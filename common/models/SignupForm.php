@@ -9,7 +9,6 @@ use yii\base\Model;
  */
 class SignupForm extends Model
 {
-
     public $email;
     public $first_name;
     public $last_name;
