@@ -2,10 +2,12 @@
 
 namespace frontend\controllers;
 
+use common\models\Petroglyph;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\data\Pagination;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -73,9 +75,26 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionIndex()
+    /*public function actionIndex()
     {
         return $this->render('index');
+    }*/
+    //const PAGE_LIMIT = 10;
+    public function actionIndex()
+    {
+        $query = Petroglyph::find()
+            ->orderBy(['id' => SORT_ASC]);
+        //$pages = new Pagination(['totalCount' => $query->count()]);
+        $pages = new Pagination(['totalCount' => 100]);
+
+        $petroglyphs = $query->offset($pages->offset)
+            //->limit($pages->limit)
+            ->limit(8)
+            ->all();
+        return $this->render('index',[
+            'petroglyphs' => $petroglyphs,
+            'pages' => $pages,
+        ]);
     }
 
     /**
