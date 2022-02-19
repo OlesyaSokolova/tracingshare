@@ -270,4 +270,21 @@ class SiteController extends Controller
             'model' => $model
         ]);
     }
+
+    public function actionPublications()
+    {
+        $query = Petroglyph::find()
+            ->where(['author_id' => Yii::$app->user->getId()])
+            ->orderBy(['id' => SORT_ASC]);
+        $pages = new Pagination(['totalCount' => $query->count()]);
+        //$pages = new Pagination(['totalCount' => 100]);
+
+        $petroglyphs = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+        return $this->render('publications',[
+            'petroglyphs' => $petroglyphs,
+            'pages' => $pages,
+        ]);
+    }
 }

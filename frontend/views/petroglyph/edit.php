@@ -1,7 +1,7 @@
 <?php
 
-use app\assets\ViewAsset;
-use app\models\Petroglyph;
+use frontend\assets\ViewAsset;
+use common\models\Petroglyph;
 
 if(!empty($petroglyph)) {
 
