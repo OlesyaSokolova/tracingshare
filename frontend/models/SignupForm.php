@@ -57,8 +57,18 @@ class SignupForm extends Model
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-//TODO: ASSIGN ROLE 'AUTHSOR'
-        return $user->save() && $this->sendEmail($user);
+        $user_saved = $user->save();
+        if($user_saved) {
+            $auth = Yii::$app->authManager;
+            $authRole = $auth->getRole('author');
+            $auth->assign($authRole, $user->getId());
+            return $this->sendEmail($user);
+        }
+        return false;
+
+
+
+       // return $user->save() && $this->sendEmail($user);
     }
 
     /**

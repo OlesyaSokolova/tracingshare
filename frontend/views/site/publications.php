@@ -2,7 +2,7 @@
 
 /* @var $this yii\web\View */
 
-use app\models\Petroglyph;
+use common\models\Petroglyph;
 use yii\bootstrap4\LinkPager;
 use yii\helpers\Html;
 use yii\helpers\Url;

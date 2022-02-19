@@ -44,7 +44,8 @@ AppAsset::register($this);
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
 
     if (isset($userRoles['author']) || isset($userRoles['admin'])) {
-        $menuItems[] = ['label' => 'Мои публикации', 'url' => ['/site/publications']];
+        $menuItems[] = ['label' => 'Мои публикации (эта ссылка невалидна!!)', 'url' => ['/site/publications']];
+        //TODO: EDIT PUBLICATIONS FOR ALL USERS!
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
@@ -54,7 +55,6 @@ AppAsset::register($this);
     $authenticationItems = [];
 
     if (Yii::$app->user->isGuest) {
-        $authenticationItems[] = ['label' => 'Регистрация', 'url' => ['/site/signup']];
         $authenticationItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
     } else {
         //$authenticationItems[] = ['label' => 'Мои публикации', 'url' => ['/gallery/publications']];
