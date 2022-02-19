@@ -6,28 +6,25 @@ use Yii;
 use yii\base\Model;
 
 /**
- * LoginForm is the model behind the login form.
- *
- * @property-read User|null $user This property is read-only.
- *
+ * Login form
  */
 class LoginForm extends Model
 {
-    public $email;
+    public $username;
     public $password;
     public $rememberMe = true;
 
-    private $_user = false;
+    private $_user;
 
 
     /**
-     * @return array the validation rules.
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
             // username and password are both required
-            [['email', 'password'], 'required'],
+            [['username', 'password'], 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
@@ -46,35 +43,24 @@ class LoginForm extends Model
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Неправильный email или пароль.');
+                $this->addError($attribute, 'Incorrect username or password.');
             }
         }
     }
 
     /**
      * Logs in a user using the provided username and password.
+     *
      * @return bool whether the user is logged in successfully
      */
-    public function login() {
-        /*if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+    public function login()
+    {
+        if ($this->validate()) {
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
-        return false;*/
-        if ($this->validate(false)) {
 
-            $user = $this->getUser();
-            if($user->status === User::STATUS_ACTIVE){
-                return Yii::$app->user->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
-            }
-            if($user->status === User::STATUS_INACTIVE){
-                throw new \DomainException('Регистрация не подтверждена. Проверьте свою почту.');
-            }
-
-        } else {
-            return false;
-        }
+        return false;
     }
 
     /**
@@ -82,10 +68,10 @@ class LoginForm extends Model
      *
      * @return User|null
      */
-    public function getUser()
+    protected function getUser()
     {
-        if ($this->_user === false) {
-            $this->_user = User::findByEmail($this->email);
+        if ($this->_user === null) {
+            $this->_user = User::findByUsername($this->username);
         }
 
         return $this->_user;

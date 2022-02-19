@@ -7,26 +7,28 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-/*
-* @property integer $id
-* @property string $password_hash
-* @property string $password_reset_token
-* @property string $email
-* @property string $first_name //имя
-* @property string $last_name //фамилия
-* @property string $patronymic //отчество
-* @property string $auth_key
-* @property integer $status
-* @property integer $created_at
-* @property integer $updated_at
-* @property string $password write-only password
-*/
+
+/**
+ * User model
+ *
+ * @property integer $id
+ * @property string $username
+ * @property string $password_hash
+ * @property string $password_reset_token
+ * @property string $verification_token
+ * @property string $email
+ * @property string $auth_key
+ * @property integer $status
+ * @property integer $created_at
+ * @property integer $updated_at
+ * @property string $password write-only password
+ */
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
-    //const STATUS_WAIT = 5;
-    const STATUS_ACTIVE = 10;
     const STATUS_INACTIVE = 9;
+    const STATUS_ACTIVE = 10;
+
 
     /**
      * {@inheritdoc}
@@ -45,9 +47,7 @@ class User extends ActiveRecord implements IdentityInterface
             TimestampBehavior::className(),
         ];
     }
-    /**
-     * @inheritdoc
-     */
+
     /**
      * {@inheritdoc}
      */
@@ -76,44 +76,33 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Finds user by email
+     * Finds user by username
      *
-     * @param string $email
+     * @param string $username
      * @return static|null
      */
-    public static function findByEmail($email)
+    public static function findByUsername($username)
     {
-        return static::findOne(['email' => $email, 'status' => self::STATUS_ACTIVE]);
-    }
-
-    public function getEmail()
-    {
-        return static::findOne(['id' => $this->getPrimaryKey(), 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
-     * Generates password hash from password and sets it to the model
+     * Finds user by password reset token
      *
-     * @param string $new_password
+     * @param string $token password reset token
+     * @return static|null
      */
-    public function updatePassword($new_password)
+    public static function findByPasswordResetToken($token)
     {
-        $this->setPassword($new_password);
-    }
-
-    public function beforeSave($insert) {
-        if ($insert) {
-            $this->setPassword($this->password_hash);
-        } else {
-            if (!empty($this->password_hash)) {
-                $this->setPassword($this->password_hash);
-            } else {
-                $this->password_hash = (string) $this->getOldAttribute('password_hash');
-            }
+        if (!static::isPasswordResetTokenValid($token)) {
+            return null;
         }
-        return parent::beforeSave($insert);
-    }
 
+        return static::findOne([
+            'password_reset_token' => $token,
+            'status' => self::STATUS_ACTIVE,
+        ]);
+    }
 
     /**
      * Finds user by verification email token
