@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use http\Message;
 use Yii;
 use yii\base\Model;
 
@@ -24,7 +25,7 @@ class LoginForm extends Model
     {
         return [
             // email and password are both required
-            [['email', 'password'], 'required'],
+            [['email', 'password'], 'required', 'message' => 'Это поле не может быть пустым'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
@@ -44,7 +45,7 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+                $this->addError($attribute, 'Неправильный email или пароль. Проверьте, что Вы подтвердили регистрацию.');
             }
         }
     }

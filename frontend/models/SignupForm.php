@@ -24,23 +24,14 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            ['first_name', 'trim'],
-            ['first_name', 'required'],
-            ['first_name', 'string', 'min' => 2, 'max' => 255],
-
-            ['last_name', 'trim'],
-            ['last_name', 'required'],
-            ['last_name', 'string', 'min' => 2, 'max' => 255],
-
-            ['patronymic', 'trim'],
-            ['patronymic', 'required'],
-            ['patronymic', 'string', 'min' => 2, 'max' => 255],
+            [['first_name', 'last_name', 'patronymic'], 'required', 'message' => 'Это поле не может быть пустым'],
+            [['first_name', 'last_name', 'patronymic'], 'string', 'min' => 2, 'max' => 32, 'message' => 'Максимальная длина: 32 символа'],
 
             ['email', 'trim'],
             ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['email', 'email', 'message' => 'Неправильный формат email.'],
+            ['email', 'string', 'max' => 32, 'message' => 'Максимальная длина: 32 символа'],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'Пользователь с таким email уже существует.'],
 
             ['password', 'required'],
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
@@ -66,7 +57,7 @@ class SignupForm extends Model
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-
+//TODO: ASSIGN ROLE 'AUTHSOR'
         return $user->save() && $this->sendEmail($user);
     }
 
