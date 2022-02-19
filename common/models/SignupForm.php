@@ -7,6 +7,7 @@ use yii\base\Model;
 /**
  * Signup form
  */
+//wrong signup form
 class SignupForm extends Model
 {
     public $email;
