@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use yii\rbac\Item;
 use yii\rbac\Rule;

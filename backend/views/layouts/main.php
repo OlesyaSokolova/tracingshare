@@ -39,12 +39,13 @@ AppAsset::register($this);
     ]);
 
     $menuItems = [];
-    $menuItems[] = ['label' => 'О проекте', 'url' => ['/site/about']];
 
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
 
     if (isset($userRoles['author']) || isset($userRoles['admin'])) {
-        $menuItems[] = ['label' => 'Мои публикации (эта ссылка невалидна!!)', 'url' => ['/site/publications']];
+        $menuItems[] = ['label' => 'Публикации (эта ссылка невалидна!!)', 'url' => ['/site/publications']];
+        $menuItems[] = ['label' => 'Пользователи (эта ссылка невалидна!!)', 'url' => ['/site/users']];
+
         //TODO: EDIT PUBLICATIONS FOR ALL USERS!
     }
     echo Nav::widget([

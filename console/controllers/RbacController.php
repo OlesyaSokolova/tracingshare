@@ -1,8 +1,9 @@
 <?php
 
-namespace app\commands;
+namespace console\controllers;
 
-use app\models\OwnerRule;
+
+use common\models\OwnerRule;
 use Yii;
 use yii\console\Controller;
 
@@ -56,7 +57,7 @@ class RbacController extends Controller
 
 // Назначение ролей пользователям. 1 и 7 это IDs возвращаемые IdentityInterface::getId()
 // обычно реализуемый в модели User.
-        $auth->assign($author, 16);
-        $auth->assign($admin, 18);
+        //$auth->assign($author, 1);
+        $auth->assign($admin, 1);
     }
 }
