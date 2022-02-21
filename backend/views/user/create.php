@@ -5,8 +5,9 @@
 
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
-
+$this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index']];
 $this->title = 'Создание пользователя';
+$model->role = 'author';
 ?>
 <div class="user-create">
     <h1 style="text-align: center;"><?= Html::encode($this->title) ?></h1>
@@ -19,7 +20,6 @@ $this->title = 'Создание пользователя';
             <?= $form->field($model, 'last_name')->label("Фамилия:") ?>
             <?= $form->field($model, 'patronymic')->label("Отчество:") ?>
             <?= $form->field($model, 'password')->passwordInput()->label("Пароль:") ?>
-            <?= $model->role = 'author'; ?>
             <?= $form->field($model, 'role')->label('Роль:')->radioList([
                 'author' =>'Автор: может создавать и редактировать свои публикации.',
                 'admin' =>'Администратор: может создавать и редактировать все публикации, управлять пользователями.',

@@ -10,37 +10,60 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Users';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Пользователи';
 ?>
 <div class="user-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Создать пользователя', ['create'], ['class' => 'btn btn-outline-primary btn-rounded']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?= GridView::widget([
+    <?=
+   // $searchModel->status;
+    GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-            'email:email',
-            'first_name',
-            'last_name',
-            'patronymic',
+            [
+                'label' => 'Фамилия',
+                'attribute' => 'last_name',
+            ],
+            [
+                'label' => 'Имя',
+                'attribute' => 'first_name',
+            ],
+            [
+                'label' => 'Отчество',
+                'attribute' => 'patronymic',
+            ],
+            'email',
+           /* [
+                'label' => 'Статус',
+                'attribute' => 'status',
+            ],*/
             //'auth_key',
             //'password_hash',
             //'password_reset_token',
             //'email_confirm_token:email',
             //'status',
-            //'created_at',
-            //'updated_at',
+            /*[
+                'attribute' => 'created_at',
+                'format' => ['date', 'php:Y-m-d']
+            ],*/
+            //'created_at:datetime', // shortcut format
+            //'updated_at:datetime', // shortcut format
+            /*[
+                'label' => 'Роль',
+                'value' => User::getRole($searchModel->id),
+                //'attribute' => 'patronymic',
+            ],*/
             //'verification_token',
             [
                 'class' => ActionColumn::className(),

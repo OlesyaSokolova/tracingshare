@@ -29,13 +29,29 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
 
-
+    public static function getStatuses()
+    {
+        return [
+            static::STATUS_DELETED => 'Удален',
+            static::STATUS_INACTIVE => 'Регистрация не подтверждена',
+            static::STATUS_ACTIVE => 'Регистрация подтверждена',
+        ];
+    }
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
         return '{{%user}}';
+    }
+
+    public static function getRole($id)
+    {
+        $allRoles = Yii::$app->authManager->getRolesByUser($id);
+        if (isset($allRoles['admin'])) {
+            return 'Администратор';
+        }
+        return 'Автор';
     }
 
     /**

@@ -17,13 +17,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'email') ?>
+    <?= $form->field($model, 'email')->label() ?>
 
-    <?= $form->field($model, 'first_name') ?>
+    <?= $form->field($model, 'first_name')->label() ?>
 
-    <?= $form->field($model, 'last_name') ?>
+    <?= $form->field($model, 'last_name')->label() ?>
 
-    <?= $form->field($model, 'patronymic') ?>
+    <?= $form->field($model, 'patronymic')->label() ?>
 
     <?php // echo $form->field($model, 'auth_key') ?>
 

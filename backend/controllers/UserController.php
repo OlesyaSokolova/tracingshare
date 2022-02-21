@@ -113,7 +113,7 @@ class UserController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        //where author_id = user_id -> admin_id
         return $this->redirect(['index']);
     }
 
