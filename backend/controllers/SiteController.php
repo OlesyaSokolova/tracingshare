@@ -80,7 +80,13 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+           $userRoles =  Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+            if(isset($userRoles['admin'])) {
+                return $this->goHome();
+            }
+           else {
+               return $this->actionLogout();
+           }
         }
 
         $model->password = '';
@@ -98,7 +104,6 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
 }

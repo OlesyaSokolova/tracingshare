@@ -7,11 +7,11 @@
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
 
-$this->title = 'Администрирование сайта';
+$this->title = 'Управление сайтом';
 ?>
 <div class="site-signup" align="center">
     <h1 style="text-align: center;"><?= Html::encode($this->title) ?></h1>
-    <h2 style="text-align: center;"><?= Html::encode("Вход") ?></h2>
+    <h4 style="text-align: center;"><?= Html::encode("Вход возможен только для администратора") ?></h4>
     <div class="row row justify-content-center">
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'form-login']) ?>

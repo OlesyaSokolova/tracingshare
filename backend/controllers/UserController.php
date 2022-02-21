@@ -92,7 +92,7 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+//TODO: write this method
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             Yii::$app->session->setFlash("hello");
             return $this->redirect(['view', 'id' => $model->id]);
