@@ -4,7 +4,7 @@
 /** @var string $content */
 
 use common\widgets\Alert;
-use frontend\assets\AppAsset;
+use backend\assets\AppAsset;
 use yii\bootstrap4\Breadcrumbs;
 use yii\bootstrap4\Html;
 use yii\bootstrap4\Nav;
@@ -38,15 +38,12 @@ AppAsset::register($this);
         ],
     ]);
 
-    $menuItems = [];
 
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
-
-    if (isset($userRoles['author']) || isset($userRoles['admin'])) {
-        $menuItems[] = ['label' => 'Публикации (эта ссылка невалидна!!)', 'url' => ['/site/publications']];
-        $menuItems[] = ['label' => 'Пользователи (эта ссылка невалидна!!)', 'url' => ['/site/users']];
-
-        //TODO: EDIT PUBLICATIONS FOR ALL USERS!
+    $menuItems = [];
+    if (isset($userRoles['admin'])) {
+        $menuItems[] = ['label' => 'Публикации - все публикации', 'url' => ['/site/publications']];
+        $menuItems[] = ['label' => 'Пользователи', 'url' => ['/user/index']];
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
@@ -54,11 +51,9 @@ AppAsset::register($this);
     ]);
 
     $authenticationItems = [];
-
     if (Yii::$app->user->isGuest) {
-        $authenticationItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
+        $authenticationItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
-        //$authenticationItems[] = ['label' => 'Мои публикации', 'url' => ['/gallery/publications']];
         $authenticationItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
@@ -69,16 +64,13 @@ AppAsset::register($this);
             . Html::endForm()
             . '</li>';
     }
-
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav ml-auto'],
         'items' => $authenticationItems,
     ]);
     NavBar::end();
     ?>
-
 </div>
-
 
 <main role="main" class="flex-shrink-0">
     <div class="container" style="margin-top: 50px">
@@ -89,6 +81,7 @@ AppAsset::register($this);
         <?= $content ?>
     </div>
 </main>
+
 
 <footer class="footer"  style="bottom: 0;
 width: 100%;
