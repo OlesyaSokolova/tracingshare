@@ -67,7 +67,7 @@ $this->title = "Пользователь: ". $model->last_name.' '. $model->firs
             ],
             [
                 'label' => 'Роль',
-                'value' => User::getRole($model->id),
+                'value' => User::getRoleTitle($model->id),
                 //'attribute' => 'patronymic',
             ],
             //'verification_token',

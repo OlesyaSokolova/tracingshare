@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\CreateUserForm;
+use backend\models\UpdateUserForm;
 use common\models\User;
 use backend\models\UserSearch;
 use Yii;
@@ -72,7 +73,6 @@ class UserController extends Controller
         $model = new CreateUserForm();
         if ($model->load(Yii::$app->request->post()) && $model->create()) {
             Yii::$app->session->setFlash('success', 'Пользователь успешно создан!');
-            //return $this->goHome();
             return $this->render('view', [
                 'model' => $this->findModel($model->user_id),
             ]);
@@ -81,23 +81,17 @@ class UserController extends Controller
             'model' => $model,
         ]);
     }
-
-    /**
-     * Updates an existing User model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-//TODO: write this method
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash("hello");
-            return $this->redirect(['view', 'id' => $model->id]);
+        $user = $this->findModel($id);
+        $model = new UpdateUserForm($user);
+        if ($model->load(Yii::$app->request->post()) && $model->update()) {
+            Yii::$app->session->setFlash('success', 'Пользователь успешно изменен!');
+            //return $this->goHome();
+            return $this->render('view', [
+                'model' => $this->findModel($model->user_id),
+            ]);
         }
-
         return $this->render('update', [
             'model' => $model,
         ]);

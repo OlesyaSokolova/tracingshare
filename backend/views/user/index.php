@@ -44,10 +44,6 @@ $this->title = 'Пользователи';
                 'attribute' => 'patronymic',
             ],
             'email',
-           /* [
-                'label' => 'Статус',
-                'attribute' => 'status',
-            ],*/
             //'auth_key',
             //'password_hash',
             //'password_reset_token',
