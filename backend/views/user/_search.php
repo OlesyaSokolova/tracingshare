@@ -44,8 +44,8 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'is_admin') ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>
+        <?= Html::submitButton('Поиск', ['class' => 'btn btn-outline-primary btn-rounded']) ?>
+        <?= Html::resetButton('Сброс', ['class' => 'btn btn-outline-secondary btn-rounded']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

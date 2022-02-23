@@ -42,7 +42,7 @@ AppAsset::register($this);
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     $menuItems = [];
     if (isset($userRoles['admin'])) {
-        $menuItems[] = ['label' => 'Публикации - все публикации', 'url' => ['/site/publications']];
+/*        $menuItems[] = ['label' => 'Публикации - все публикации', 'url' => ['/site/publications']];*/
         $menuItems[] = ['label' => 'Пользователи', 'url' => ['/user/index']];
     }
     echo Nav::widget([
