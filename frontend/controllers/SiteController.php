@@ -250,27 +250,6 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Resend verification email
-     *
-     * @return mixed
-     */
-    public function actionResendVerificationEmail()
-    {
-        $model = new ResendVerificationEmailForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Регистрация успешно подтверждена.');
-                return $this->goHome();
-            }
-            Yii::$app->session->setFlash('error', 'Произошла ошибка во время подтверждения регистрации: неправильный токен.');
-        }
-
-        return $this->render('resendVerificationEmail', [
-            'model' => $model
-        ]);
-    }
-
     public function actionPublications()
     {
         $query = Petroglyph::find()

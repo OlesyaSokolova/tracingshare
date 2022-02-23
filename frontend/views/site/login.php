@@ -22,8 +22,6 @@ $this->title = 'Вход';
 
             <div style="color:#999;margin:1em 0">
                 Если Вы забыли пароль, Вы можете его <?= Html::a('сбросить', ['site/request-password-reset']) ?>.
-                <br><br>
-                Необходимо новое письмо для подтверждения регистрации? <?= Html::a('Отправить письмо ещё раз', ['site/resend-verification-email']) ?>
             </div>
 
             <div class="form-group" style="text-align: center;">
