@@ -86,6 +86,9 @@ class SiteController extends Controller
             //->limit($pages->limit)
             ->limit(8)
             ->all();
+        foreach ($petroglyphs as &$petroglyph) {
+            $petroglyph->generateThumbnail();
+        }
         return $this->render('index',[
             'petroglyphs' => $petroglyphs,
             'pages' => $pages,
