@@ -12,7 +12,7 @@ use yii\imagine\Image;
 * @property string name
 * @property string description //description of petroglyph
 * @property string image //link to an original image
-* @property string thumbnail //link to an original image
+* @property string thumbnail //link to an thumbnail image
 * @property string settings //TEXT - json as string with drawings (and later maybe textures will be added)
  * {
 "drawings": [
@@ -45,11 +45,11 @@ use yii\imagine\Image;
 class Petroglyph extends ActiveRecord
 {
     //TODO: изменить PATH_STORAGE
-    const PATH_STORAGE = 'http://localhost/tracingshare/storage/';
+    const HTTP_PATH_STORAGE = 'http://localhost/tracingshare/storage/';
+    const FULL_PATH_STORAGE = '/var/www/html/tracingshare/storage/';
     //const DIR_IMAGE = 'storage';
-    const PATH_IMAGES = 'images';//folder with original images
-    const PATH_DRAWINGS = 'drawings';//folder with drawings
-    const FULL_PATH_THUMBNAILS = '/var/www/html/tracingshare/storage/thumbnails';//folder with thumbnails
+    const PREFIX_PATH_IMAGES = 'images';//folder with original images
+    const PREFIX_PATH_DRAWINGS = 'drawings';//folder with drawings
     const PREFIX_PATH_THUMBNAILS = 'thumbnails';//folder with thumbnails
     const THUMBNAIL_W = 800;//пропорционально уменьшать картинки
     const THUMBNAIL_H = 500;
@@ -83,8 +83,8 @@ class Petroglyph extends ActiveRecord
     public function generateThumbnail() {
         //TODO: создавать миниатюры вместе с прорисовками
         //$path = self::basePath();
-        $thumbnailPath =  self::FULL_PATH_THUMBNAILS . '/' . self::THUMBNAIL_PREFIX . $this->image;
-        $originalImagePath = self::PATH_STORAGE . self::PATH_IMAGES . '/' . $this->image;
+        $thumbnailPath =  self::FULL_PATH_STORAGE . self::PREFIX_PATH_THUMBNAILS. '/' . self::THUMBNAIL_PREFIX . $this->image;
+        $originalImagePath = self::FULL_PATH_STORAGE . self::PREFIX_PATH_IMAGES . '/' . $this->image;
         if (!file_exists($thumbnailPath)) {
             //$newName = md5(uniqid($this->id));
             $sizes = getimagesize($originalImagePath);

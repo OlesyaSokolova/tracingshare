@@ -6,8 +6,8 @@ use common\models\Petroglyph;
 if(!empty($petroglyph)) {
 
     $this->title = "Редактирование: ".$petroglyph->name;
-    $originalImageSrc = "\"" . Petroglyph::PATH_STORAGE.Petroglyph::PATH_IMAGES.'/'.$petroglyph->image . "\"";
-    $drawingPathPrefix = "\"" . Petroglyph::PATH_STORAGE . Petroglyph::PATH_DRAWINGS . '/' . "\"";
+    $originalImageSrc = "\"" . Petroglyph::HTTP_PATH_STORAGE.Petroglyph::PREFIX_PATH_IMAGES.'/'.$petroglyph->image . "\"";
+    $drawingPathPrefix = "\"" . Petroglyph::HTTP_PATH_STORAGE . Petroglyph::PREFIX_PATH_DRAWINGS . '/' . "\"";
 
     $script = <<< JS
     
