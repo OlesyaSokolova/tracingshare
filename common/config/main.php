@@ -12,6 +12,13 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => true,
+            //'enableStrictParsing' => false,
+            'rules' => [
+            ],
+        ],
        /* 'user' => [
             'class' => 'common\models\User',
             'identityClass' => 'common\models\User',
