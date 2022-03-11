@@ -2,14 +2,17 @@
 
 namespace common\models;
 
+use Imagine\Image\Box;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\FileHelper;
+use yii\imagine\Image;
 
 /* @property int id
 * @property string name
 * @property string description //description of petroglyph
 * @property string image //link to an original image
+* @property string thumbnail //link to an thumbnail image
 * @property string settings //TEXT - json as string with drawings (and later maybe textures will be added)
  * {
 "drawings": [
@@ -41,9 +44,16 @@ use yii\helpers\FileHelper;
 
 class Petroglyph extends ActiveRecord
 {
-    const PATH_STORAGE = 'http://localhost/tracingshare/storage/';
-    const PATH_IMAGES = 'images';//folder with original images
-    const PATH_DRAWINGS = 'drawings';//folder with drawings
+    //TODO: изменить PATH_STORAGE
+    const HTTP_PATH_STORAGE = 'http://localhost/tracingshare/storage/';
+    const FULL_PATH_STORAGE = '/var/www/html/tracingshare/storage/';
+    //const DIR_IMAGE = 'storage';
+    const PREFIX_PATH_IMAGES = 'images';//folder with original images
+    const PREFIX_PATH_DRAWINGS = 'drawings';//folder with drawings
+    const PREFIX_PATH_THUMBNAILS = 'thumbnails';//folder with thumbnails
+    const THUMBNAIL_W = 800;//пропорционально уменьшать картинки
+    const THUMBNAIL_H = 500;
+    const THUMBNAIL_PREFIX = 'thumbnail_';
 
     //public $fileImage; //File
     //public $fileTexture;
@@ -55,62 +65,36 @@ class Petroglyph extends ActiveRecord
         return 'exhibits';
     }
 
-    /*public function rules()
-    {
-        return [
-            [['name'], 'required'],
-            [['name', 'description', 'image', 'settings', 'author'], 'string'],
-            [['fileImage'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg'],
-            //[['fileTexture'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, bin', 'maxFiles' => 10],
-            [['fileDrawing'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, gif, webp', 'maxFiles' => 10],//'maxSize' => 8192*8192
-           //['sef', 'match', 'pattern' => '/^[a-z0-9\-]*$/iu', 'message' => 'Допустима латиница, числа и -'], ??
-        ];
-    }*/
-
-    /*public function upload()
-    {
-        if ($this->validate()) {
-            //1.$this->image = link to image from database
-            if ($this->fileImage) {
-                $path = self::PATH_IMAGE . '/' . $this->id;
-
-                if (!empty($this->image) and file_exists($path . '/' . $this->image)) {
-                    //if link to the image is not empty we should overwrite file
-                    unlink($path . '/' . $this->image);
-                }
-
-                FileHelper::createDirectory($path);
-
-                $newName = strtotime('now');
-                $this->fileImage->saveAs($path . '/' . $newName . '.' . $this->fileImage->extension);
-                $this->image = $newName . '.' . $this->fileImage->extension;
+    public function generateThumbnail() {
+        //$path = self::basePath();
+        $thumbnailPath =  self::FULL_PATH_STORAGE . self::PREFIX_PATH_THUMBNAILS. '/' . self::THUMBNAIL_PREFIX . $this->image;
+        $originalImagePath = self::FULL_PATH_STORAGE . self::PREFIX_PATH_IMAGES . '/' . $this->image;
+        if (!file_exists($thumbnailPath)) {
+            //$newName = md5(uniqid($this->id));
+            $sizes = getimagesize($originalImagePath);
+            if ($sizes[0] > self::THUMBNAIL_W) {
+                Image::thumbnail($originalImagePath, self::THUMBNAIL_W, self::THUMBNAIL_H)
+                    ->resize(new Box(self::THUMBNAIL_W, self::THUMBNAIL_H))
+                    ->save($thumbnailPath, ['quality' => 80]);
+                $this->thumbnail = self::THUMBNAIL_PREFIX . $this->image;
+                $this->save();
             }
 
-            if ($this->filesDrawings) {
-                //path for directory
-                $path = Petroglyph::PATH_IMAGE . '/' . $this->id;
-                $drawingsArray = array();
-                FileHelper::createDirectory($path);
-                FileHelper::createDirectory($path . '/' . $this->pathDrawing);
-
-                foreach ($this->filesDrawings as $fileDrawing) {
-                    $fileDrawing->saveAs($path . '/' . $this->pathDrawing . '/' . $fileDrawing->baseName . '.' . $fileDrawing->extension);
-                    $drawingsArray[] = '/' . $path . '/' . $this->pathDrawing . '/' . $fileDrawing->baseName . '.' . $fileDrawing->extension;
-                }
-                $this->setSetting('drawings', $drawingsArray);
-            }
         }
-    }*/
-
-  /*  public function setSetting($field, $value)
-    {
-        $setting = $this->getSettingsArray();
-        $setting->$field = $value;
-        $this->setting = json_encode($setting);
-    }*/
+    }
 
     public function getSettingsArray()
     {
         return json_decode($this->settings);
+    }
+
+    public static function basePath()
+    {
+       /* $path = \Yii::getAlias('@' . self::DIR_IMAGE);
+
+        // Создаем директорию, если не существует
+        FileHelper::createDirectory($path);
+
+        return $path;*/
     }
 }

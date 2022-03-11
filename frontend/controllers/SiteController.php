@@ -79,13 +79,16 @@ class SiteController extends Controller
     {
         $query = Petroglyph::find()
             ->orderBy(['id' => SORT_ASC]);
-        //$pages = new Pagination(['totalCount' => $query->count()]);
-        $pages = new Pagination(['totalCount' => 100]);
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count()]);
+        //$pages = new Pagination(['totalCount' => 100]);
 
         $petroglyphs = $query->offset($pages->offset)
-            //->limit($pages->limit)
-            ->limit(8)
+            ->limit($pages->limit)
             ->all();
+        foreach ($petroglyphs as &$petroglyph) {
+            $petroglyph->generateThumbnail();
+        }
         return $this->render('index',[
             'petroglyphs' => $petroglyphs,
             'pages' => $pages,

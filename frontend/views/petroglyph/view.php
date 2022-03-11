@@ -6,8 +6,8 @@ use yii\helpers\Html;
 
 if(!empty($petroglyph)) {
     $this->title = $petroglyph->name;
-    $originalImageSrc = "\"" . Petroglyph::PATH_STORAGE.Petroglyph::PATH_IMAGES.'/'.$petroglyph->image . "\"";
-    $drawingPathPrefix = "\"" . Petroglyph::PATH_STORAGE . Petroglyph::PATH_DRAWINGS . '/' . "\"";
+    $originalImageSrc = "\"" . Petroglyph::HTTP_PATH_STORAGE.Petroglyph::PREFIX_PATH_IMAGES.'/'.$petroglyph->image . "\"";
+    $drawingPathPrefix = "\"" . Petroglyph::HTTP_PATH_STORAGE . Petroglyph::PREFIX_PATH_DRAWINGS . '/' . "\"";
 
     $script = <<< JS
     originalImageSrc = $originalImageSrc
