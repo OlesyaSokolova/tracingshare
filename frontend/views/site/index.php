@@ -28,7 +28,7 @@ $this->title = 'Петроглифы'; ?>
                        <a href="<?= Url::to(['petroglyph/view', 'id' => $petroglyph->id])?>" class="petroglyph-item">
 
                         <div class="row">
-                            <div class="thumbnail" style="background-image: url(<?= Petroglyph::HTTP_PATH_STORAGE . Petroglyph::PREFIX_PATH_THUMBNAILS . '/' . $petroglyph->getThumbnail() ?>)"></div>
+                            <div class="thumbnail" style="background-image: url(<?= Petroglyph::HTTP_PATH_STORAGE . Petroglyph::PREFIX_PATH_THUMBNAILS . '/' . $petroglyph->thumbnail ?>)"></div>
                         </div>
                         <h5>
                             <?= $petroglyph->name ?>

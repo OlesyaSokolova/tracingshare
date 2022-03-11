@@ -64,24 +64,8 @@ class Petroglyph extends ActiveRecord
         //return '{{petroglyph}}
         return 'exhibits';
     }
-    /**
-     * @return string
-     * @throws \yii\base\Exception
-     */
-    public function getThumbnail()
-    {
-        return $this->thumbnail;
-       /* $path = self::basePath();
-
-        if (file_exists($path . '/' . self::THUMBNAIL_PREFIX . $this->image)) {
-            return self::THUMBNAIL_PREFIX . $this->image;
-        } else {
-            return $this->image;
-        }*/
-    }
 
     public function generateThumbnail() {
-        //TODO: создавать миниатюры вместе с прорисовками
         //$path = self::basePath();
         $thumbnailPath =  self::FULL_PATH_STORAGE . self::PREFIX_PATH_THUMBNAILS. '/' . self::THUMBNAIL_PREFIX . $this->image;
         $originalImagePath = self::FULL_PATH_STORAGE . self::PREFIX_PATH_IMAGES . '/' . $this->image;
