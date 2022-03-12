@@ -33,8 +33,10 @@ if (strcmp($petroglyph->settings ,'') != 0): ?>
 <?php endif; ?>
 
     <?php
-    if (Yii::$app->user->can('updatePost',
-        ['petroglyph' => $petroglyph])):?>
+    $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+
+    if (Yii::$app->user->can('updateOwnPost',
+        ['petroglyph' => $petroglyph]) || isset($userRoles['admin'])):?>
 
         <?= Html::a(Yii::t('app', 'Редактировать'),
             ['/petroglyph/edit', 'id' => $petroglyph->id],
@@ -47,7 +49,6 @@ if (strcmp($petroglyph->settings ,'') != 0): ?>
                 'name' => 'delete-button',]) ?>
 
     <?php endif; ?>
-</p>
 
 <div class="box" style="display: flex">
     <div class="container-petroglyph" data-state="static">

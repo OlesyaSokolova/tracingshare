@@ -55,9 +55,27 @@ class Petroglyph extends ActiveRecord
     const THUMBNAIL_H = 500;
     const THUMBNAIL_PREFIX = 'thumbnail_';
 
-    //public $fileImage; //File
-    //public $fileTexture;
-    //public $filesDrawings = array(); //Array// files-drawings from folder "PATH_STORAGE+PATH_DRAWING
+    public $imageFile;
+
+    public function rules()
+    {
+        return [
+            [['name', 'description'], 'required', 'message' => 'Это поле не может быть пустым'],
+            ['name', 'string', 'max' => 100, 'message' => 'Максимальная длина: 32 символа'],
+            ['description', 'string', 'max' => 32000, 'message' => 'Максимальная длина: 32000 символов'],
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg'],
+        ];
+    }
+
+    public function upload()
+    {
+        if ($this->validate()) {
+            $this->imageFile->saveAs('uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public static function tableName()
     {
@@ -86,15 +104,5 @@ class Petroglyph extends ActiveRecord
     public function getSettingsArray()
     {
         return json_decode($this->settings);
-    }
-
-    public static function basePath()
-    {
-       /* $path = \Yii::getAlias('@' . self::DIR_IMAGE);
-
-        // Создаем директорию, если не существует
-        FileHelper::createDirectory($path);
-
-        return $path;*/
     }
 }

@@ -17,6 +17,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\UploadedFile;
 
 /**
  * Site controller
@@ -253,20 +254,18 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    public function actionPublications()
+    public function actionUpload()
     {
-        $query = Petroglyph::find()
-            ->where(['author_id' => Yii::$app->user->getId()])
-            ->orderBy(['id' => SORT_ASC]);
-        $pages = new Pagination(['totalCount' => $query->count()]);
-        //$pages = new Pagination(['totalCount' => 100]);
+       /* $model = new Petroglyph();
 
-        $petroglyphs = $query->offset($pages->offset)
-            ->limit($pages->limit)
-            ->all();
-        return $this->render('publications',[
-            'petroglyphs' => $petroglyphs,
-            'pages' => $pages,
-        ]);
+        if (Yii::$app->request->isPost) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->upload()) {
+                // file is uploaded successfully
+                return;
+            }
+        }*/
+
+        return $this->render('upload');
     }
 }

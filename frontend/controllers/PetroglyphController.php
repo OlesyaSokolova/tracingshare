@@ -3,8 +3,10 @@
 namespace frontend\controllers;
 
 use common\models\Petroglyph;
+use Yii;
 use yii\web\Controller;
 use yii\web\HttpException;
+use yii\web\UploadedFile;
 
 class PetroglyphController extends Controller
 {

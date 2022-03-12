@@ -4,12 +4,12 @@
 
 use common\models\Petroglyph;
 use yii\bootstrap4\LinkPager;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
-$this->title = 'Публикации';
+$this->title = 'Публикации'; ?>
 
 
-?>
 <style>
     .thumbnail {
         background-color: white;
@@ -23,6 +23,16 @@ $this->title = 'Публикации';
     }
 </style>
 <h1>Мои публикации</h1>
+
+<?php
+ //if (Yii::$app->user->can('createPost')):?>
+<h2> hello </h2>
+        <?= Html::a(Yii::t('app', 'Создать новую публикацию'),
+            '/publications/upload',
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'upload-button',]) ?>
+    <?php //endif; ?>
+
 <div id="w0" class="list-view">
     <?php if (!empty($petroglyphs)):?>
         <div class="row petroglyphs" style="position: relative;">
