@@ -66,7 +66,7 @@ class PetroglyphController extends Controller
             $petroglyph->settings = $newSettings;
         }
         if($petroglyph->update(true, ["name", "description", "settings"])) {
-            Yii::$app->session->setFlash('success', "Успешно сохранено");
+            Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
         else {
             Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.");
@@ -84,7 +84,7 @@ class PetroglyphController extends Controller
                     $model->image = $model->imageFile->baseName . '.' . $model->imageFile->extension;
                     if($model->save()) {
                         if ($model->upload()) {
-                        Yii::$app->session->setFlash('success', "Успешно сохранено");
+                        Yii::$app->session->setFlash('success', "Успешно сохранено.");
 
                         // TODO: edit file when it will be possible to create new layers
                             return $this->redirect(['petroglyph/view', 'id' => $model->id]);
