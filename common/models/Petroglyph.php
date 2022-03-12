@@ -61,20 +61,56 @@ class Petroglyph extends ActiveRecord
     {
         return [
             [['name', 'description'], 'required', 'message' => 'Это поле не может быть пустым'],
+            [['imageFile'], 'required', 'message' => 'Файл должен быть выбран.'],
             ['name', 'string', 'max' => 100, 'message' => 'Максимальная длина: 32 символа'],
             ['description', 'string', 'max' => 32000, 'message' => 'Максимальная длина: 32000 символов'],
-            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg'],
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg', 'message' => 'Ошибка при сохранении файла'],
         ];
     }
 
     public function upload()
     {
+       $pathToSave = self::FULL_PATH_STORAGE . self::PREFIX_PATH_IMAGES ;
+
         if ($this->validate()) {
-            $this->imageFile->saveAs('uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            $this->imageFile->saveAs($pathToSave . '/'. $this->imageFile->baseName . '.' . $this->imageFile->extension);
             return true;
         } else {
             return false;
         }
+//        /*if ($this->validate()) {
+//
+//            //$path = self::basePath();
+//           $pathToSave = self::FULL_PATH_STORAGE . self::PREFIX_PATH_IMAGES ;
+//           $thumbnailPath =  self::FULL_PATH_STORAGE . self::PREFIX_PATH_THUMBNAILS. '/' . self::THUMBNAIL_PREFIX;
+//
+//
+//            /*if (!empty($this->image) and file_exists($pathToSave . '/' . $this->image)) {
+//                unlink($pathToSave . '/' . $this->image);
+//
+//                if (file_exists($thumbnailPath . $this->image)) {
+//                    unlink($thumbnailPath . $this->image);
+//                }
+//            }*/
+//
+//            //TODO: CREATE DIRECTORY IF IT DOESN'T EXIST
+//            //FileHelper::createDirectory($path);
+//
+//            //$newName = md5(uniqid($this->id));
+//            $this->imageFile->saveAs($pathToSave . '/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+//            $this->image = $this->imageFile->baseName . '.' . $this->imageFile->extension;
+//
+//           /* $sizes = getimagesize($path . '/' . $newName . '.' . $this->fileImage->extension);
+//            if ($sizes[0] > self::THUMBNAIL_W) {
+//                Image::thumbnail($path . '/' . $newName . '.' . $this->fileImage->extension, self::THUMBNAIL_W, self::THUMBNAIL_H)
+//                    ->resize(new Box(self::THUMBNAIL_W, self::THUMBNAIL_H))
+//                    ->save($path . '/' . self::THUMBNAIL_PREFIX . $newName . '.' . $this->fileImage->extension, ['quality' => 80]);
+//            }*/
+//
+//            return $this->save();
+//        } else {
+//            return false;
+//        }*/
     }
 
     public static function tableName()
@@ -104,5 +140,22 @@ class Petroglyph extends ActiveRecord
     public function getSettingsArray()
     {
         return json_decode($this->settings);
+    }
+
+    /**
+     * Устанавливает путь до директории
+     *
+     * @return string
+     * @throws \yii\base\Exception
+     */
+    public static function basePath()
+    {
+        $dirimage = 'storage/images';
+        $path = \Yii::getAlias('@' . $dirimage);
+
+        // Создаем директорию, если не существует
+        FileHelper::createDirectory($path);
+
+        return $path;
     }
 }

@@ -13,9 +13,9 @@ $this->title = 'Создание публикации';
     <div class="row justify-content-center">
         <div class="col-lg-5">
 
-            <?php $form = ActiveForm::begin(['id' => 'form-upload']) ?>
+            <?php $form = ActiveForm::begin(['id' => 'form-upload', 'options' => ['enctype' => 'multipart/form-data']]) ?>
             <?= $form->field($model, 'name')->label("Название:") ?>
-            <?= $form->field($model, 'description')->label("Описание:") ?>
+            <?= $form->field($model, 'description')->textarea(['rows' => '6'])->label("Описание:") ?>
             <?= $form->field($model, 'imageFile')->fileInput()->label("Изображение:") ?>
             <div class="form-group" style="text-align: center;">
                 <?= Html::submitButton('Сохранить', ['class' => 'btn btn-outline-primary btn-rounded', 'name' => 'upload-button']) ?>

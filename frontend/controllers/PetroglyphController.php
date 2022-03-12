@@ -74,13 +74,43 @@ class PetroglyphController extends Controller
         $model = new Petroglyph();
 
         if (Yii::$app->request->isPost) {
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ($model->upload()) {
-                // file is uploaded successfully
-                return;
+            if ($model->load(Yii::$app->request->post())) {
+                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                if ($model->upload()) {
+                    Yii::$app->session->setFlash('success', "Успешно сохранено");
+
+                    // TODO: edit file when it will be possible to create new layers
+                    return $this->render('view', [
+                        'petroglyph' => $model,
+                        /*'categoryId' => $categoryId,
+                        'objectPrev' => $objectPrev,
+                        'objectNext' => $objectNext,*/
+                    ]);
+                }
             }
+            Yii::$app->session->setFlash('error', "При сохраении произошла ошибка.");
         }
 
-        return $this->render('upload', ['model' => $model]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            if ($model->save()) {
+                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                $model->upload();
+                Yii::$app->session->setFlash('success', "Данные внесены");
+
+                return $this->render('edit', [
+                    'petroglyph' => $model,
+                    /*'categoryId' => $categoryId,
+                    'objectPrev' => $objectPrev,
+                    'objectNext' => $objectNext,*/
+                ]);
+            }
+
+            Yii::$app->session->setFlash('error', "Не удалось сохранить изменения<br>" . print_r($model->errors, true));
+        }
+
+        return $this->render('upload', [
+            'model' => $model
+        ]);
     }
 }

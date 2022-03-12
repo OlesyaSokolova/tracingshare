@@ -26,12 +26,13 @@ $this->title = 'Публикации'; ?>
 
 <?php
  //if (Yii::$app->user->can('createPost')):?>
-<h2> hello </h2>
         <?= Html::a(Yii::t('app', 'Создать новую публикацию'),
             ['/petroglyph/upload'],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'upload-button',]) ?>
     <?php //endif; ?>
+<br>
+<br>
 
 <div id="w0" class="list-view">
     <?php if (!empty($petroglyphs)):?>
