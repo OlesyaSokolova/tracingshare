@@ -17,6 +17,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\UploadedFile;
 
 /**
  * Site controller
@@ -90,6 +91,21 @@ class SiteController extends Controller
             $petroglyph->generateThumbnail();
         }
         return $this->render('index',[
+            'petroglyphs' => $petroglyphs,
+            'pages' => $pages,
+        ]);
+    }
+
+    public function actionPublications()
+    {
+        $query = Petroglyph::find()
+            ->where(['author_id' => Yii::$app->user->getId()])
+            ->orderBy(['id' => SORT_ASC]);
+        $pages = new Pagination(['totalCount' => $query->count()]);
+        $petroglyphs = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+        return $this->render('publications',[
             'petroglyphs' => $petroglyphs,
             'pages' => $pages,
         ]);
@@ -251,22 +267,5 @@ class SiteController extends Controller
 
         Yii::$app->session->setFlash('error', 'Произошла ошибка во время подтверждения регистрации: неправильный токен.');
         return $this->goHome();
-    }
-
-    public function actionPublications()
-    {
-        $query = Petroglyph::find()
-            ->where(['author_id' => Yii::$app->user->getId()])
-            ->orderBy(['id' => SORT_ASC]);
-        $pages = new Pagination(['totalCount' => $query->count()]);
-        //$pages = new Pagination(['totalCount' => 100]);
-
-        $petroglyphs = $query->offset($pages->offset)
-            ->limit($pages->limit)
-            ->all();
-        return $this->render('publications',[
-            'petroglyphs' => $petroglyphs,
-            'pages' => $pages,
-        ]);
     }
 }

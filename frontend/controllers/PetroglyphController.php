@@ -3,8 +3,11 @@
 namespace frontend\controllers;
 
 use common\models\Petroglyph;
+use Yii;
+use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\HttpException;
+use yii\web\UploadedFile;
 
 class PetroglyphController extends Controller
 {
@@ -42,6 +45,7 @@ class PetroglyphController extends Controller
     {
         $petroglyph = Petroglyph::findOne($id);
         $petroglyph->delete();
+        return $this->goBack();
     }
 
     public function actionSave()
@@ -61,7 +65,43 @@ class PetroglyphController extends Controller
             $newSettings = json_encode($data["newSettings"]);
             $petroglyph->settings = $newSettings;
         }
-        //echo strcmp(json_encode($data["newSettings"]), "");
-        $petroglyph->update();
+        if($petroglyph->update(true, ["name", "description", "settings"])) {
+            Yii::$app->session->setFlash('success', "Успешно сохранено");
+        }
+        else {
+            Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.");
+        }
+    }
+
+    public function actionUpload()
+    {
+        $model = new Petroglyph();
+
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post())) {
+                $model->author_id = Yii::$app->user->getId();
+                    $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                    $model->image = $model->imageFile->baseName . '.' . $model->imageFile->extension;
+                    if($model->save()) {
+                        if ($model->upload()) {
+                        Yii::$app->session->setFlash('success', "Успешно сохранено");
+
+                        // TODO: edit file when it will be possible to create new layers
+                            return $this->redirect(['petroglyph/view', 'id' => $model->id]);
+//                        return $this->render('view', [
+//                            'petroglyph' => $model,
+//                            /*'categoryId' => $categoryId,
+//                            'objectPrev' => $objectPrev,
+//                            'objectNext' => $objectNext,*/
+//                        ]);
+                    }
+                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
+                }
+            }
+        }
+
+        return $this->render('upload', [
+            'model' => $model
+        ]);
     }
 }

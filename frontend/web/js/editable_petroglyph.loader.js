@@ -4,10 +4,10 @@ function prepareEditablePetroglyph() {
         defaultSettings = JSON.parse(JSON.stringify(settings));
 
         //1. update settings from query (if exist)
-        updateSettingsFromQuery(settings);
+        //updateSettingsFromQuery(settings);
 
         //2. put (updated) settings to url
-        updateAllQueryParameters(settings)
+        //updateAllQueryParameters(settings)
 
         originalImage = new Image();
         originalImage.src = originalImageSrc;
@@ -27,7 +27,7 @@ function prepareEditablePetroglyph() {
                     var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
                     drawingsImages[drawingImageId].alpha = newAlpha;
                     updateAllLayers(drawingsImages)
-                    updateOneQueryParameter(jsonSettings = settings, layerId = drawingImageId, key = "alpha", newValue = newAlpha);
+                    //updateOneQueryParameter(jsonSettings = settings, layerId = drawingImageId, key = "alpha", newValue = newAlpha);
                 })
 
                 .on('input change', '.color-value', function () {
@@ -36,7 +36,7 @@ function prepareEditablePetroglyph() {
                     var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
                     drawingsImages[drawingImageId].color = newColor;
                     updateAllLayers(drawingsImages)
-                    updateOneQueryParameter(jsonSettings = settings, layerId = drawingImageId, key = "color", newValue = newColor);
+                    //updateOneQueryParameter(jsonSettings = settings, layerId = drawingImageId, key = "color", newValue = newColor);
                 })
 
             var resetButton = document.getElementById("reset-button");
@@ -81,11 +81,11 @@ function prepareEditablePetroglyph() {
         };
         $.ajax({
             type: "POST",
-            url: "/petroglyphs/web/index.php/petroglyph/save",
+            url: "/tracingshare/frontend/web/index.php/petroglyph/save",
             data: {params: JSON.stringify(newData)},
             success: function (data) {
                 //alert(data)
-                location.href = "http://localhost/petroglyphs/web/index.php/petroglyph/view?id=" + petroglyphId
+                location.href = "http://localhost/tracingshare/frontend/web/index.php/petroglyph/view?id=" + petroglyphId
             },
             error: function (xhr, status, error) {
                 alert("Произошла ошибка при сохранении данных:" + xhr);
@@ -97,7 +97,7 @@ function prepareEditablePetroglyph() {
 function reloadSettingsForEdit(defaultSettings, drawingsImages) {
     initLayersSettingsForEdit(defaultSettings)
     updateAllLayers(initDrawingsArray(defaultSettings))
-    updateAllQueryParameters(defaultSettings)
+    //updateAllQueryParameters(defaultSettings)
 }
 
 function initLayersSettingsForEdit(jsonSettings) {

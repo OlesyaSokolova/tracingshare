@@ -4,12 +4,12 @@
 
 use common\models\Petroglyph;
 use yii\bootstrap4\LinkPager;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
-$this->title = 'Публикации';
+$this->title = 'Публикации'; ?>
 
 
-?>
 <style>
     .thumbnail {
         background-color: white;
@@ -23,6 +23,17 @@ $this->title = 'Публикации';
     }
 </style>
 <h1>Мои публикации</h1>
+
+<?php
+ //if (Yii::$app->user->can('createPost')):?>
+        <?= Html::a(Yii::t('app', 'Создать новую публикацию'),
+            ['/petroglyph/upload'],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'upload-button',]) ?>
+    <?php //endif; ?>
+<br>
+<br>
+
 <div id="w0" class="list-view">
     <?php if (!empty($petroglyphs)):?>
         <div class="row petroglyphs" style="position: relative;">
@@ -31,7 +42,7 @@ $this->title = 'Публикации';
                         <a href="<?= Url::to(['petroglyph/view', 'id' => $petroglyph->id])?>" class="petroglyph-item">
 
                         <div class="row">
-                            <div class="thumbnail" style="background-image: url(<?= Petroglyph::HTTP_PATH_STORAGE.Petroglyph::PREFIX_PATH_THUMBNAILS.'/'.$petroglyph->thumbnail ?>)"></div>
+                            <div class="thumbnail" style="background-image: url(<?= Petroglyph::HTTP_PATH_STORAGE . Petroglyph::PREFIX_PATH_THUMBNAILS . '/' . Petroglyph::THUMBNAIL_PREFIX . $petroglyph->image?>)"></div>
                         </div>
                         <h5>
                             <?= $petroglyph->name ?>
