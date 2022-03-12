@@ -46,8 +46,6 @@ class Petroglyph extends ActiveRecord
 {
     //TODO: изменить PATH_STORAGE
     const HTTP_PATH_STORAGE = 'http://localhost/tracingshare/storage/';
-    const FULL_PATH_STORAGE = '/var/www/html/tracingshare/storage/';
-    //const DIR_IMAGE = 'storage';
     const PREFIX_PATH_IMAGES = 'images';//folder with original images
     const PREFIX_PATH_DRAWINGS = 'drawings';//folder with drawings
     const PREFIX_PATH_THUMBNAILS = 'thumbnails';//folder with thumbnails
@@ -69,10 +67,12 @@ class Petroglyph extends ActiveRecord
 
     public function upload()
     {
-       $pathToSave = self::FULL_PATH_STORAGE . self::PREFIX_PATH_IMAGES ;
-
+       //$pathToSave = self::FULL_PATH_STORAGE . self::PREFIX_PATH_IMAGES ;
+       $imageDir = self::basePath() . '/' . self::PREFIX_PATH_IMAGES;
+        // Создаем директорию, если не существует
+        FileHelper::createDirectory($imageDir);
         if ($this->validate()) {
-            $this->imageFile->saveAs($pathToSave . '/'. $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            $this->imageFile->saveAs($imageDir . '/'. $this->imageFile->baseName . '.' . $this->imageFile->extension);
             $this->generateThumbnail();
             return true;
         } else {
@@ -120,9 +120,12 @@ class Petroglyph extends ActiveRecord
     }
 
     public function generateThumbnail() {
-        //$path = self::basePath();
-        $thumbnailPath =  self::FULL_PATH_STORAGE . self::PREFIX_PATH_THUMBNAILS. '/' . self::THUMBNAIL_PREFIX . $this->image;
-        $originalImagePath = self::FULL_PATH_STORAGE . self::PREFIX_PATH_IMAGES . '/' . $this->image;
+        $thumbnailDir = self::basePath(). '/' . self::PREFIX_PATH_THUMBNAILS;
+        // Создаем директорию, если не существует
+        FileHelper::createDirectory($thumbnailDir);
+
+        $thumbnailPath =   $thumbnailDir. '/' . self::THUMBNAIL_PREFIX . $this->image;
+        $originalImagePath = self::basePath() . self::PREFIX_PATH_IMAGES . '/' . $this->image;
         if (!file_exists($thumbnailPath)) {
             //$newName = md5(uniqid($this->id));
             $sizes = getimagesize($originalImagePath);
@@ -147,8 +150,7 @@ class Petroglyph extends ActiveRecord
      */
     public static function basePath()
     {
-        $dirimage = 'storage/images';
-        $path = \Yii::getAlias('@' . $dirimage);
+        $path = \Yii::getAlias('@storage');
 
         // Создаем директорию, если не существует
         FileHelper::createDirectory($path);
