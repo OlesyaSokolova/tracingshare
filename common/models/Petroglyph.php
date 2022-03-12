@@ -74,6 +74,7 @@ class Petroglyph extends ActiveRecord
 
         if ($this->validate()) {
             $this->imageFile->saveAs($pathToSave . '/'. $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            $this->generateThumbnail();
             return true;
         } else {
             return false;
@@ -130,10 +131,7 @@ class Petroglyph extends ActiveRecord
                 Image::thumbnail($originalImagePath, self::THUMBNAIL_W, self::THUMBNAIL_H)
                     ->resize(new Box(self::THUMBNAIL_W, self::THUMBNAIL_H))
                     ->save($thumbnailPath, ['quality' => 80]);
-                $this->thumbnail = self::THUMBNAIL_PREFIX . $this->image;
-                $this->save();
             }
-
         }
     }
 

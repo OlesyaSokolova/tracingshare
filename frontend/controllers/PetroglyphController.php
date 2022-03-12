@@ -75,38 +75,25 @@ class PetroglyphController extends Controller
 
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
-                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-                if ($model->upload()) {
-                    Yii::$app->session->setFlash('success', "Успешно сохранено");
+                $model->author_id = Yii::$app->user->getId();
+                    $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                    $model->image = $model->imageFile;
+                    if($model->save()) {
+                        if ($model->upload()) {
 
-                    // TODO: edit file when it will be possible to create new layers
-                    return $this->render('view', [
-                        'petroglyph' => $model,
-                        /*'categoryId' => $categoryId,
-                        'objectPrev' => $objectPrev,
-                        'objectNext' => $objectNext,*/
-                    ]);
+                        Yii::$app->session->setFlash('success', "Успешно сохранено");
+
+                        // TODO: edit file when it will be possible to create new layers
+                        return $this->render('view', [
+                            'petroglyph' => $model,
+                            /*'categoryId' => $categoryId,
+                            'objectPrev' => $objectPrev,
+                            'objectNext' => $objectNext,*/
+                        ]);
+                    }
+                        Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
                 }
             }
-            Yii::$app->session->setFlash('error', "При сохраении произошла ошибка.");
-        }
-
-        if ($model->load(Yii::$app->request->post())) {
-
-            if ($model->save()) {
-                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-                $model->upload();
-                Yii::$app->session->setFlash('success', "Данные внесены");
-
-                return $this->render('edit', [
-                    'petroglyph' => $model,
-                    /*'categoryId' => $categoryId,
-                    'objectPrev' => $objectPrev,
-                    'objectNext' => $objectNext,*/
-                ]);
-            }
-
-            Yii::$app->session->setFlash('error', "Не удалось сохранить изменения<br>" . print_r($model->errors, true));
         }
 
         return $this->render('upload', [
