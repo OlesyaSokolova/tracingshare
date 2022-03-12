@@ -28,7 +28,7 @@ $this->title = 'Публикации'; ?>
  //if (Yii::$app->user->can('createPost')):?>
 <h2> hello </h2>
         <?= Html::a(Yii::t('app', 'Создать новую публикацию'),
-            '/publications/upload',
+            ['/petroglyph/upload'],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'upload-button',]) ?>
     <?php //endif; ?>

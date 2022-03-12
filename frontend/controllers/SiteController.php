@@ -96,6 +96,21 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionPublications()
+    {
+        $query = Petroglyph::find()
+            ->where(['author_id' => Yii::$app->user->getId()])
+            ->orderBy(['id' => SORT_ASC]);
+        $pages = new Pagination(['totalCount' => $query->count()]);
+        $petroglyphs = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+        return $this->render('publications',[
+            'petroglyphs' => $petroglyphs,
+            'pages' => $pages,
+        ]);
+    }
+
     /**
      * Logs in a user.
      *
@@ -252,20 +267,5 @@ class SiteController extends Controller
 
         Yii::$app->session->setFlash('error', 'Произошла ошибка во время подтверждения регистрации: неправильный токен.');
         return $this->goHome();
-    }
-
-    public function actionUpload()
-    {
-       /* $model = new Petroglyph();
-
-        if (Yii::$app->request->isPost) {
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ($model->upload()) {
-                // file is uploaded successfully
-                return;
-            }
-        }*/
-
-        return $this->render('upload');
     }
 }

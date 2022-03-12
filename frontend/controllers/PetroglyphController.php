@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\models\Petroglyph;
 use Yii;
+use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\UploadedFile;
@@ -66,5 +67,20 @@ class PetroglyphController extends Controller
         }
         echo strcmp(json_encode($data["newSettings"]), "");
         $petroglyph->update();
+    }
+
+    public function actionUpload()
+    {
+        $model = new Petroglyph();
+
+        if (Yii::$app->request->isPost) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->upload()) {
+                // file is uploaded successfully
+                return;
+            }
+        }
+
+        return $this->render('upload', ['model' => $model]);
     }
 }

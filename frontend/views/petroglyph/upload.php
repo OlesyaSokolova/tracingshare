@@ -8,12 +8,12 @@ use yii\bootstrap4\ActiveForm;
 
 $this->title = 'Создание публикации';
 ?>
-<div class="site-upload">
+<div class="petroglyph-upload">
     <h1 style="text-align: center;"><?= Html::encode($this->title) ?></h1>
     <div class="row justify-content-center">
         <div class="col-lg-5">
 
-            <?php $form = ActiveForm::begin(['id' => 'form-signup']) ?>
+            <?php $form = ActiveForm::begin(['id' => 'form-upload']) ?>
             <?= $form->field($model, 'name')->label("Название:") ?>
             <?= $form->field($model, 'description')->label("Описание:") ?>
             <?= $form->field($model, 'imageFile')->fileInput()->label("Изображение:") ?>
