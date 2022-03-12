@@ -52,7 +52,6 @@ class PetroglyphController extends Controller
         $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
 
         $id = $data["id"];
-        echo ("hello");
 
         $newName = $data["newName"];
         $newDescription = $data["newDescription"];
@@ -65,8 +64,12 @@ class PetroglyphController extends Controller
             $newSettings = json_encode($data["newSettings"]);
             $petroglyph->settings = $newSettings;
         }
-        echo strcmp(json_encode($data["newSettings"]), "");
-        $petroglyph->update();
+        if($petroglyph->update(true, ["name", "description", "settings"])) {
+            Yii::$app->session->setFlash('success', "Успешно сохранено");
+        }
+        else {
+            Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.");
+        }
     }
 
     public function actionUpload()
@@ -77,10 +80,9 @@ class PetroglyphController extends Controller
             if ($model->load(Yii::$app->request->post())) {
                 $model->author_id = Yii::$app->user->getId();
                     $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-                    $model->image = $model->imageFile;
+                    $model->image = $model->imageFile->baseName . $model->imageFile->extension;
                     if($model->save()) {
                         if ($model->upload()) {
-
                         Yii::$app->session->setFlash('success', "Успешно сохранено");
 
                         // TODO: edit file when it will be possible to create new layers
@@ -91,7 +93,7 @@ class PetroglyphController extends Controller
                             'objectNext' => $objectNext,*/
                         ]);
                     }
-                        Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
+                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
                 }
             }
         }
