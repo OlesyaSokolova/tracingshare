@@ -87,12 +87,13 @@ class PetroglyphController extends Controller
                         Yii::$app->session->setFlash('success', "Успешно сохранено");
 
                         // TODO: edit file when it will be possible to create new layers
-                        return $this->render('view', [
-                            'petroglyph' => $model,
-                            /*'categoryId' => $categoryId,
-                            'objectPrev' => $objectPrev,
-                            'objectNext' => $objectNext,*/
-                        ]);
+                            return $this->redirect(['petroglyph/view', 'id' => $model->id]);
+//                        return $this->render('view', [
+//                            'petroglyph' => $model,
+//                            /*'categoryId' => $categoryId,
+//                            'objectPrev' => $objectPrev,
+//                            'objectNext' => $objectNext,*/
+//                        ]);
                     }
                     Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
                 }
