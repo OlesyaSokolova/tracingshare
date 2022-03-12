@@ -130,7 +130,7 @@ class Petroglyph extends ActiveRecord
                 Image::thumbnail($originalImagePath, self::THUMBNAIL_W, self::THUMBNAIL_H)
                     ->resize(new Box(self::THUMBNAIL_W, self::THUMBNAIL_H))
                     ->save($thumbnailPath, ['quality' => 80]);
-            }
+           }
         }
     }
 

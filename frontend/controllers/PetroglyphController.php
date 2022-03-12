@@ -45,6 +45,7 @@ class PetroglyphController extends Controller
     {
         $petroglyph = Petroglyph::findOne($id);
         $petroglyph->delete();
+        return $this->goBack();
     }
 
     public function actionSave()
@@ -80,7 +81,7 @@ class PetroglyphController extends Controller
             if ($model->load(Yii::$app->request->post())) {
                 $model->author_id = Yii::$app->user->getId();
                     $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-                    $model->image = $model->imageFile->baseName . $model->imageFile->extension;
+                    $model->image = $model->imageFile->baseName . '.' . $model->imageFile->extension;
                     if($model->save()) {
                         if ($model->upload()) {
                         Yii::$app->session->setFlash('success', "Успешно сохранено");

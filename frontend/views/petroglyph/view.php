@@ -49,6 +49,8 @@ if (strcmp($petroglyph->settings ,'') != 0): ?>
                 'name' => 'delete-button',]) ?>
 
     <?php endif; ?>
+<br>
+<br>
 
 <div class="box" style="display: flex">
     <div class="container-petroglyph" data-state="static">
