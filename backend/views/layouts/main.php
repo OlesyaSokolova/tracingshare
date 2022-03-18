@@ -52,7 +52,7 @@ AppAsset::register($this);
 
     $authenticationItems = [];
     if (Yii::$app->user->isGuest) {
-        $authenticationItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $authenticationItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
     } else {
         $authenticationItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
