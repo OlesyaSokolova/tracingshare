@@ -61,20 +61,18 @@ JS;
             <span class="media-body">Заливка</span>
         </button>
 
-        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-            <span class="media-body">Прозрачность</span>
-        </button>
-
         <label for="brushColor">Цвет</label>
         <input type="color" id="brushColor" class =\'color-value\' value="#000000" name="drawingColor">
 
         <label for="thickness">Толщина кисти/ластика: </label>
-        <input type=range id="thickness" class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=1 oninput=\"this.nextElementSibling.value = this.value\">
+        <input type=range id="thickness" class=\'alpha-value\' step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
 
     </div>
 
 
-    <div class="container-layer" data-state="static">
+    <div class="container-layer" data-state="static" style="border:1px solid black;
+            border-radius: 10px;
+            padding: 30px">
         <div class="canvas-layer">
             <canvas id="layerCanvas">
             </canvas>
@@ -95,7 +93,7 @@ JS;
                 </canvas>
                 <br>
                 <label for="newLayerThumbnailAlpha">Прозрачность: </label>
-                <input type=range name="alphaChannel" id="newLayerThumbnailAlpha" class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=1 oninput=\"this.nextElementSibling.value = this.value\">
+                <input type=range name="alphaChannel" id="newLayerThumbnailAlpha" class=\'alpha-value\' step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
             </div>
 
             <div style="border:1px solid black;
@@ -109,7 +107,7 @@ JS;
                 </canvas>
                 <br>
                 <label for="originalImageThumbnailAlpha">Прозрачность: </label>
-                <input type=range name="alphaChannel" id="originalImageThumbnailAlpha" class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=1 oninput=\"this.nextElementSibling.value = this.value\">
+                <input type=range name="alphaChannel" id="originalImageThumbnailAlpha" class=\'alpha-value\' step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
             </div>
 
         </div>
