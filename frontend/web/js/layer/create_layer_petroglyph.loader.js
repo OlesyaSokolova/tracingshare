@@ -6,12 +6,11 @@ function prepareLayersToDraw() {
         newLayer = new Image();
         var originalImageLayerCtx = drawOriginalImageLayer(originalImage)
 
-        originalImage.onload = function () {
             originalImageLayerThumbnail = new Image();
             originalImage.src = originalImageSrc;
 
             newLayerThumbnail = new Image();
-            var originalImageLayerCtx = drawOriginalImageLayerThumbnail(originalImage)
+            var originalImageThumbnailLayerCtx = drawOriginalImageLayerThumbnail(originalImage)
             var newLayerCtx = drawNewLayerThumbnail()
 
             classNameContainer = 'layers-class'
@@ -29,7 +28,6 @@ function prepareLayersToDraw() {
             resetButton.addEventListener('click', function (event) {
                 reloadSettingsForEdit(defaultSettings, drawingsImages)
             })*/
-        }
 
     var saveButton = document.getElementById("save-button");
     saveButton.addEventListener(
@@ -166,7 +164,7 @@ function drawNewLayerThumbnail() {
     canvas.height = correspondingHeight
 
     originalImageCtx = canvas.getContext('2d');
-    //originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
+    originalImageCtx.drawImage(new Image(), 0, 0,canvas.width,  canvas.height);
 
     return originalImageCtx
 }

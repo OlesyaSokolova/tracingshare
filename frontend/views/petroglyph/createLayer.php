@@ -47,16 +47,28 @@ JS;
 
 <div class="d-flex justify-content-around">
 
-    <div id="layers" class = "layers-class" style="width: 300px;">
-        //столбец с картинками: новый слой + оригинал
-        <div class="thumbnails-layers">
-            <canvas id="originalImageThumbnail">
-            </canvas>
+    <!-- List With Icons -->
+    <div class="list-group pmd-list pmd-card-list">
+        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+            <span class="media-body">Кисть</span>
+        </button>
 
-            <canvas id="newLayerThumbnail">
-            </canvas>
-        </div>
+        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+            <span class="media-body">Ластик</span>
+        </button>
+
+        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+            <span class="media-body">Заливка</span>
+        </button>
+
+        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+            <span class="media-body">Цвет</span>
+
+        </button><button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+            <span class="media-body">Прозрачность</span>
+        </button>
     </div>
+
 
     <div class="container-layer" data-state="static">
         <div class="canvas-layer">
@@ -65,26 +77,20 @@ JS;
         </div>
     </div>
 
-    <!-- List With Icons -->
-    <div class="list-group pmd-list pmd-card-list">
-        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-                <span class="media-body">Кисть</span>
-        </button>
+    <div id="layers" class = "layers-class" style="width: 300px;">
+        <div class="thumbnails-layers">
 
-        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-                <span class="media-body">Ластик</span>
-        </button>
+                <label for="newLayerThumbnail">Новый слой: </label>
+                <canvas id="newLayerThumbnail">
+                </canvas>
+                <input type=range name="alphaChannel" id="newLayerThumbnail" class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=1 oninput=\"this.nextElementSibling.value = this.value\">
 
-        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-                <span class="media-body">Заливка</span>
-        </button>
+                <label for="originalImageThumbnail">Оригинальное изображение: </label>
+                <canvas id="originalImageThumbnail">
+                </canvas>
+                <input type=range name="alphaChannel" id="originalImageThumbnail" class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=1 oninput=\"this.nextElementSibling.value = this.value\">
 
-        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-                <span class="media-body">Цвет</span>
-
-        </button><button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-                <span class="media-body">Прозрачность</span>
-        </button>
+        </div>
     </div>
 </div>
 
