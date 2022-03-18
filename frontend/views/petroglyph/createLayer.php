@@ -6,7 +6,7 @@ use yii\helpers\Html;
 
 if(!empty($petroglyph)) {
 
-    $this->title = "Создание слоя: ".$petroglyph->name;//TODO: layer name
+    $this->title = "Создание нового слоя: ".$petroglyph->name;//TODO: layer name
     $originalImageSrc = "\"" . Petroglyph::HTTP_PATH_STORAGE.Petroglyph::PREFIX_PATH_IMAGES.'/'.$petroglyph->image . "\"";
     $drawingPathPrefix = "\"" . Petroglyph::HTTP_PATH_STORAGE . Petroglyph::PREFIX_PATH_DRAWINGS . '/' . "\"";
 
@@ -46,38 +46,39 @@ JS;
 
 
 <div class="d-flex justify-content-around">
-        <div class="box" id="instruments" style="width: 300px;">
-            //столбец с картинками: новый слой + оригинал
+
+    <div id="layers" class = "layers-class" style="width: 300px;">
+        //столбец с картинками: новый слой + оригинал
+    </div>
+
+    <div class="container-layer" data-state="static">
+        <div class="canvas-layer">
+            <canvas id="layerCanvas">
+            </canvas>
         </div>
+    </div>
 
-        <div class="container-layer" data-state="static">
-            <div class="canvas-layer">
-                <canvas id="layerCanvas">
-                </canvas>
-            </div>
-        </div>
+    <!-- List With Icons -->
+    <div class="list-group pmd-list pmd-card-list">
+        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+                <span class="media-body">Кисть</span>
+        </button>
 
-        <!-- List With Icons -->
-        <div class="list-group pmd-list pmd-card-list">
-            <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-                    <span class="media-body">Кисть</span>
-            </button>
+        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+                <span class="media-body">Ластик</span>
+        </button>
 
-            <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-                    <span class="media-body">Ластик</span>
-            </button>
+        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+                <span class="media-body">Заливка</span>
+        </button>
 
-            <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-                    <span class="media-body">Заливка</span>
-            </button>
+        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+                <span class="media-body">Цвет</span>
 
-            <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-                    <span class="media-body">Цвет</span>
-
-            </button><button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-                    <span class="media-body">Прозрачность</span>
-            </button>
-        </div>
+        </button><button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+                <span class="media-body">Прозрачность</span>
+        </button>
+    </div>
 </div>
 
 <form style="padding-top: 20px">
