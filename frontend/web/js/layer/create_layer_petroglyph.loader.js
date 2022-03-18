@@ -1,63 +1,39 @@
-function prepareEditablePetroglyph() {
-    if(typeof settings != "undefined" && settings !== ''  && settings !== "") {
-
-        defaultSettings = JSON.parse(JSON.stringify(settings));
-
-        //1. update settings from query (if exist)
-        //updateSettingsFromQuery(settings);
-
-        //2. put (updated) settings to url
-        //updateAllQueryParameters(settings)
+function prepareLayersToDraw() {
 
         originalImage = new Image();
         originalImage.src = originalImageSrc;
 
+        newLayer = new Image();
+        var originalImageLayerCtx = drawOriginalImageLayer(originalImage)
+
         originalImage.onload = function () {
-            var originalImageCtx = drawOriginalImage(originalImage)
-            var drawingsImages = initDrawingsArray(jsonSettings = settings)
-            addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = originalImageCtx)
-            initLayersSettingsForEdit(jsonSettings = settings)
+            originalImageLayerThumbnail = new Image();
+            originalImage.src = originalImageSrc;
+
+            newLayerThumbnail = new Image();
+            var originalImageLayerCtx = drawOriginalImageLayerThumbnail(originalImage)
+            var newLayerCtx = drawNewLayerThumbnail()
 
             classNameContainer = 'layers-class'
 
-            $('.' + classNameContainer)
+            /*$('.' + classNameContainer)//прозрачность слоев
                 .on('input change', '.alpha-value', function () {
                     $(this).attr('value', $(this).val());
                     var newAlpha = parseFloat($(this).val());
-                    var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
-                    drawingsImages[drawingImageId].alpha = newAlpha;
-                    updateAllLayers(drawingsImages)
-                    //updateOneQueryParameter(jsonSettings = settings, layerId = drawingImageId, key = "alpha", newValue = newAlpha);
+                    var layerId = parseInt(($(this).attr('id')).split('_')[1]);
+                    layers[layerId].alpha = newAlpha;//change alpha value of original image
+                    updateAllLayers(layers)
                 })
-
-                .on('input change', '.color-value', function () {
-                    $(this).attr('value', $(this).val());
-                    var newColor = $(this).val();
-                    var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
-                    drawingsImages[drawingImageId].color = newColor;
-                    updateAllLayers(drawingsImages)
-                    //updateOneQueryParameter(jsonSettings = settings, layerId = drawingImageId, key = "color", newValue = newColor);
-                })
-
-            var resetButton = document.getElementById("reset-button");
+*/
+           /* var resetButton = document.getElementById("reset-button");
             resetButton.addEventListener('click', function (event) {
                 reloadSettingsForEdit(defaultSettings, drawingsImages)
-            })
+            })*/
         }
-
-    }
-
-    else {
-        originalImage = new Image();
-        originalImage.src = originalImageSrc;
-
-        originalImage.onload = function () {
-            drawOriginalImage(originalImage)
-        }
-    }
 
     var saveButton = document.getElementById("save-button");
-    saveButton.addEventListener('click', function (event) {
+    saveButton.addEventListener(
+        'click', function (event) {
         if(typeof settings != 'undefined' && settings !== '' && settings !== "") {
             for (let i = 0; i < settings.drawings.length; i++) {
                 settings.drawings[i].layerParams.title = document.getElementById("title_" + i).value;
@@ -97,7 +73,6 @@ function prepareEditablePetroglyph() {
 function reloadSettingsForEdit(defaultSettings, drawingsImages) {
     initLayersSettingsForEdit(defaultSettings)
     updateAllLayers(initDrawingsArray(defaultSettings))
-    //updateAllQueryParameters(defaultSettings)
 }
 
 function initLayersSettingsForEdit(jsonSettings) {
@@ -149,4 +124,49 @@ function initLayersSettingsForEdit(jsonSettings) {
         var layersDiv = document.getElementById("layers");
         layersDiv.insertAdjacentHTML('beforeend', layerInfo)
     }
+}
+
+function drawOriginalImageLayer(originalImage) {
+
+    var canvas = document.getElementById('layerCanvas')
+    var ratio = originalImage.width/originalImage.height
+    var constWidth = 700
+    var correspondingHeight = constWidth/ratio
+    canvas.width = constWidth
+    canvas.height = correspondingHeight
+
+    originalImageCtx = canvas.getContext('2d');
+    originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
+
+    return originalImageCtx
+}
+
+function drawOriginalImageLayerThumbnail(originalImage) {
+
+    var canvas = document.getElementById('originalImageThumbnail')
+    var ratio = originalImage.width/originalImage.height
+    var constWidth = 200
+    var correspondingHeight = constWidth/ratio
+    canvas.width = constWidth
+    canvas.height = correspondingHeight
+
+    originalImageCtx = canvas.getContext('2d');
+    originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
+
+    return originalImageCtx
+}
+
+function drawNewLayerThumbnail() {
+
+    var canvas = document.getElementById('newLayerThumbnail')
+    var ratio = originalImage.width/originalImage.height
+    var constWidth = 200
+    var correspondingHeight = constWidth/ratio
+    canvas.width = constWidth
+    canvas.height = correspondingHeight
+
+    originalImageCtx = canvas.getContext('2d');
+    //originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
+
+    return originalImageCtx
 }

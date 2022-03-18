@@ -17,7 +17,7 @@ if(!empty($petroglyph)) {
     drawingPathPrefix =  $drawingPathPrefix
     settings = $petroglyph->settings
    
-    prepareEditablePetroglyph()
+    prepareLayersToDraw()
 
 JS;
 
@@ -49,6 +49,13 @@ JS;
 
     <div id="layers" class = "layers-class" style="width: 300px;">
         //столбец с картинками: новый слой + оригинал
+        <div class="thumbnails-layers">
+            <canvas id="originalImageThumbnail">
+            </canvas>
+
+            <canvas id="newLayerThumbnail">
+            </canvas>
+        </div>
     </div>
 
     <div class="container-layer" data-state="static">

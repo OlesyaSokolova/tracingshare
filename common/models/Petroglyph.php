@@ -108,11 +108,18 @@ class Petroglyph extends ActiveRecord
         if (!file_exists($thumbnailPath)) {
             //$newName = md5(uniqid($this->id));
             $sizes = getimagesize($originalImagePath);
-            if ($sizes[0] > self::THUMBNAIL_W) {
-                Image::thumbnail($originalImagePath, self::THUMBNAIL_W, self::THUMBNAIL_H)
-                    ->resize(new Box(self::THUMBNAIL_W, self::THUMBNAIL_H))
+            $originalWidth = $sizes[0];
+            $originalHeight = $sizes[1];
+            $ratio = $originalWidth/$originalHeight;
+            $correspondingHeight = self::THUMBNAIL_W/$ratio;
+            $newWidth = self::THUMBNAIL_W;
+            $newHeight = $correspondingHeight;
+
+           // if ($sizes[0] > self::THUMBNAIL_W) {
+                Image::thumbnail($originalImagePath, $newWidth, $newHeight)
+                    ->resize(new Box($newWidth, $newHeight))
                     ->save($thumbnailPath, ['quality' => 80]);
-           }
+          // }
         }
 
 
