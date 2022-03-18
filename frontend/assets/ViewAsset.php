@@ -23,6 +23,8 @@ class ViewAsset extends AssetBundle
         'js/canvas_utils.js',
         'js/petroglyph.loader.js',
         'js/editable_petroglyph.loader.js',
+        'js/layer/create_layer_petroglyph.loader.js',
+        'js/layer/layer_utils.js',
         ];
 
     public $depends = [
