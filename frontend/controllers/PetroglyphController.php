@@ -41,6 +41,21 @@ class PetroglyphController extends Controller
         ]);
     }
 
+    public function actionCreateLayer($id)
+    {
+        $petroglyph = Petroglyph::findOne($id);
+        /*if (empty($petroglyph)) {
+            throw new HttpException(404);
+        }*/
+
+        return $this->render('createLayer', [
+            'petroglyph' => $petroglyph,
+            /*'categoryId' => $categoryId,
+            'objectPrev' => $objectPrev,
+            'objectNext' => $objectNext,*/
+        ]);
+    }
+
     public function actionDelete($id)
     {
         $petroglyph = Petroglyph::findOne($id);

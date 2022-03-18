@@ -76,7 +76,7 @@ if ($petroglyph->settings != ''): ?>
    <!-- --><?php /*if (strcmp($petroglyph->settings ,'') != 0): */?>
             <div id="layers" class = "layers-class" style="padding-left: 20px;">
                 <?= Html::a(Yii::t('app', 'Создать новый слой'),
-                    ['/petroglyph/createLayer', 'id' => $petroglyph->id],
+                    ['/petroglyph/create-layer', 'id' => $petroglyph->id],
                     ['class' => 'btn btn-outline-primary btn-rounded', 'style' => 'margin-bottom: 10px',
                         'name' => 'create-layer-button'],) ?>
             </div>
