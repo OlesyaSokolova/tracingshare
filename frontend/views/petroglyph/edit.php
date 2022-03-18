@@ -72,11 +72,12 @@ if ($petroglyph->settings != ''): ?>
     </div>
 
 
-    <?php if (strcmp($petroglyph->settings ,'') != 0): ?>
-            <div id="layers" class = "layers-class" style="
-            padding-left: 20px;">
+   <!-- --><?php /*if (strcmp($petroglyph->settings ,'') != 0): */?>
+            <div id="layers" class = "layers-class" style="padding-left: 20px;">
+                <button type="button" class="btn btn-outline-primary btn-rounded" id="save-button" style="margin-bottom: 10px">Создать новый слой</button>
             </div>
-    <?php endif; ?>
+
+    <?php /*endif; */?>
 
 </div>
 
