@@ -29,36 +29,34 @@ function prepareLayersToDraw() {
                 reloadSettingsForEdit(defaultSettings, drawingsImages)
             })*/
 
-    var saveButton = document.getElementById("save-button");
+    var saveButton = document.getElementById("save-layer-button");
     saveButton.addEventListener(
         'click', function (event) {
-        if(typeof settings != 'undefined' && settings !== '' && settings !== "") {
-            for (let i = 0; i < settings.drawings.length; i++) {
-                settings.drawings[i].layerParams.title = document.getElementById("title_" + i).value;
-                settings.drawings[i].layerParams.alpha = document.getElementById('alpha_' + i).value;
-                settings.drawings[i].layerParams.color = document.getElementById('color_' + i).value;
-                settings.drawings[i].layerParams.description = document.getElementById('desc_' + i).value;
-            }
-        }
-        else
-        {
-            settings = ''
-        }
-        layerDescription = document.getElementById('layerDesc').value;
-        name = document.getElementById('name').value;
+            settings = "{" +
+                "\"drawings\": [" +
+                "   {" +
+/*
+                "    image: \"new_layer.png\",\n" +
+*/
+                "    layerParams: {" +
+                "                   alpha: \"1\"," +
+                "                   color: \"#ffffff\"" +
+                "                }" +
+                "    }]" +
+                "}"
+            settingJSON = JSON.parse(JSON.stringify(settings))
+            settingJSON.drawings[0].layerParams.title = document.getElementById("title").value;
+            /*settings.drawings[0].layerParams.alpha = document.getElementById('alpha_' + i).value;
+            settings.drawings[0].layerParams.color = document.getElementById('color_' + i).value;*/
+            settingJSON.drawings[0].layerParams.description = document.getElementById('layerDesc').value;
+
         console.log(petroglyphId)
-        var newData = {
-            id: parseInt(petroglyphId),
-            newName: name,
-            newDescription: layerDescription,
-            newSettings: settings,
-        };
         $.ajax({
             type: "POST",
             url: "/tracingshare/frontend/web/index.php/petroglyph/save-layer",
-            data: {params: JSON.stringify(newData)},
+            data: newSettings,
             success: function (data) {
-                //alert(data)
+                alert(data)
                 location.href = "http://localhost/tracingshare/frontend/web/index.php/petroglyph/view?id=" + petroglyphId
             },
             error: function (xhr, status, error) {
@@ -66,62 +64,6 @@ function prepareLayersToDraw() {
             }
         });
     })
-}
-
-function reloadSettingsForEdit(defaultSettings, drawingsImages) {
-    initLayersSettingsForEdit(defaultSettings)
-    updateAllLayers(initDrawingsArray(defaultSettings))
-}
-
-function initLayersSettingsForEdit(jsonSettings) {
-    var drawings = jsonSettings.drawings
-    if (Array.isArray(drawings)) {
-
-        var layerInfo = '<form>';
-        for (let i = 0; i < drawings.length; i++) {
-            if (typeof drawings[i].layerParams.alpha != 'undefined') {
-                alphaValue = drawings[i].layerParams.alpha;
-                colorValue = drawings[i].layerParams.color;
-            } else {
-                alphaValue = 1;
-            }
-            var layerId = "layer_" + i;
-            layerInfo += '<div className="form-group" id=\'' + layerId + '\' style="border:1px solid black;\n' +
-                '                border-radius: 10px;\n' +
-                '                padding-left: 20px;\n' +
-                '                width: 700px;\n' +
-                '                text-align: left;\n' +
-                '                margin-bottom: 10px">';
-
-            var titleId = "title_" + i;
-            var alphaId = "alpha_" + i;
-            var colorId = "color_" + i;
-            var descId = "desc_" + i;
-
-            layerInfo += '<label for=\'' + titleId + '\'>Название: </label>'
-                + '<input type="text" id=\'' + titleId + '\' class="form-control" value=\'' + (drawings[i].layerParams.title) + '\'/>'
-                + '<br>'
-
-                + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
-                + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=\'' + alphaValue + '\' oninput=\"this.nextElementSibling.value = this.value\">'
-                + '<br>'
-
-                + '<label for=\'' + colorId + '\'>Цвет: </label>'
-                + '<input type="color" id=\'' + colorId + '\' class =\'color-value\' value=\'' + colorValue + '\' name="drawingColor"></button>' + '<br>'
-
-                + '<label for=\'' + descId + '\'>Описание: </label>'
-                + '<textarea id=\'' + descId + '\' style="width: 500px" class="form-control">'
-                + drawings[i].layerParams.description
-                +'</textarea>'
-                + '<br>'
-
-            layerInfo += '</div>';
-        }
-
-        layerInfo += '</form>';
-        var layersDiv = document.getElementById("layers");
-        layersDiv.insertAdjacentHTML('beforeend', layerInfo)
-    }
 }
 
 function drawOriginalImageLayer(originalImage) {

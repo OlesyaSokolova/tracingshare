@@ -32,14 +32,14 @@ JS;
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     if (Yii::$app->user->can('updateOwnPost',
             ['petroglyph' => $petroglyph]) || isset($userRoles['admin'])):?>
-        <button type="button" class="btn btn-outline-primary btn-rounded" id="save-button">Сохранить</button>
+        <button type="button" class="btn btn-outline-primary btn-rounded" id="save-layer-button">Сохранить</button>
     <?php endif; ?>
 </p>
 
 <form>
     <div class="form-group">
-        <label for="name">Название слоя: </label>
-        <input type="text" style="size: auto" class="form-control" id="name" value="<?=$petroglyph->name?>">
+        <label for="title">Название слоя: </label>
+        <input type="text" style="size: auto" class="form-control" id="title" value="<?=$petroglyph->name?>">
     </div>
 </form>
 
@@ -80,15 +80,33 @@ JS;
     <div id="layers" class = "layers-class" style="width: 300px;">
         <div class="thumbnails-layers">
 
+            <div style="border:1px solid black;
+            border-radius: 10px;
+            padding-left: 20px;
+            width: 400px;
+            text-align: left;
+            margin-bottom: 10px">
                 <label for="newLayerThumbnail">Новый слой: </label>
                 <canvas id="newLayerThumbnail">
                 </canvas>
-                <input type=range name="alphaChannel" id="newLayerThumbnail" class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=1 oninput=\"this.nextElementSibling.value = this.value\">
+                <br>
+                <label for="newLayerThumbnailAlpha">Прозрачность: </label>
+                <input type=range name="alphaChannel" id="newLayerThumbnailAlpha" class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=1 oninput=\"this.nextElementSibling.value = this.value\">
+            </div>
 
+            <div style="border:1px solid black;
+            border-radius: 10px;
+            padding-left: 20px;
+            width: 400px;
+            text-align: left;
+            margin-bottom: 10px">
                 <label for="originalImageThumbnail">Оригинальное изображение: </label>
                 <canvas id="originalImageThumbnail">
                 </canvas>
-                <input type=range name="alphaChannel" id="originalImageThumbnail" class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=1 oninput=\"this.nextElementSibling.value = this.value\">
+                <br>
+                <label for="originalImageThumbnailAlpha">Прозрачность: </label>
+                <input type=range name="alphaChannel" id="originalImageThumbnailAlpha" class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=1 oninput=\"this.nextElementSibling.value = this.value\">
+            </div>
 
         </div>
     </div>
