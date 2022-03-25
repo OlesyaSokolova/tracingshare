@@ -58,7 +58,7 @@ class Publication extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'description'], 'required', 'message' => 'Это поле не может быть пустым'],
+            [['name'], 'required', 'message' => 'Это поле не может быть пустым'],
             ['name', 'string', 'max' => 100, 'message' => 'Максимальная длина: 32 символа'],
             ['description', 'string', 'max' => 32000, 'message' => 'Максимальная длина: 32000 символов'],
             [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg', 'message' => 'Ошибка при сохранении файла'],

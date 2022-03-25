@@ -96,7 +96,7 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionMyPublications()
+    public function actionPublications()
     {
         $query = Publication::find()
             ->where(['author_id' => Yii::$app->user->getId()])

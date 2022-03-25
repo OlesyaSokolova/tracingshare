@@ -44,7 +44,7 @@ AppAsset::register($this);
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
 
     if (isset($userRoles['author']) || isset($userRoles['admin'])) {
-        $menuItems[] = ['label' => 'Мои публикации', 'url' => ['/site/my-publications']];
+        $menuItems[] = ['label' => 'Мои публикации', 'url' => ['/site/publications']];
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
