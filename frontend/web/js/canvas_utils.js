@@ -47,7 +47,7 @@ function initDrawingsArray(jsonSettings) {
 
 function drawOriginalImage(originalImage) {
 
-    var canvas = document.getElementById('petroglyphCanvas')
+    var canvas = document.getElementById('publicationCanvas')
     var ratio = originalImage.width/originalImage.height
     var constWidth = 700
     var correspondingHeight = constWidth/ratio

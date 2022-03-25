@@ -2,7 +2,7 @@
 
 namespace frontend\controllers;
 
-use common\models\Petroglyph;
+use common\models\Publication;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -78,35 +78,35 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $query = Petroglyph::find()
+        $query = Publication::find()
             ->orderBy(['id' => SORT_ASC]);
         $countQuery = clone $query;
         $pages = new Pagination(['totalCount' => $countQuery->count()]);
         //$pages = new Pagination(['totalCount' => 100]);
 
-        $petroglyphs = $query->offset($pages->offset)
+        $publications = $query->offset($pages->offset)
             ->limit($pages->limit)
             ->all();
-        foreach ($petroglyphs as &$petroglyph) {
-            $petroglyph->generateThumbnail();
+        foreach ($publications as &$publication) {
+            $publication->generateThumbnail();
         }
         return $this->render('index',[
-            'petroglyphs' => $petroglyphs,
+            'publications' => $publications,
             'pages' => $pages,
         ]);
     }
 
-    public function actionPublications()
+    public function actionMyPublications()
     {
-        $query = Petroglyph::find()
+        $query = Publication::find()
             ->where(['author_id' => Yii::$app->user->getId()])
             ->orderBy(['id' => SORT_ASC]);
         $pages = new Pagination(['totalCount' => $query->count()]);
-        $petroglyphs = $query->offset($pages->offset)
+        $publications = $query->offset($pages->offset)
             ->limit($pages->limit)
             ->all();
         return $this->render('publications',[
-            'petroglyphs' => $petroglyphs,
+            'publications' => $publications,
             'pages' => $pages,
         ]);
     }

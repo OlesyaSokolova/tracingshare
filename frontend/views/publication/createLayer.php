@@ -1,14 +1,14 @@
 <?php
 
 use frontend\assets\ViewAsset;
-use common\models\Petroglyph;
+use common\models\Publication;
 use yii\helpers\Html;
 
 if(!empty($petroglyph)) {
 
     $this->title = "Создание нового слоя: ".$petroglyph->name;//TODO: layer name
-    $originalImageSrc = "\"" . Petroglyph::HTTP_PATH_STORAGE.Petroglyph::PREFIX_PATH_IMAGES.'/'.$petroglyph->image . "\"";
-    $drawingPathPrefix = "\"" . Petroglyph::HTTP_PATH_STORAGE . Petroglyph::PREFIX_PATH_DRAWINGS . '/' . "\"";
+    $originalImageSrc = "\"" . Publication::HTTP_PATH_STORAGE.Publication::PREFIX_PATH_IMAGES.'/'.$petroglyph->image . "\"";
+    $drawingPathPrefix = "\"" . Publication::HTTP_PATH_STORAGE . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
 
     $script = <<< JS
     
@@ -31,7 +31,7 @@ JS;
     <?php
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     if (Yii::$app->user->can('updateOwnPost',
-            ['petroglyph' => $petroglyph]) || isset($userRoles['admin'])):?>
+            ['publication' => $petroglyph]) || isset($userRoles['admin'])):?>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="save-layer-button">Сохранить</button>
     <?php endif; ?>
 </p>

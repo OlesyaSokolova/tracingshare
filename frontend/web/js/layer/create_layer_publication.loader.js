@@ -50,14 +50,14 @@ function prepareLayersToDraw() {
             settings.drawings[0].layerParams.color = document.getElementById('color_' + i).value;*/
             settingJSON.drawings[0].layerParams.description = document.getElementById('layerDesc').value;
 
-        console.log(petroglyphId)
+        console.log(publicationId)
         $.ajax({
             type: "POST",
-            url: "/tracingshare/frontend/web/index.php/petroglyph/save-layer",
+            url: "/tracingshare/frontend/web/index.php/publication/save-layer",
             data: newSettings,
             success: function (data) {
                 alert(data)
-                location.href = "http://localhost/tracingshare/frontend/web/index.php/petroglyph/view?id=" + petroglyphId
+                location.href = "http://localhost/tracingshare/frontend/web/index.php/publication/view?id=" + publicationId
             },
             error: function (xhr, status, error) {
                 alert("Произошла ошибка при сохранении данных:" + xhr);

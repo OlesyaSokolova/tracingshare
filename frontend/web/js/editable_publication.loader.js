@@ -1,4 +1,4 @@
-function prepareEditablePetroglyph() {
+function prepareEditablePublication() {
     if(typeof settings != "undefined" && settings !== ''  && settings !== "") {
 
         defaultSettings = JSON.parse(JSON.stringify(settings));
@@ -72,20 +72,19 @@ function prepareEditablePetroglyph() {
         }
         mainDescription = document.getElementById('mainDesc').value;
         name = document.getElementById('name').value;
-        console.log(petroglyphId)
         var newData = {
-            id: parseInt(petroglyphId),
+            id: parseInt(publicationId),
             newName: name,
             newDescription: mainDescription,
             newSettings: settings,
         };
         $.ajax({
             type: "POST",
-            url: "/tracingshare/frontend/web/index.php/petroglyph/save",
+            url: "/tracingshare/frontend/web/index.php/publication/save",
             data: {params: JSON.stringify(newData)},
             success: function (data) {
                 //alert(data)
-                location.href = "http://localhost/tracingshare/frontend/web/index.php/petroglyph/view?id=" + petroglyphId
+                location.href = "http://localhost/tracingshare/frontend/web/index.php/publication/view?id=" + publicationId
             },
             error: function (xhr, status, error) {
                 alert("Произошла ошибка при сохранении данных:" + xhr);

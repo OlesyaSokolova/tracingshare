@@ -3,7 +3,9 @@
 namespace backend\controllers;
 
 use common\models\LoginForm;
+use common\models\Publication;
 use Yii;
+use yii\data\Pagination;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -58,11 +60,26 @@ class SiteController extends Controller
     /**
      * Displays homepage.
      *
-     * @return string
+     * @return mixed
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $query = Publication::find()
+            ->orderBy(['id' => SORT_ASC]);
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count()]);
+        //$pages = new Pagination(['totalCount' => 100]);
+
+        $petroglyphs = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+        foreach ($petroglyphs as &$petroglyph) {
+            $petroglyph->generateThumbnail();
+        }
+        return $this->render('index',[
+            'petroglyphs' => $petroglyphs,
+            'pages' => $pages,
+        ]);
     }
 
     /**

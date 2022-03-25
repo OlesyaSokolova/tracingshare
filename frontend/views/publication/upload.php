@@ -1,7 +1,7 @@
 <?php
 /** @var yii\web\View $this */
 /** @var yii\bootstrap4\ActiveForm $form */
-/** @var \common\models\Petroglyph $model */
+/** @var \common\models\Publication $model */
 
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;

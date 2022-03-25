@@ -2,11 +2,11 @@
 
 /* @var $this yii\web\View */
 
-use common\models\Petroglyph;
+use common\models\Publication;
 use yii\bootstrap4\LinkPager;
 use yii\helpers\Url;
 
-$this->title = 'Петроглифы'; ?>
+$this->title = 'Все публикации'; ?>
 <style>
     .thumbnail {
         background-color: white;
@@ -19,19 +19,19 @@ $this->title = 'Петроглифы'; ?>
         background-repeat: no-repeat;
     }
 </style>
-<h1>Все публикации</h1>
+<h1><?= $this->title ?></h1>
 <div id="w0" class="list-view">
-    <?php if (!empty($petroglyphs)):?>
-        <div class="row petroglyphs" style="position: relative;">
-            <?php foreach ($petroglyphs as $petroglyph): ?>
+    <?php if (!empty($publications)):?>
+        <div class="row publications" style="position: relative;">
+            <?php foreach ($publications as $publication): ?>
                 <div class="column">
-                       <a href="<?= Url::to(['petroglyph/view', 'id' => $petroglyph->id])?>" class="petroglyph-item">
+                       <a href="<?= Url::to(['publication/view', 'id' => $publication->id])?>" class="publication-item">
 
                         <div class="row">
-                            <div class="thumbnail" style="background-image: url(<?= Petroglyph::HTTP_PATH_STORAGE . Petroglyph::PREFIX_PATH_THUMBNAILS . '/' . Petroglyph::THUMBNAIL_PREFIX . $petroglyph->image ?>)"></div>
+                            <div class="thumbnail" style="background-image: url(<?= Publication::HTTP_PATH_STORAGE . Publication::PREFIX_PATH_THUMBNAILS . '/' . Publication::THUMBNAIL_PREFIX . $publication->image ?>)"></div>
                         </div>
                         <h5>
-                            <?= $petroglyph->name ?>
+                            <?= $publication->name ?>
                         </h5>
                     </a>
               </div>

@@ -10,7 +10,7 @@ use yii\imagine\Image;
 
 /* @property int id
 * @property string name
-* @property string description //description of petroglyph
+* @property string description //description of publication
 * @property string image //link to an original image
 * @property string thumbnail //link to an thumbnail image
 * @property string settings //TEXT - json as string with drawings (and later maybe textures will be added)
@@ -42,7 +42,7 @@ use yii\imagine\Image;
 * @property string author_id //id of author from table "author"
 */
 
-class Petroglyph extends ActiveRecord
+class Publication extends ActiveRecord
 {
     //TODO: изменить PATH_STORAGE
     const HTTP_PATH_STORAGE = 'http://localhost/tracingshare/storage/';
@@ -92,8 +92,8 @@ class Petroglyph extends ActiveRecord
 
     public static function tableName()
     {
-        //return '{{petroglyph}}
-        return 'exhibits';
+        return '{{%publication}}';
+        //return 'exhibits';
     }
 
     public function generateThumbnail() {
