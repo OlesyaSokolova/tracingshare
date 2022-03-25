@@ -17,7 +17,7 @@ class PublicationSearch extends Publication
     public function rules()
     {
         return [
-            [['id', 'author_id'], 'integer'],
+            [['id'], 'integer'],
             [['name', 'description', 'image', 'settings'], 'safe'],
         ];
     }
@@ -66,6 +66,7 @@ class PublicationSearch extends Publication
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'image', $this->image])
             ->andFilterWhere(['like', 'settings', $this->settings]);
+
 
         return $dataProvider;
     }

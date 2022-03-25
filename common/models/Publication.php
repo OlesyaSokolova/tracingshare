@@ -7,6 +7,7 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\FileHelper;
 use yii\imagine\Image;
+use common\models\User;
 
 /* @property int id
 * @property string name
@@ -146,4 +147,11 @@ class Publication extends ActiveRecord
 
         return $path;
     }
+
+    public function getAuthorName() {
+        $user = User::findIdentity($this->author_id);
+        return $user->last_name . " " . $user->first_name . " " . $user->patronymic
+            . " (" .$user->email .")" ;
+    }
+
 }
