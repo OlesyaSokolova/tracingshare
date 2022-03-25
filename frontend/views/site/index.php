@@ -19,7 +19,7 @@ $this->title = 'Петроглифы'; ?>
         background-repeat: no-repeat;
     }
 </style>
-<h1>Все петроглифы</h1>
+<h1>Все публикации</h1>
 <div id="w0" class="list-view">
     <?php if (!empty($petroglyphs)):?>
         <div class="row petroglyphs" style="position: relative;">
