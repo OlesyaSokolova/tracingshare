@@ -77,7 +77,7 @@ class PublicationController extends Controller
         $publication->description = $newDescription;
 
         if (strcmp(json_encode($data["newSettings"]), "") != 2) {
-            $newSettings = json_encode($data["newSettings"]);
+            $newSettings = json_encode($data["newSettings"], JSON_UNESCAPED_UNICODE);
             $publication->settings = $newSettings;
         }
         if($publication->update(true, ["name", "description", "settings"])) {

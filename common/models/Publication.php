@@ -59,6 +59,7 @@ class Publication extends ActiveRecord
     {
         return [
             [['name'], 'required', 'message' => 'Это поле не может быть пустым'],
+            [['settings'], 'default', 'value'=> ''],
             ['name', 'string', 'max' => 100, 'message' => 'Максимальная длина: 32 символа'],
             ['description', 'string', 'max' => 32000, 'message' => 'Максимальная длина: 32000 символов'],
             [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg', 'message' => 'Ошибка при сохранении файла'],

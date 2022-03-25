@@ -20,10 +20,7 @@ $this->title = 'Пользователи';
         <?= Html::a('Создать пользователя', ['create'], ['class' => 'btn btn-outline-primary btn-rounded']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <?=
-   // $searchModel->status;
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
