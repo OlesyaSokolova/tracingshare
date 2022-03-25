@@ -39,7 +39,7 @@ if (strcmp($publication->settings ,'') != 0): ?>
         ['publication' => $publication]) || isset($userRoles['admin'])):?>
 
         <?= Html::a(Yii::t('app', 'Редактировать'),
-            ['/publication/edit', 'id' => $publication->id],
+            ['/publication/update', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'edit-button',]) ?>
 
