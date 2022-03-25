@@ -195,4 +195,19 @@ class PublicationController extends Controller
             'model' => $model
         ]);
     }
+
+    public function actionCreateLayer($id)
+    {
+        $publication = Publication::findOne($id);
+        /*if (empty($publication)) {
+            throw new HttpException(404);
+        }*/
+
+        return $this->render('createLayer', [
+            'publication' => $publication,
+            /*'categoryId' => $categoryId,
+            'objectPrev' => $objectPrev,
+            'objectNext' => $objectNext,*/
+        ]);
+    }
 }

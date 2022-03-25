@@ -80,11 +80,11 @@ function prepareEditablePublication() {
         };
         $.ajax({
             type: "POST",
-            url: "/tracingshare/frontend/web/index.php/publication/save",
+            url: "/tracingshare/backend/web/index.php/publication/save",
             data: {params: JSON.stringify(newData)},
             success: function (data) {
                 //alert(data)
-                location.href = "http://localhost/tracingshare/frontend/web/index.php/publication/view?id=" + publicationId
+                location.href = "http://localhost/tracingshare/backend/web/index.php/publication/view?id=" + publicationId
             },
             error: function (xhr, status, error) {
                 alert("Произошла ошибка при сохранении данных:" + xhr);
