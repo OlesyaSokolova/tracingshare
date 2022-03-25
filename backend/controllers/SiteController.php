@@ -70,14 +70,14 @@ class SiteController extends Controller
         $pages = new Pagination(['totalCount' => $countQuery->count()]);
         //$pages = new Pagination(['totalCount' => 100]);
 
-        $petroglyphs = $query->offset($pages->offset)
+        $publications = $query->offset($pages->offset)
             ->limit($pages->limit)
             ->all();
-        foreach ($petroglyphs as &$petroglyph) {
-            $petroglyph->generateThumbnail();
+        foreach ($publications as &$publication) {
+            $publication->generateThumbnail();
         }
         return $this->render('index',[
-            'petroglyphs' => $petroglyphs,
+            'publications' => $publications,
             'pages' => $pages,
         ]);
     }
