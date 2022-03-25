@@ -4,9 +4,12 @@ namespace backend\controllers;
 
 use common\models\Publication;
 use backend\models\publication\PublicationSearch;
+use Yii;
 use yii\web\Controller;
+use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * PublicationController implements the CRUD actions for Publication model.
@@ -55,8 +58,16 @@ class PublicationController extends Controller
      */
     public function actionView($id)
     {
+        $publication = Publication::findOne($id);
+        if (empty($publication)) {
+            throw new HttpException(404);
+        }
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'publication' => $publication,
+            /*'categoryId' => $categoryId,
+            'objectPrev' => $objectPrev,
+            'objectNext' => $objectNext,*/
         ]);
     }
 
@@ -91,14 +102,16 @@ class PublicationController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $publication = Publication::findOne($id);
+        if (empty($publication)) {
+            throw new HttpException(404);
         }
 
         return $this->render('update', [
-            'model' => $model,
+            'publication' => $publication,
+            /*'categoryId' => $categoryId,
+            'objectPrev' => $objectPrev,
+            'objectNext' => $objectNext,*/
         ]);
     }
 
@@ -130,5 +143,56 @@ class PublicationController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionSave()
+    {
+        $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
+
+        $id = $data["id"];
+
+        $newName = $data["newName"];
+        $newDescription = $data["newDescription"];
+
+        $publication = Publication::findOne($id);
+        $publication->name = $newName;
+        $publication->description = $newDescription;
+
+        if (strcmp(json_encode($data["newSettings"]), "") != 2) {
+            $newSettings = json_encode($data["newSettings"], JSON_UNESCAPED_UNICODE);
+            $publication->settings = $newSettings;
+        }
+        if($publication->update(true, ["name", "description", "settings"])) {
+            Yii::$app->session->setFlash('success', "Успешно сохранено.");
+        }
+        else {
+            Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.");
+        }
+    }
+
+    public function actionUpload()
+    {
+        $model = new Publication();
+
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post())) {
+                $model->author_id = Yii::$app->user->getId();
+                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                $model->image = $model->imageFile->baseName . '.' . $model->imageFile->extension;
+                if($model->save()) {
+                    if ($model->upload()) {
+                        Yii::$app->session->setFlash('success', "Успешно сохранено.");
+
+                        // TODO: edit file when it will be possible to create new layers
+                        return $this->redirect(['publication/view', 'id' => $model->id]);
+                    }
+                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
+                }
+            }
+        }
+
+        return $this->render('upload', [
+            'model' => $model
+        ]);
     }
 }
