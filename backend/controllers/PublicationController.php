@@ -180,7 +180,7 @@ class PublicationController extends Controller
                 $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
                 $model->image = $model->imageFile->baseName . '.' . $model->imageFile->extension;
                 if($model->save()) {
-                    if ($model->upload()) {
+                    if ($model->uploadOriginalImage()) {
                         Yii::$app->session->setFlash('success', "Успешно сохранено.");
 
                         // TODO: edit file when it will be possible to create new layers

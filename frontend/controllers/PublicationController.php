@@ -88,7 +88,7 @@ class PublicationController extends Controller
         }
     }
 
-    public function actionUpload()
+    public function actionUploadOriginalImage()
     {
         $model = new Publication();
 
@@ -98,18 +98,44 @@ class PublicationController extends Controller
                     $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
                     $model->image = $model->imageFile->baseName . '.' . $model->imageFile->extension;
                     if($model->save()) {
-                        if ($model->upload()) {
+                        if ($model->uploadOriginalImage()) {
                         Yii::$app->session->setFlash('success', "Успешно сохранено.");
-
-                        // TODO: edit file when it will be possible to create new layers
-                            return $this->redirect(['publication/view', 'id' => $model->id]);
+                         return $this->redirect(['publication/view', 'id' => $model->id]);
                     }
                     Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
                 }
             }
         }
 
-        return $this->render('upload', [
+        return $this->render('uploadOriginalImage', [
+            'model' => $model
+        ]);
+    }
+
+    public function actionUploadDrawings($id)
+    {
+        $model = Publication::findOne($id);
+
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post())) {
+                //$model->author_id = Yii::$app->user->getId();
+                $model->drawingsFiles = UploadedFile::getInstances($model, 'drawingsFiles');
+                //if($model->save()) {
+                    if ($model->uploadDrawings()) {
+                        $model->settings = $model->updateSettings();
+                        var_dump($model->settings);
+                        if($model->update(true, ["settings"])) {
+                            Yii::$app->session->setFlash('success', "Успешно сохранено.");
+                            return $this->redirect(['publication/edit', 'id' => $model->id]);
+                        }
+                        Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
+                    }
+                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
+                //}
+            }
+        }
+
+        return $this->render('uploadDrawings', [
             'model' => $model
         ]);
     }

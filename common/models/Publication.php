@@ -15,30 +15,38 @@ use common\models\User;
 * @property string image //link to an original image
 * @property string thumbnail //link to an thumbnail image
 * @property string settings //TEXT - json as string with drawings (and later maybe textures will be added)
- * {
-"drawings": [
-   {
-    image: "dr1_1.png",
-    layerParams: {
-                   alpha: "0.5",
-                   test: "hello1!!"
-                }
-    },
-    {
-    image: "dr1_2.png",
-    layerParams: {
-                   alpha: "0.6",
-                   test: "hello2!!"
-                }
-    },
-    {
-    image: "dr1_1.png",
-    layerParams: {
-                   alpha: "0.8656377",
-                   test: "hello3!!"
-                }
-    }]
+/*{
+"drawings":[
+{
+"image":"1_dr.png",
+"layerParams":{
+"title":"Слой 1",
+"alpha":"0.98",
+"color":"#0a0000",
+"description":"Основная композиция плоскости представлена массивными фигурами животных, выполненными в традициях Минусинского стиля (неолит)."
 }
+},
+{
+"image":"2_dr.png",
+"layerParams":{
+"title":"Слой 2",
+"alpha":"1",
+"color":"#3a6e3a",
+"description":"На плоскости прослежена голова животного, перекрывающая нижнюю часть самой крупной фигуры марала(?). Время её создания также соотносится с эпохой неолита."
+}
+},
+{
+"image":"3_dr.png",
+"layerParams":{
+"title":"Слой 3",
+"alpha":"1",
+"color":"#0000ff",
+"description":"На плоскости зафиксированы 2 нефигуративных изображения, время создания которых не определено (cлой 3 - зеленый)."
+}
+}
+]
+}
+
  *
 * @property string author_id //id of author from table "author"
 */
@@ -53,8 +61,15 @@ class Publication extends ActiveRecord
     const THUMBNAIL_W = 800;//пропорционально уменьшать картинки
     const THUMBNAIL_H = 500;
     const THUMBNAIL_PREFIX = 'thumbnail_';
+    const DRAWING_PREFIX = 'drawing_';
+
+    const DEFAULT_ALPHA = "1";
+    const DEFAULT_COLOR = "#000000";
+    const DEFAULT_DESCRIPTION = " ";
+
 
     public $imageFile;
+    public $drawingsFiles;
 
     public function rules()
     {
@@ -63,17 +78,18 @@ class Publication extends ActiveRecord
             [['settings'], 'default', 'value'=> ''],
             ['name', 'string', 'max' => 100, 'message' => 'Максимальная длина: 32 символа'],
             ['description', 'string', 'max' => 32000, 'message' => 'Максимальная длина: 32000 символов'],
-            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg', 'message' => 'Ошибка при сохранении файла'],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'message' => 'Ошибка при сохранении файла'],
+            [['drawingsFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'message' => 'Ошибка при сохранении одного из файлов', 'maxFiles' => 10],
         ];
     }
 
-    public function upload()
+    public function uploadOriginalImage()
     {
        //$pathToSave = self::FULL_PATH_STORAGE . self::PREFIX_PATH_IMAGES ;
        $imageDir = self::basePath() . '/' . self::PREFIX_PATH_IMAGES;
         // Создаем директорию, если не существует
         FileHelper::createDirectory($imageDir);
-        if ($this->validate()) {
+        if ($this->validate(["imageFile"])) {
             $filePath = $imageDir . '/'. $this->imageFile->baseName . '.' . $this->imageFile->extension;
             if (file_exists($filePath)) {
                 unlink($filePath);
@@ -86,6 +102,28 @@ class Publication extends ActiveRecord
             }
             $this->imageFile->saveAs($filePath);
             $this->generateThumbnail();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function uploadDrawings()
+    {
+        if ($this->validate( "drawingsFiles")) {
+            $drawingsDir = self::basePath() . '/' . self::PREFIX_PATH_DRAWINGS;
+
+            // Создаем директорию, если не существует
+            FileHelper::createDirectory($drawingsDir);
+
+            foreach ($this->drawingsFiles as $file) {
+                $filename = self::DRAWING_PREFIX . $file->baseName . '.' . $file->extension;
+                $drawingPath = $drawingsDir. '/' . $filename;
+                if (file_exists($drawingPath)) {
+                    unlink($drawingPath);
+                }
+                $file->saveAs($drawingPath);
+            }
             return true;
         } else {
             return false;
@@ -154,4 +192,59 @@ class Publication extends ActiveRecord
             . " (" .$user->email .")" ;
     }
 
+    public function updateSettings()
+    {
+        $settingsArray = array();
+        if (strcmp($this->settings ,'') != 0) {
+            $settingsArray = $this->getSettingsArray();
+        }
+        if(!array_key_exists('drawings', $settingsArray)) {
+            $settingsArray['drawings'] = array();
+        }
+
+        foreach ($this->drawingsFiles as $file) {
+            $filename = self::DRAWING_PREFIX . $file->baseName . '.' . $file->extension;
+            $newLayerInfo = array("image" => $filename,
+               "layerParams" => array(
+                    "title" => $file->baseName,
+                    "alpha" => self::DEFAULT_ALPHA,
+                    "color" => self::DEFAULT_COLOR,
+                    "description" => self::DEFAULT_DESCRIPTION,
+                ));
+            array_push($settingsArray['drawings'], $newLayerInfo);
+        }
+       return json_encode($settingsArray);
+    }
 }
+/*{
+    "drawings":[
+    {
+        "image":"1_dr.png",
+        "layerParams":{
+                "title":"Слой 1",
+                "alpha":"0.98",
+                "color":"#0a0000",
+                "description":"Основная композиция плоскости представлена массивными фигурами животных, выполненными в традициях Минусинского стиля (неолит)."
+        }
+    },
+    {
+        "image":"2_dr.png",
+        "layerParams":{
+                "title":"Слой 2",
+                "alpha":"1",
+                "color":"#3a6e3a",
+                "description":"На плоскости прослежена голова животного, перекрывающая нижнюю часть самой крупной фигуры марала(?). Время её создания также соотносится с эпохой неолита."
+            }
+        },
+        {
+        "image":"3_dr.png",
+        "layerParams":{
+            "title":"Слой 3",
+            "alpha":"1",
+            "color":"#0000ff",
+            "description":"На плоскости зафиксированы 2 нефигуративных изображения, время создания которых не определено (cлой 3 - зеленый)."
+            }
+        }
+    ]
+}
+*/
