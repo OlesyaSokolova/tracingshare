@@ -79,6 +79,8 @@ if ($publication->settings != ''): ?>
                     ['/publication/create-layer', 'id' => $publication->id],
                     ['class' => 'btn btn-outline-primary btn-rounded', 'style' => 'margin-bottom: 10px',
                         'name' => 'create-layer-button'],) ?>
+                <div id="editForm"">
+                    <div>
             </div>
 
     <?php /*endif; */?>
