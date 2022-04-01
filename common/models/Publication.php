@@ -167,7 +167,7 @@ class Publication extends ActiveRecord
 
     public function getSettingsArray()
     {
-        return json_decode($this->settings);
+        return json_decode($this->settings, true);
     }
 
     /**
