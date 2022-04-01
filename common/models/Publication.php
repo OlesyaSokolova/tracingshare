@@ -161,8 +161,6 @@ class Publication extends ActiveRecord
                     ->save($thumbnailPath, ['quality' => 80]);
           // }
         }
-
-
     }
 
     public function getSettingsArray()
@@ -215,36 +213,26 @@ class Publication extends ActiveRecord
         }
        return json_encode($settingsArray);
     }
-}
-/*{
-    "drawings":[
-    {
-        "image":"1_dr.png",
-        "layerParams":{
-                "title":"Слой 1",
-                "alpha":"0.98",
-                "color":"#0a0000",
-                "description":"Основная композиция плоскости представлена массивными фигурами животных, выполненными в традициях Минусинского стиля (неолит)."
+
+    public function deleteFilesFromStorage() {
+
+        $originalImagePath = self::basePath() . '/' . self::PREFIX_PATH_IMAGES . '/' . $this->image;
+        if (file_exists($originalImagePath)) {
+            unlink($originalImagePath);
         }
-    },
-    {
-        "image":"2_dr.png",
-        "layerParams":{
-                "title":"Слой 2",
-                "alpha":"1",
-                "color":"#3a6e3a",
-                "description":"На плоскости прослежена голова животного, перекрывающая нижнюю часть самой крупной фигуры марала(?). Время её создания также соотносится с эпохой неолита."
-            }
-        },
-        {
-        "image":"3_dr.png",
-        "layerParams":{
-            "title":"Слой 3",
-            "alpha":"1",
-            "color":"#0000ff",
-            "description":"На плоскости зафиксированы 2 нефигуративных изображения, время создания которых не определено (cлой 3 - зеленый)."
+
+        $thumbnailPath = self::basePath(). '/' . self::PREFIX_PATH_THUMBNAILS . '/' . self::THUMBNAIL_PREFIX . $this->image;
+        if (file_exists($thumbnailPath)) {
+            unlink($thumbnailPath);
+        }
+
+        if(isset($this->drawingsFiles)) {
+            foreach ($this->drawingsFiles as $file) {
+                $filePath = self::basePath() . '/' . self::PREFIX_PATH_DRAWINGS . '/' . self::DRAWING_PREFIX . $file->baseName . '.' . $file->extension;
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
             }
         }
-    ]
+    }
 }
-*/
