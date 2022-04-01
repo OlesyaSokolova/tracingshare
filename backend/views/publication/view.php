@@ -1,18 +1,18 @@
 <?php
 
-use frontend\assets\ViewAsset;
-use common\models\Petroglyph;
+use backend\assets\ViewAsset;
+use common\models\Publication;
 use yii\helpers\Html;
 
-if(!empty($petroglyph)) {
-    $this->title = $petroglyph->name;
-    $originalImageSrc = "\"" . Petroglyph::HTTP_PATH_STORAGE.Petroglyph::PREFIX_PATH_IMAGES.'/'.$petroglyph->image . "\"";
-    $drawingPathPrefix = "\"" . Petroglyph::HTTP_PATH_STORAGE . Petroglyph::PREFIX_PATH_DRAWINGS . '/' . "\"";
+if(!empty($publication)) {
+    $this->title = $publication->name;
+    $originalImageSrc = "\"" . Publication::HTTP_PATH_STORAGE.Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
+    $drawingPathPrefix = "\"" . Publication::HTTP_PATH_STORAGE . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
 
     $script = <<< JS
     originalImageSrc = $originalImageSrc
     drawingPathPrefix =  $drawingPathPrefix
-    settings = $petroglyph->settings   
+    settings = $publication->settings   
    
     prepareView()
 
@@ -26,7 +26,7 @@ JS;
 <h2><?=$this->title?></h2>
 
 <?php
-if (strcmp($petroglyph->settings ,'') != 0): ?>
+if (strcmp($publication->settings ,'') != 0): ?>
 <p>
     <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить авторские настройки</button>
 </p>
@@ -36,15 +36,15 @@ if (strcmp($petroglyph->settings ,'') != 0): ?>
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
 
     if (Yii::$app->user->can('updateOwnPost',
-        ['petroglyph' => $petroglyph]) || isset($userRoles['admin'])):?>
+        ['publication' => $publication]) || isset($userRoles['admin'])):?>
 
         <?= Html::a(Yii::t('app', 'Редактировать'),
-            ['/petroglyph/edit', 'id' => $petroglyph->id],
+            ['/publication/update', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'edit-button',]) ?>
 
         <?= Html::a(Yii::t('app', 'Удалить'),
-            ['/petroglyph/delete', 'id' => $petroglyph->id],
+            ['/publication/delete', 'id' => $publication->id],
             ['class' => 'btn btn-outline-danger btn-rounded',
                 'name' => 'delete-button',]) ?>
 
@@ -53,16 +53,16 @@ if (strcmp($petroglyph->settings ,'') != 0): ?>
 <br>
 
 <div class="box" style="display: flex">
-    <div class="container-petroglyph" data-state="static">
-        <div class="canvas-petroglyph">
-            <canvas id="petroglyphCanvas">
+    <div class="container-publication" data-state="static">
+        <div class="canvas-publication">
+            <canvas id="publicationCanvas">
             </canvas>
         </div>
     </div>
 
     <?php
-    //var_dump($petroglyph->settings);
-    if (strcmp($petroglyph->settings ,'') != 0): ?>
+    //var_dump($publication->settings);
+    if (strcmp($publication->settings ,'') != 0): ?>
         <div style="padding-left: 20px; margin-right: 20px" id="layers" class = "layers-class">
         </div>
 
@@ -82,7 +82,7 @@ if (strcmp($petroglyph->settings ,'') != 0): ?>
     <?php
     else:  ?>
         <p style="margin-left: 30px">
-        <?=$petroglyph->description?>
+        <?=$publication->description?>
         </p>
     <?php endif; ?>
 
@@ -90,15 +90,15 @@ if (strcmp($petroglyph->settings ,'') != 0): ?>
 
 
 <?php
-if (strcmp($petroglyph->settings ,'') != 0): ?>
+if (strcmp($publication->settings ,'') != 0): ?>
 
     <p style="margin-top: 20px">
-        <?= $petroglyph->description ?>
+        <?= $publication->description ?>
     </p>
 <?php endif; ?>
 
 <!--<p>
-    ФИО автора: //$petroglyph->getAuthor()...
+    ФИО автора: //$publication->getAuthor()...
 </p>-->
 
 <!--<div id="rt_popover" style="width: 200px"><div id="rt_popover">1 : <input type='range' id='0' class='alpha-value' step='0.05' min='-1' max='1' value='0.5'><button value="0" class="btn menu-object cp-button" data-menu="layer_pallete" data-html="true" data-container="#rt_popover"data-toggle="popover" data-placement="bottom"><i class="fas fa-palette"></i></button><br>2 : <input type='range' id='1' class='alpha-value' step='0.05' min='-1' max='1' value='0.6'><button value="1" class="btn menu-object cp-button" data-menu="layer_pallete" data-html="true" data-container="#rt_popover"data-toggle="popover" data-placement="bottom"><i class="fas fa-palette"></i></button><br>3 : <input type='range' id='2' class='alpha-value' step='0.05' min='-1' max='1' value='0.8656377'><button value="2" class="btn menu-object cp-button" data-menu="layer_pallete" data-html="true" data-container="#rt_popover"data-toggle="popover" data-placement="bottom"><i class="fas fa-palette"></i></button><br></div></div>

@@ -1,53 +1,50 @@
 <?php
 
-/** @var yii\web\View $this */
+/* @var $this yii\web\View */
 
-$this->title = 'My Yii Application';
-?>
-<div class="site-index">
+use common\models\Publication;
+use yii\bootstrap4\LinkPager;
+use yii\helpers\Url;
 
-    <div class="jumbotron text-center bg-transparent">
-        <h1 class="display-4">Congratulations!</h1>
+$this->title = 'Управление сайтом'; ?>
+<style>
+    .thumbnail {
+        background-color: white;
+        width: 300px;
+        height: 300px;
+        object-fit: contain;
+        display: inline-block; /* makes it fit in like an <img> */
+        background-size: contain; /* or contain */
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+</style>
+<h1>Все публикации</h1>
+<div id="w0" class="list-view">
+    <?php if (!empty($publications)):?>
+        <div class="row publications" style="position: relative;">
+            <?php foreach ($publications as $publication): ?>
+                <div class="column">
+                    <a href="<?= Url::to(['publication/view', 'id' => $publication->id])?>" class="publication-item">
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
+                        <div class="row">
+                            <div class="thumbnail" style="background-image: url(<?= Publication::HTTP_PATH_STORAGE . Publication::PREFIX_PATH_THUMBNAILS . '/' . Publication::THUMBNAIL_PREFIX . $publication->image ?>)"></div>
+                        </div>
+                        <h5>
+                            <?= $publication->name ?>
+                        </h5>
+                    </a>
+                </div>
+            <?php endforeach;
+            ?>
         </div>
-
-    </div>
+    <?php endif; ?>
 </div>
+<?php
+if(!empty($pages)):
+    echo LinkPager::widget([
+        'pagination' => $pages,
+    ]); ?>
+<?php endif;
+?>
+

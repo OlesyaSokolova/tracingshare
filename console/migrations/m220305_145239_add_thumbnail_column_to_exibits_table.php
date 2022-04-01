@@ -9,11 +9,11 @@ class m220305_145239_add_thumbnail_column_to_exibits_table extends Migration
 {
     public function up()
     {
-        $this->addColumn('exhibits', 'thumbnail', $this->string()->defaultValue(null));
+        $this->addColumn('{{%publication}}', 'thumbnail', $this->string()->defaultValue(null));
     }
 
     public function down()
     {
-        $this->dropColumn('exhibits', 'thumbnail');
+        $this->dropColumn('{{%publication}}', 'thumbnail');
     }
 }

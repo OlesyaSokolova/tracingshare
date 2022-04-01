@@ -31,8 +31,8 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
+       /* 'brandLabel' => Yii::$app->name,
+        'brandUrl' => Yii::$app->homeUrl,*/
         'options' => [
             'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
         ],
@@ -42,7 +42,7 @@ AppAsset::register($this);
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     $menuItems = [];
     if (isset($userRoles['admin'])) {
-/*        $menuItems[] = ['label' => 'Публикации - все публикации', 'url' => ['/site/publications']];*/
+        $menuItems[] = ['label' => 'Публикации', 'url' => ['/publication/index']];
         $menuItems[] = ['label' => 'Пользователи', 'url' => ['/user/index']];
     }
     echo Nav::widget([
@@ -52,7 +52,7 @@ AppAsset::register($this);
 
     $authenticationItems = [];
     if (Yii::$app->user->isGuest) {
-        $authenticationItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $authenticationItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
     } else {
         $authenticationItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')

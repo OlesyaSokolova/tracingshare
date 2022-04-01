@@ -2,24 +2,24 @@
 
 namespace frontend\controllers;
 
-use common\models\Petroglyph;
+use common\models\Publication;
 use Yii;
 use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\UploadedFile;
 
-class PetroglyphController extends Controller
+class PublicationController extends Controller
 {
     public function actionView($id)
     {
-        $petroglyph = Petroglyph::findOne($id);
-        if (empty($petroglyph)) {
+        $publication = Publication::findOne($id);
+        if (empty($publication)) {
             throw new HttpException(404);
         }
 
         return $this->render('view', [
-            'petroglyph' => $petroglyph,
+            'publication' => $publication,
             /*'categoryId' => $categoryId,
             'objectPrev' => $objectPrev,
             'objectNext' => $objectNext,*/
@@ -28,13 +28,28 @@ class PetroglyphController extends Controller
 
     public function actionEdit($id)
     {
-        $petroglyph = Petroglyph::findOne($id);
-        if (empty($petroglyph)) {
+        $publication = Publication::findOne($id);
+        if (empty($publication)) {
             throw new HttpException(404);
         }
 
         return $this->render('edit', [
-            'petroglyph' => $petroglyph,
+            'publication' => $publication,
+            /*'categoryId' => $categoryId,
+            'objectPrev' => $objectPrev,
+            'objectNext' => $objectNext,*/
+        ]);
+    }
+
+    public function actionCreateLayer($id)
+    {
+        $publication = Publication::findOne($id);
+        /*if (empty($publication)) {
+            throw new HttpException(404);
+        }*/
+
+        return $this->render('createLayer', [
+            'publication' => $publication,
             /*'categoryId' => $categoryId,
             'objectPrev' => $objectPrev,
             'objectNext' => $objectNext,*/
@@ -43,8 +58,8 @@ class PetroglyphController extends Controller
 
     public function actionDelete($id)
     {
-        $petroglyph = Petroglyph::findOne($id);
-        $petroglyph->delete();
+        $publication = Publication::findOne($id);
+        $publication->delete();
         return $this->goBack();
     }
 
@@ -57,15 +72,15 @@ class PetroglyphController extends Controller
         $newName = $data["newName"];
         $newDescription = $data["newDescription"];
 
-        $petroglyph = Petroglyph::findOne($id);
-        $petroglyph->name = $newName;
-        $petroglyph->description = $newDescription;
+        $publication = Publication::findOne($id);
+        $publication->name = $newName;
+        $publication->description = $newDescription;
 
         if (strcmp(json_encode($data["newSettings"]), "") != 2) {
-            $newSettings = json_encode($data["newSettings"]);
-            $petroglyph->settings = $newSettings;
+            $newSettings = json_encode($data["newSettings"], JSON_UNESCAPED_UNICODE);
+            $publication->settings = $newSettings;
         }
-        if($petroglyph->update(true, ["name", "description", "settings"])) {
+        if($publication->update(true, ["name", "description", "settings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
         else {
@@ -75,7 +90,7 @@ class PetroglyphController extends Controller
 
     public function actionUpload()
     {
-        $model = new Petroglyph();
+        $model = new Publication();
 
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
@@ -87,7 +102,7 @@ class PetroglyphController extends Controller
                         Yii::$app->session->setFlash('success', "Успешно сохранено.");
 
                         // TODO: edit file when it will be possible to create new layers
-                            return $this->redirect(['petroglyph/view', 'id' => $model->id]);
+                            return $this->redirect(['publication/view', 'id' => $model->id]);
                     }
                     Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
                 }

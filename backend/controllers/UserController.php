@@ -2,10 +2,10 @@
 
 namespace backend\controllers;
 
-use backend\models\CreateUserForm;
-use backend\models\UpdateUserForm;
+use backend\models\user\CreateUserForm;
+use backend\models\user\UpdateUserForm;
+use backend\models\user\UserSearch;
 use common\models\User;
-use backend\models\UserSearch;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

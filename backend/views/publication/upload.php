@@ -1,14 +1,14 @@
 <?php
 /** @var yii\web\View $this */
 /** @var yii\bootstrap4\ActiveForm $form */
-/** @var \common\models\Petroglyph $model */
+/** @var \common\models\Publication $model */
 
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
 
 $this->title = 'Создание публикации';
 ?>
-<div class="petroglyph-upload">
+<div class="publication-upload">
     <h1 style="text-align: center;"><?= Html::encode($this->title) ?></h1>
     <div class="row justify-content-center">
         <div class="col-lg-5">

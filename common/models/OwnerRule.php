@@ -20,10 +20,10 @@ class OwnerRule extends Rule
      */
     public function execute($userId, $item, $params)
     {
-        if (!isset($params['petroglyph'])) {
+        if (!isset($params['publication'])) {
             return false;
         }
 
-        return $params['petroglyph']->author_id == $userId;
+        return $params['publication']->author_id == $userId;
     }
 }

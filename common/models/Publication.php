@@ -7,10 +7,11 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\FileHelper;
 use yii\imagine\Image;
+use common\models\User;
 
 /* @property int id
 * @property string name
-* @property string description //description of petroglyph
+* @property string description //description of publication
 * @property string image //link to an original image
 * @property string thumbnail //link to an thumbnail image
 * @property string settings //TEXT - json as string with drawings (and later maybe textures will be added)
@@ -42,7 +43,7 @@ use yii\imagine\Image;
 * @property string author_id //id of author from table "author"
 */
 
-class Petroglyph extends ActiveRecord
+class Publication extends ActiveRecord
 {
     //TODO: изменить PATH_STORAGE
     const HTTP_PATH_STORAGE = 'http://localhost/tracingshare/storage/';
@@ -58,7 +59,8 @@ class Petroglyph extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'description'], 'required', 'message' => 'Это поле не может быть пустым'],
+            [['name'], 'required', 'message' => 'Это поле не может быть пустым'],
+            [['settings'], 'default', 'value'=> ''],
             ['name', 'string', 'max' => 100, 'message' => 'Максимальная длина: 32 символа'],
             ['description', 'string', 'max' => 32000, 'message' => 'Максимальная длина: 32000 символов'],
             [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg', 'message' => 'Ошибка при сохранении файла'],
@@ -72,69 +74,57 @@ class Petroglyph extends ActiveRecord
         // Создаем директорию, если не существует
         FileHelper::createDirectory($imageDir);
         if ($this->validate()) {
-            $this->imageFile->saveAs($imageDir . '/'. $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            $filePath = $imageDir . '/'. $this->imageFile->baseName . '.' . $this->imageFile->extension;
+            if (file_exists($filePath)) {
+                unlink($filePath);
+
+                $thumbnailDir = self::basePath(). '/' . self::PREFIX_PATH_THUMBNAILS;
+                $thumbnailPath =   $thumbnailDir. '/' . self::THUMBNAIL_PREFIX . $this->image;
+                if (file_exists($thumbnailPath)) {
+                    unlink($thumbnailPath);
+                }
+            }
+            $this->imageFile->saveAs($filePath);
             $this->generateThumbnail();
             return true;
         } else {
             return false;
         }
-//        /*if ($this->validate()) {
-//
-//            //$path = self::basePath();
-//           $pathToSave = self::FULL_PATH_STORAGE . self::PREFIX_PATH_IMAGES ;
-//           $thumbnailPath =  self::FULL_PATH_STORAGE . self::PREFIX_PATH_THUMBNAILS. '/' . self::THUMBNAIL_PREFIX;
-//
-//
-//            /*if (!empty($this->image) and file_exists($pathToSave . '/' . $this->image)) {
-//                unlink($pathToSave . '/' . $this->image);
-//
-//                if (file_exists($thumbnailPath . $this->image)) {
-//                    unlink($thumbnailPath . $this->image);
-//                }
-//            }*/
-//
-//            //TODO: CREATE DIRECTORY IF IT DOESN'T EXIST
-//            //FileHelper::createDirectory($path);
-//
-//            //$newName = md5(uniqid($this->id));
-//            $this->imageFile->saveAs($pathToSave . '/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
-//            $this->image = $this->imageFile->baseName . '.' . $this->imageFile->extension;
-//
-//           /* $sizes = getimagesize($path . '/' . $newName . '.' . $this->fileImage->extension);
-//            if ($sizes[0] > self::THUMBNAIL_W) {
-//                Image::thumbnail($path . '/' . $newName . '.' . $this->fileImage->extension, self::THUMBNAIL_W, self::THUMBNAIL_H)
-//                    ->resize(new Box(self::THUMBNAIL_W, self::THUMBNAIL_H))
-//                    ->save($path . '/' . self::THUMBNAIL_PREFIX . $newName . '.' . $this->fileImage->extension, ['quality' => 80]);
-//            }*/
-//
-//            return $this->save();
-//        } else {
-//            return false;
-//        }*/
     }
 
     public static function tableName()
     {
-        //return '{{petroglyph}}
-        return 'exhibits';
+        return '{{%publication}}';
+        //return 'exhibits';
     }
 
     public function generateThumbnail() {
         $thumbnailDir = self::basePath(). '/' . self::PREFIX_PATH_THUMBNAILS;
+        $originalImagePath = self::basePath() . '/' . self::PREFIX_PATH_IMAGES . '/' . $this->image;
+
         // Создаем директорию, если не существует
         FileHelper::createDirectory($thumbnailDir);
 
         $thumbnailPath =   $thumbnailDir. '/' . self::THUMBNAIL_PREFIX . $this->image;
-        $originalImagePath = self::basePath() . self::PREFIX_PATH_IMAGES . '/' . $this->image;
+
         if (!file_exists($thumbnailPath)) {
             //$newName = md5(uniqid($this->id));
             $sizes = getimagesize($originalImagePath);
-            if ($sizes[0] > self::THUMBNAIL_W) {
-                Image::thumbnail($originalImagePath, self::THUMBNAIL_W, self::THUMBNAIL_H)
-                    ->resize(new Box(self::THUMBNAIL_W, self::THUMBNAIL_H))
+            $originalWidth = $sizes[0];
+            $originalHeight = $sizes[1];
+            $ratio = $originalWidth/$originalHeight;
+            $correspondingHeight = self::THUMBNAIL_W/$ratio;
+            $newWidth = self::THUMBNAIL_W;
+            $newHeight = $correspondingHeight;
+
+           // if ($sizes[0] > self::THUMBNAIL_W) {
+                Image::thumbnail($originalImagePath, $newWidth, $newHeight)
+                    ->resize(new Box($newWidth, $newHeight))
                     ->save($thumbnailPath, ['quality' => 80]);
-           }
+          // }
         }
+
+
     }
 
     public function getSettingsArray()
@@ -157,4 +147,11 @@ class Petroglyph extends ActiveRecord
 
         return $path;
     }
+
+    public function getAuthorName() {
+        $user = User::findIdentity($this->author_id);
+        return $user->last_name . " " . $user->first_name . " " . $user->patronymic
+            . " (" .$user->email .")" ;
+    }
+
 }

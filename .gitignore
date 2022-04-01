@@ -55,7 +55,7 @@ phpunit.phar
 /environments/prod/common/config/main-local.php
 /environments/prod/console/config/main-local.php
 /environments/prod/frontend/config/main-local.php
-/common/models/Petroglyph.php
+/common/models/Publication.php
 /storage/images/Poi_1.9.jpg
 /storage/images/Poi_1.11.jpg
 /storage/images/Poi_1.13.jpg
