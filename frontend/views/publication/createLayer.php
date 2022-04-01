@@ -4,18 +4,18 @@ use frontend\assets\ViewAsset;
 use common\models\Publication;
 use yii\helpers\Html;
 
-if(!empty($petroglyph)) {
+if(!empty($publication)) {
 
-    $this->title = "Создание нового слоя: ".$petroglyph->name;//TODO: layer name
-    $originalImageSrc = "\"" . Publication::HTTP_PATH_STORAGE.Publication::PREFIX_PATH_IMAGES.'/'.$petroglyph->image . "\"";
+    $this->title = "Создание нового слоя: ".$publication->name;//TODO: layer name
+    $originalImageSrc = "\"" . Publication::HTTP_PATH_STORAGE.Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
     $drawingPathPrefix = "\"" . Publication::HTTP_PATH_STORAGE . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
 
     $script = <<< JS
     
-    petroglyphId = $petroglyph->id
+    publicationId = $publication->id
     originalImageSrc = $originalImageSrc
     drawingPathPrefix =  $drawingPathPrefix
-    settings = $petroglyph->settings
+    settings = $publication->settings
    
     prepareLayersToDraw()
 
@@ -31,7 +31,7 @@ JS;
     <?php
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     if (Yii::$app->user->can('updateOwnPost',
-            ['publication' => $petroglyph]) || isset($userRoles['admin'])):?>
+            ['publication' => $publication]) || isset($userRoles['admin'])):?>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="save-layer-button">Сохранить</button>
     <?php endif; ?>
 </p>
@@ -39,7 +39,7 @@ JS;
 <form>
     <div class="form-group">
         <label for="title">Название слоя: </label>
-        <input type="text" style="size: auto" class="form-control" id="title" value="<?=$petroglyph->name?>">
+        <input type="text" style="size: auto" class="form-control" id="title" value="<?=$publication->name?>">
     </div>
 </form>
 
@@ -117,7 +117,7 @@ JS;
 <form style="padding-top: 20px">
     <div class="form-group">
         <label for="layerDesc">Описание:</label>
-        <textarea class="form-control" id="layerDesc" rows="10" ><?=$petroglyph->description?></textarea>
+        <textarea class="form-control" id="layerDesc" rows="10" ><?=$publication->description?></textarea>
     </div>
 </form>
 
