@@ -43,6 +43,11 @@ if (strcmp($publication->settings ,'') != 0): ?>
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'edit-button',]) ?>
 
+        <?= Html::a(Yii::t('app', 'Загрузить слои прорисовок'),
+            ['/publication/upload-drawings', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'upload-drawings-button',]) ?>
+
         <?= Html::a(Yii::t('app', 'Удалить'),
             ['/publication/delete', 'id' => $publication->id],
             ['class' => 'btn btn-outline-danger btn-rounded',

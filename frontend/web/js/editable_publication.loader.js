@@ -145,7 +145,7 @@ function initLayersSettingsForEdit(jsonSettings) {
         }
 
         layerInfo += '</form>';
-        var layersDiv = document.getElementById("layers");
-        layersDiv.insertAdjacentHTML('beforeend', layerInfo)
+        var layersEditForm = document.getElementById("editForm");
+        layersEditForm.innerHTML = layerInfo
     }
 }
