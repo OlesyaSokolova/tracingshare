@@ -43,35 +43,41 @@ JS;
     </div>
 </form>
 
-
-
+<!--TODO: add btn to clear canvas
+--><!--TODO: add button to create new layer in the editor
+ if user creates new layer from editor, settings should be updated -->
 <div class="d-flex justify-content-around">
 
     <!-- List With Icons -->
-    <div class="list-group pmd-list pmd-card-list">
-        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+    <div class="list-group pmd-list pmd-card-list" id="toolbar" style="width: fit-content; padding-right: 10px">
+        <button type="button" id="brush" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
             <span class="media-body">Кисть</span>
+            <img src="http://localhost/tracingshare/icons/brush.png" width="50"/>
+
         </button>
 
-        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-            <span class="media-body">Ластик</span>
+        <button type="button" id="eraser" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+         <span class="media-body">Ластик</span>
+            <img src="http://localhost/tracingshare/icons/eraser.png" width="50"/>
         </button>
 
-        <button type="button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+        <button type="button" id="fill" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
             <span class="media-body">Заливка</span>
+            <img src="http://localhost/tracingshare/icons/fill.png" width="50"/>
         </button>
 
         <label for="brushColor">Цвет</label>
         <input type="color" id="brushColor" class =\'color-value\' value="#000000" name="drawingColor">
 
         <label for="thickness">Толщина кисти/ластика: </label>
-        <input type=range id="thickness" class=\'alpha-value\' step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
+        <input type=range id="thickness" style="width: 300px" class=\'alpha-value\' step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
 
     </div>
 
 
     <div class="container-layer" data-state="static" style="border:1px solid black;
             border-radius: 10px;
+            width: max-content;
             padding: 30px">
         <div class="canvas-layer">
             <canvas id="layerCanvas">
@@ -79,7 +85,7 @@ JS;
         </div>
     </div>
 
-    <div id="layers" class = "layers-class" style="width: 300px;">
+    <div id="layers" class = "layers-class"style="width: fit-content; padding-left: 10px">
         <div class="thumbnails-layers">
 
             <div style="border:1px solid black;
@@ -94,6 +100,14 @@ JS;
                 <br>
                 <label for="newLayerThumbnailAlpha">Прозрачность: </label>
                 <input type=range name="alphaChannel" id="newLayerThumbnailAlpha" class=\'alpha-value\' step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
+            </div>
+
+            <div style="border:1px solid black;
+                border-radius: 10px;
+                padding-left: 20px;
+                width: 400px;
+                text-align: left;
+                margin-bottom: 10px" id = "otherLayersThumbnails">
             </div>
 
             <div style="border:1px solid black;
@@ -114,10 +128,10 @@ JS;
     </div>
 </div>
 
-<form style="padding-top: 20px">
+<!--<form style="padding-top: 20px">
     <div class="form-group">
         <label for="layerDesc">Описание:</label>
-        <textarea class="form-control" id="layerDesc" rows="10" ><?=$publication->description?></textarea>
+        <textarea class="form-control" id="layerDesc" rows="10" ><?/*=$publication->description*/?></textarea>
     </div>
-</form>
+</form>-->
 

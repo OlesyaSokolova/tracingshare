@@ -1,42 +1,56 @@
 function prepareLayersToDraw() {
 
+    //1. Preparations
+        //1.1. set original image as background
         originalImage = new Image();
         originalImage.src = originalImageSrc;
+        drawBackground(originalImage);
 
+        //1.2. create canvas for new layer (to draw)
         newLayer = new Image();
-        var originalImageLayerCtx = drawOriginalImageLayer(originalImage)
 
-            originalImageLayerThumbnail = new Image();
-            originalImage.src = originalImageSrc;
+        //1.3. create thumbnails of all existing layers
+        //1.3.1. init settings: if they are not set,
+        // create settings as associative array for new layer (see below)
+        layersSettings = ""
+        if(typeof settings != "undefined" && settings !== ''  && settings !== "") {
+            layersSettings = JSON.parse(JSON.stringify(settings));
+            drawOtherLayersThumbnails(settings)
+        }
+        //if user creates new layer from editor, settings should be updated
 
-            newLayerThumbnail = new Image();
-            var originalImageThumbnailLayerCtx = drawOriginalImageLayerThumbnail(originalImage)
-            var newLayerCtx = drawNewLayerThumbnail()
+        //1.4. create thumbnail for original image
+        var originalImageThumbnailLayerCtx = drawOriginalImageLayerThumbnail(originalImage)
 
-            classNameContainer = 'layers-class'
+        //1.5. create thumbnail for new layer:
+         newLayerThumbnail = new Image();
+        var newLayerCtx = drawNewLayerThumbnail()
 
-            /*$('.' + classNameContainer)//прозрачность слоев
-                .on('input change', '.alpha-value', function () {
-                    $(this).attr('value', $(this).val());
-                    var newAlpha = parseFloat($(this).val());
-                    var layerId = parseInt(($(this).attr('id')).split('_')[1]);
-                    layers[layerId].alpha = newAlpha;//change alpha value of original image
-                    updateAllLayers(layers)
-                })
+        classNameContainer = 'layers-class'
+
+        /*$('.' + classNameContainer)//прозрачность слоев
+            .on('input change', '.alpha-value', function () {
+                $(this).attr('value', $(this).val());
+                var newAlpha = parseFloat($(this).val());
+                var layerId = parseInt(($(this).attr('id')).split('_')[1]);
+                layers[layerId].alpha = newAlpha;//change alpha value of original image
+                updateAllLayers(layers)
+            })
 */
-           /* var resetButton = document.getElementById("reset-button");
-            resetButton.addEventListener('click', function (event) {
-                reloadSettingsForEdit(defaultSettings, drawingsImages)
-            })*/
+       /* var resetButton = document.getElementById("reset-button");
+        resetButton.addEventListener('click', function (event) {
+            reloadSettingsForEdit(defaultSettings, drawingsImages)
+        })*/
 
     var saveButton = document.getElementById("save-layer-button");
     saveButton.addEventListener(
         'click', function (event) {
+            var image = contextToDrawOn.getDataUrl()
             settings = "{" +
                 "\"drawings\": [" +
                 "   {" +
 /*
-                "    image: \"new_layer.png\",\n" +
+                "    image: \" + image+ \",\n" +
 */
                 "    layerParams: {" +
                 "                   alpha: \"1\"," +
@@ -50,7 +64,7 @@ function prepareLayersToDraw() {
             settings.drawings[0].layerParams.color = document.getElementById('color_' + i).value;*/
             settingJSON.drawings[0].layerParams.description = document.getElementById('layerDesc').value;
 
-        console.log(publicationId)
+        //console.log(publicationId)
         $.ajax({
             type: "POST",
             url: "/tracingshare/frontend/web/index.php/publication/save-layer",
@@ -66,11 +80,11 @@ function prepareLayersToDraw() {
     })
 }
 
-function drawOriginalImageLayer(originalImage) {
+function drawBackground(originalImage) {
 
     var canvas = document.getElementById('layerCanvas')
     var ratio = originalImage.width/originalImage.height
-    var constWidth = 700
+    var constWidth = 1000
     var correspondingHeight = constWidth/ratio
     canvas.width = constWidth
     canvas.height = correspondingHeight
@@ -94,6 +108,23 @@ function drawOriginalImageLayerThumbnail(originalImage) {
     originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
 
     return originalImageCtx
+}
+
+function drawOtherLayersThumbnails(settings) {
+
+    var divWithLayers = document.getElementById('otherLayersThumbnails')
+    //create new canvases for each layer
+    /*var canvas =
+    var ratio = originalImage.width/originalImage.height
+    var constWidth = 200
+    var correspondingHeight = constWidth/ratio
+    canvas.width = constWidth
+    canvas.height = correspondingHeight
+
+    originalImageCtx = canvas.getContext('2d');
+    originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
+
+    return originalImageCtx*/
 }
 
 function drawNewLayerThumbnail() {
