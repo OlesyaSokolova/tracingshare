@@ -19,17 +19,53 @@ function prepareLayersToDraw() {
         var context = canvas.getContext("2d");
 
         //1.3. drawing
-        var isDrawing = true;
+        var isDrawing = false;
+
+        var previousTool;
+
+        //1.4. init buttons
+        var brushButton = document.getElementById("brush-btn");
+        brushButton.addEventListener(
+        'click', function (event) {
+                $(this).addClass('active');
+                if (previousTool != null) {
+                    $(previousTool).removeClass('active');
+                }
+                previousTool = this;
+            });
+
+        var eraserButton = document.getElementById("eraser-btn");
+        eraserButton.addEventListener(
+            'click', function (event) {
+                $(this).addClass('active');
+                if (previousTool != null) {
+                    $(previousTool).removeClass('active');
+                }
+                previousTool = this;
+
+            });
+
+        var fillButton = document.getElementById("fill-btn");
+        fillButton.addEventListener(
+            'click', function (event) {
+                $(this).addClass('active');
+                if (previousTool != null) {
+                    $(previousTool).removeClass('active');
+                }
+                previousTool = this;
+            });
+
 
         function startDrawing(e) {
-        // Начинаем рисовать
-        isDrawing = true;
+            // Начинаем рисовать
+            if (isDrawing === true) {
 
-        // Создаем новый путь (с текущим цветом и толщиной линии)
-        context.beginPath();
+            // Создаем новый путь (с текущим цветом и толщиной линии)
+            context.beginPath();
 
-        // Нажатием левой кнопки мыши помещаем "кисть" на холст
-        context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+            // Нажатием левой кнопки мыши помещаем "кисть" на холст
+            context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+        }
     }
 
     function draw(e) {
@@ -50,7 +86,6 @@ function prepareLayersToDraw() {
         isDrawing = false;
     }
 
-        //var colorButton = document.getElementById("change-thickness-btn")
     classNameContainer = 'toolbar'
 
     $('.' + classNameContainer)

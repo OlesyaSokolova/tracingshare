@@ -4,6 +4,7 @@ use frontend\assets\ViewAsset;
 use common\models\Publication;
 use yii\helpers\Html;
 
+
 if(!empty($publication)) {
 
     $this->title = "Создание нового слоя: ".$publication->name;//TODO: layer name
@@ -50,18 +51,17 @@ JS;
 
     <!-- List With Icons -->
     <div class="list-group pmd-list pmd-card-list" id="toolbar" style="width: fit-content; padding-right: 10px">
-        <button type="button" id="brush" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+        <button type="button" id="brush-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
             <span class="media-body">Кисть</span>
-            <img src="http://localhost/tracingshare/icons/brush.png" width="50"/>
-
+            <img id="brush-icn" src="http://localhost/tracingshare/icons/brush.png" width="50"/>
         </button>
 
-        <button type="button" id="eraser" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+        <button type="button" id="eraser-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
          <span class="media-body">Ластик</span>
             <img src="http://localhost/tracingshare/icons/eraser.png" width="50"/>
         </button>
 
-        <button type="button" id="fill" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+        <button type="button" id="fill-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
             <span class="media-body">Заливка</span>
             <img src="http://localhost/tracingshare/icons/fill.png" width="50"/>
         </button>
