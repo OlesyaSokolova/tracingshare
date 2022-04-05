@@ -4,10 +4,73 @@ function prepareLayersToDraw() {
         //1.1. set original image as background
         originalImage = new Image();
         originalImage.src = originalImageSrc;
-        drawBackground(originalImage);
+        var originalImageCtx = drawBackground(originalImage);
 
         //1.2. create canvas for new layer (to draw)
-        newLayer = new Image();
+        //newLayer = new Image();
+        var canvas;
+        var context;
+        var isDrawing;
+
+        window.onload = function() {
+
+            canvas = document.getElementById("layerToDrawOn");
+            context = canvas.getContext("2d");
+            canvas.width = originalImageCtx.canvas.width
+            canvas.height = originalImageCtx.canvas.height
+            var backgroundElement = document.getElementById("background");
+
+            var x = backgroundElement.offsetLeft, y = backgroundElement.offsetTop;
+
+            canvas.style.position = "absolute";
+            canvas.style.left = x+'px';
+            canvas.style.top = y+'px';
+
+            // Подключаем требуемые для рисования события
+            canvas.onmousedown = startDrawing;
+            canvas.onmouseup = stopDrawing;
+            canvas.onmouseout = stopDrawing;
+            canvas.onmousemove = draw;
+        }
+
+    function startDrawing(e) {
+        // Начинаем рисовать
+        isDrawing = true;
+
+        // Создаем новый путь (с текущим цветом и толщиной линии)
+        context.beginPath();
+
+        // Нажатием левой кнопки мыши помещаем "кисть" на холст
+        context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+    }
+
+    function draw(e) {
+        if (isDrawing === true)
+        {
+            // Определяем текущие координаты указателя мыши
+            var x = e.pageX - canvas.offsetLeft;
+            var y = e.pageY - canvas.offsetTop;
+
+            // Рисуем линию до новой координаты
+            context.lineTo(x, y);
+            context.stroke();
+        }
+    }
+
+
+    function stopDrawing() {
+        isDrawing = false;
+    }
+
+        //var colorButton = document.getElementById("change-thickness-btn")
+    classNameContainer = 'toolbar'
+
+    $('.' + classNameContainer)
+        .on('input change', '.change-color-btn', function () {
+            $(this).attr('value', $(this).val());
+            var newColor = $(this).val();
+            context.strokeStyle = color;
+        });
 
         //1.3. create thumbnails of all existing layers
         //1.3.1. init settings: if they are not set,
@@ -26,21 +89,7 @@ function prepareLayersToDraw() {
          newLayerThumbnail = new Image();
         var newLayerCtx = drawNewLayerThumbnail()
 
-        classNameContainer = 'layers-class'
 
-        /*$('.' + classNameContainer)//прозрачность слоев
-            .on('input change', '.alpha-value', function () {
-                $(this).attr('value', $(this).val());
-                var newAlpha = parseFloat($(this).val());
-                var layerId = parseInt(($(this).attr('id')).split('_')[1]);
-                layers[layerId].alpha = newAlpha;//change alpha value of original image
-                updateAllLayers(layers)
-            })
-*/
-       /* var resetButton = document.getElementById("reset-button");
-        resetButton.addEventListener('click', function (event) {
-            reloadSettingsForEdit(defaultSettings, drawingsImages)
-        })*/
 
     var saveButton = document.getElementById("save-layer-button");
     saveButton.addEventListener(
@@ -80,9 +129,9 @@ function prepareLayersToDraw() {
     })
 }
 
-function drawBackground(originalImage) {
 
-    var canvas = document.getElementById('layerCanvas')
+function drawBackground(originalImage) {
+    var canvas = document.getElementById('background')
     var ratio = originalImage.width/originalImage.height
     var constWidth = 1000
     var correspondingHeight = constWidth/ratio

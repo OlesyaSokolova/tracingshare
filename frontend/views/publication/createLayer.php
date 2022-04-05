@@ -66,23 +66,23 @@ JS;
             <img src="http://localhost/tracingshare/icons/fill.png" width="50"/>
         </button>
 
-        <label for="brushColor">Цвет</label>
+        <label for="brushColor" id="change-color-btn">Цвет</label>
         <input type="color" id="brushColor" class =\'color-value\' value="#000000" name="drawingColor">
 
-        <label for="thickness">Толщина кисти/ластика: </label>
+        <label for="thickness" id="change-thickness-btn">Толщина кисти/ластика: </label>
         <input type=range id="thickness" style="width: 300px" class=\'alpha-value\' step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
 
     </div>
 
 
-    <div class="container-layer" data-state="static" style="border:1px solid black;
+    <div class="canvasDiv" data-state="static" style="border:1px solid black;
             border-radius: 10px;
             width: max-content;
             padding: 30px">
-        <div class="canvas-layer">
-            <canvas id="layerCanvas">
-            </canvas>
-        </div>
+        <canvas id="background">
+        </canvas>
+        <canvas id="layerToDrawOn">
+        </canvas>
     </div>
 
     <div id="layers" class = "layers-class"style="width: fit-content; padding-left: 10px">
