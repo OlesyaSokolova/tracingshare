@@ -7,33 +7,21 @@ function prepareLayersToDraw() {
         var originalImageCtx = drawBackground(originalImage);
 
         //1.2. create canvas for new layer (to draw)
-        //newLayer = new Image();
-        var canvas;
-        var context;
-        var isDrawing;
+        var backgroundElement = document.getElementById("background");
+        var x = backgroundElement.offsetLeft, y = backgroundElement.offsetTop;
+        var canvas = createCanvasToDrawOn(originalImageCtx.canvas.width, originalImageCtx.canvas.height, x, y)
 
-        window.onload = function() {
+        canvas.onmousedown = startDrawing;
+        canvas.onmouseup = stopDrawing;
+        canvas.onmouseout = stopDrawing;
+        canvas.onmousemove = draw;
 
-            canvas = document.getElementById("layerToDrawOn");
-            context = canvas.getContext("2d");
-            canvas.width = originalImageCtx.canvas.width
-            canvas.height = originalImageCtx.canvas.height
-            var backgroundElement = document.getElementById("background");
+        var context = canvas.getContext("2d");
 
-            var x = backgroundElement.offsetLeft, y = backgroundElement.offsetTop;
+        //1.3. drawing
+        var isDrawing = true;
 
-            canvas.style.position = "absolute";
-            canvas.style.left = x+'px';
-            canvas.style.top = y+'px';
-
-            // Подключаем требуемые для рисования события
-            canvas.onmousedown = startDrawing;
-            canvas.onmouseup = stopDrawing;
-            canvas.onmouseout = stopDrawing;
-            canvas.onmousemove = draw;
-        }
-
-    function startDrawing(e) {
+        function startDrawing(e) {
         // Начинаем рисовать
         isDrawing = true;
 
@@ -189,4 +177,16 @@ function drawNewLayerThumbnail() {
     originalImageCtx.drawImage(new Image(), 0, 0,canvas.width,  canvas.height);
 
     return originalImageCtx
+}
+function createCanvasToDrawOn(width, height, x, y) {
+
+    var canvas = document.getElementById("layerToDrawOn");
+    canvas.width = width;
+    canvas.height = height
+
+    canvas.style.position = "absolute";
+    canvas.style.left = x + 'px';
+    canvas.style.top = y + 'px';
+
+    return canvas;
 }
