@@ -6,8 +6,8 @@ use yii\helpers\Html;
 
 if(!empty($publication)) {
     $this->title = $publication->name;
-    $originalImageSrc = "\"" . Publication::HTTP_PATH_STORAGE.Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
-    $drawingPathPrefix = "\"" . Publication::HTTP_PATH_STORAGE . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
+    $originalImageSrc = "\"" . Publication::getHttpPath().Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
+    $drawingPathPrefix = "\"" . Publication::getHttpPath() . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
 
     $script = <<< JS
     originalImageSrc = $originalImageSrc

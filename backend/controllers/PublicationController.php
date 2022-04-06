@@ -102,17 +102,14 @@ class PublicationController extends Controller
      */
     public function actionUpdate($id)
     {
-        $publication = Publication::findOne($id);
-        if (empty($publication)) {
-            throw new HttpException(404);
-        }
+        header("Location: ". $this->frontendUrl()."/publication/edit?id=".$id);
+        exit();
+    }
 
-        return $this->render('update', [
-            'publication' => $publication,
-            /*'categoryId' => $categoryId,
-            'objectPrev' => $objectPrev,
-            'objectNext' => $objectNext,*/
-        ]);
+    public function actionEdit($id)
+    {
+        header("Location: ". $this->frontendUrl()."/publication/edit?id=".$id);
+        exit();
     }
 
     /**
@@ -124,8 +121,9 @@ class PublicationController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $publication = Publication::findOne($id);
+        $publication->deleteFilesFromStorage();
+        $publication->delete();
         return $this->redirect(['index']);
     }
 
@@ -196,18 +194,16 @@ class PublicationController extends Controller
         ]);
     }
 
-    public function actionCreateLayer($id)
-    {
-        $publication = Publication::findOne($id);
-        /*if (empty($publication)) {
-            throw new HttpException(404);
-        }*/
 
-        return $this->render('createLayer', [
-            'publication' => $publication,
-            /*'categoryId' => $categoryId,
-            'objectPrev' => $objectPrev,
-            'objectNext' => $objectNext,*/
-        ]);
+    private function frontendUrl()
+    {
+        $projectFolder = explode ("/", $_SERVER['REQUEST_URI'])[1];
+        if(isset($_SERVER['HTTPS'])){
+            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+        }
+        else{
+            $protocol = 'http';
+        }
+        return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $projectFolder ."/frontend/web/index.php";
     }
 }

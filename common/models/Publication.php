@@ -53,7 +53,7 @@ use common\models\User;
 
 class Publication extends ActiveRecord
 {
-    //TODO: изменить PATH_STORAGE
+    //const HTTP_PATH_STORAGE = 'http://localhost/tracingshare/storage/';
     const HTTP_PATH_STORAGE = 'http://localhost/tracingshare/storage/';
     const PREFIX_PATH_IMAGES = 'images';//folder with original images
     const PREFIX_PATH_DRAWINGS = 'drawings';//folder with drawings
@@ -234,5 +234,16 @@ class Publication extends ActiveRecord
                 }
             }
         }
+    }
+
+    public static function getHttpPath() {
+        $projectFolder = explode ("/", $_SERVER['REQUEST_URI'])[1];
+        if(isset($_SERVER['HTTPS'])){
+            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+        }
+        else {
+            $protocol = 'http';
+        }
+        return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $projectFolder ."/storage/";
     }
 }
