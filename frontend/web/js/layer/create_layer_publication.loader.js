@@ -158,12 +158,13 @@ function prepareLayersToDraw() {
     var saveButton = document.getElementById("save-layer-button");
     saveButton.addEventListener(
         'click', function (event) {
-            //var image = context.getDataUrl()
+            var imageDataUrl = canvas.toDataURL("image/png")
+            var imageName = generateRandomImageTitle();
             layerDescription = document.getElementById('layerDesc').value;
             layerTitle = document.getElementById('layerTitle').value;
 
             var newLayerInfo = {
-                image: "path",
+                image: imageName,
                 layerParams: {
                     title: layerTitle,
                     alpha: "1",
@@ -172,11 +173,16 @@ function prepareLayersToDraw() {
                 }
             }
             currentSettings.drawings.push(newLayerInfo);
-            settingsJSON = JSON.stringify(currentSettings)
+            //settingsJSON = JSON.stringify(currentSettings)
+            var newData = {
+                newImageName: imageName,
+                newImageUrl: imageDataUrl,
+                newSettings: currentSettings,
+            };
             $.ajax({
                 type: "POST",
                 url: "/tracingshare/frontend/web/index.php/publication/save-layer?id=" + publicationId,
-                data: {params: settingsJSON},
+                data: {params: JSON.stringify(newData)},
                 success: function (data) {
                     location.href = "http://localhost/tracingshare/frontend/web/index.php/publication/edit?id=" + publicationId
                 },
@@ -186,5 +192,19 @@ function prepareLayersToDraw() {
             });
         }
     )
+    //https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+    function generateRandomImageTitle() {
+        const length = 5;
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+        return prefix + result + ".png";
+    }
 }
+
+
 

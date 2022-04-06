@@ -95,10 +95,20 @@ class PublicationController extends Controller
 
         $publication = Publication::findOne($id);
 
-        if (strcmp(json_encode($data), "") != 2) {
-            $newSettings = json_encode($data, JSON_UNESCAPED_UNICODE);
+        if (strcmp(json_encode($data['newSettings']), "") != 2) {
+            $newSettings = json_encode($data['newSettings'], JSON_UNESCAPED_UNICODE);
             $publication->settings = $newSettings;
+
+            $imageBase64 = $data['newImageUrl'];
+            $img0 = str_replace('data:image/png;base64,', '', $imageBase64);
+            $img0 = str_replace(' ', '+', $img0);
+            $imageToSave = base64_decode($img0);
+            $filePath = Publication::basePath() . '/'
+                . Publication::PREFIX_PATH_DRAWINGS . '/'
+                . $data['newImageName'];
+            file_put_contents($filePath, $imageToSave);
         }
+
         if($publication->update(true, ["settings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }

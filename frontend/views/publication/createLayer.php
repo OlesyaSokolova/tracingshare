@@ -9,13 +9,13 @@ if(!empty($publication)) {
 
     $this->title = "Создание нового слоя: ".$publication->name;//TODO: layer name
     $originalImageSrc = "\"" . Publication::HTTP_PATH_STORAGE.Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
-    $drawingPathPrefix = "\"" . Publication::HTTP_PATH_STORAGE . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
+    $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . "\"";
 
     $script = <<< JS
     
     publicationId = $publication->id
     originalImageSrc = $originalImageSrc
-    drawingPathPrefix =  $drawingPathPrefix
+    prefix = $drawingPrefix
     settings = $publication->settings
    
     prepareLayersToDraw()
@@ -40,7 +40,7 @@ JS;
 <form>
     <div class="form-group">
         <label for="title">Название слоя: </label>
-        <input type="text" style="size: auto" class="form-control" id="layerTitle" value="<?=$publication->name?>">
+        <input type="text" style="size: auto" class="form-control" id="layerTitle" value="Новый слой">
     </div>
 </form>
 
@@ -127,7 +127,7 @@ JS;
 <form style="padding-top: 20px">
     <div class="form-group">
         <label for="layerDesc">Описание:</label>
-        <textarea class="form-control" id="layerDesc" rows="10" ></textarea>
+        <textarea class="form-control" id="layerDesc" rows="10" >Описание</textarea>
     </div>
 </form>
 
