@@ -75,7 +75,6 @@ function prepareLayersToDraw() {
                 fillIsClicked = true;
             });
 
-
         function startDrawing(e) {
             if(counter === 1) {
                 isDrawing = false;
@@ -114,11 +113,17 @@ function prepareLayersToDraw() {
     classNameContainer = 'toolbar'
 
     $('.' + classNameContainer)
-        .on('input change', '.change-color-btn', function () {
+        .on('input change', '.color-value', function () {
             $(this).attr('value', $(this).val());
             var newColor = $(this).val();
-            context.strokeStyle = color;
-        });
+            context.strokeStyle = newColor;
+        })
+
+        .on('input change', '.thickness-value', function () {
+            $(this).attr('value', $(this).val());
+            var newThickness = $(this).val();
+            context.lineWidth = newThickness;
+        })
 
         //1.3. create thumbnails of all existing layers
         //1.3.1. init settings: if they are not set,

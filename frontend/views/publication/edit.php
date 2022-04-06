@@ -54,9 +54,6 @@ if ($publication->settings != ''): ?>
 <div class="box" style="
     display: flex
 ">
-    <!--<div class="box" id="instruments">
-        //сетка/список с инструментами
-    </div>-->
 
     <div class="container-publication" data-state="static">
         <div class="canvas-publication">

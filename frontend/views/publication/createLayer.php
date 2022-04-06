@@ -48,9 +48,10 @@ JS;
 --><!--TODO: add button to create new layer in the editor
  if user creates new layer from editor, settings should be updated -->
 <div class="d-flex justify-content-around">
+    <div class="toolbar">
 
     <!-- List With Icons -->
-    <div class="list-group pmd-list pmd-card-list" id="toolbar" style="width: fit-content; padding-right: 10px">
+    <div class="list-group pmd-list pmd-card-list" style="width: fit-content; padding-right: 10px">
         <button type="button" id="brush-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
             <span class="media-body">Кисть</span>
             <img id="brush-icn" src="http://localhost/tracingshare/icons/brush.png" width="50"/>
@@ -67,11 +68,12 @@ JS;
         </button>
 
         <label for="brushColor" id="change-color-btn">Цвет</label>
-        <input type="color" id="brushColor" class =\'color-value\' value="#000000" name="drawingColor">
+        <input type="color" id="brushColor" class ="color-value" value="#000000" name="drawingColor">
 
         <label for="thickness" id="change-thickness-btn">Толщина кисти/ластика: </label>
-        <input type=range id="thickness" style="width: 300px" class=\'alpha-value\' step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
-
+        <input type=range id="thickness" style="width: 300px" class="thickness-value" step='1' min='1' max='10' value='1' >
+<!--        oninput=\"this.nextElementSibling.value = this.value\"
+-->    </div>
     </div>
 
 
