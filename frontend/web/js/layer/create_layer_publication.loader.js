@@ -11,7 +11,7 @@ function prepareLayersToDraw() {
         var x = backgroundElement.offsetLeft, y = backgroundElement.offsetTop;
         var canvas = createCanvasToDrawOn(originalImageCtx.canvas.width, originalImageCtx.canvas.height, x, y)
 
-        canvas.onmousedown = startDrawing;
+        canvas.onmousedown = startDrawing;//if button-brush is clicked && isDrawing is true!!
         canvas.onmouseup = stopDrawing;
         canvas.onmouseout = stopDrawing;
         canvas.onmousemove = draw;
@@ -20,43 +20,72 @@ function prepareLayersToDraw() {
 
         //1.3. drawing
         var isDrawing = false;
+        var isErasing = false;
+        var isFilling = false;
 
+        var brushIsClicked = false;
+        var eraserIsClicked = false;
+        var fillIsClicked = false;
+        var counter = 0;
         var previousTool;
 
         //1.4. init buttons
         var brushButton = document.getElementById("brush-btn");
         brushButton.addEventListener(
         'click', function (event) {
+            isDrawing = true;
+            counter = 1;
                 $(this).addClass('active');
                 if (previousTool != null) {
                     $(previousTool).removeClass('active');
                 }
                 previousTool = this;
+                brushIsClicked = true;
+                eraserIsClicked = false;
+                fillIsClicked = false;
             });
+
+
 
         var eraserButton = document.getElementById("eraser-btn");
         eraserButton.addEventListener(
             'click', function (event) {
+                counter = 1;
                 $(this).addClass('active');
                 if (previousTool != null) {
                     $(previousTool).removeClass('active');
                 }
                 previousTool = this;
-
+                brushIsClicked = false;
+                eraserIsClicked = true;
+                fillIsClicked = false;
             });
 
         var fillButton = document.getElementById("fill-btn");
         fillButton.addEventListener(
             'click', function (event) {
+                counter = 1;
                 $(this).addClass('active');
                 if (previousTool != null) {
                     $(previousTool).removeClass('active');
                 }
                 previousTool = this;
+                brushIsClicked = false;
+                eraserIsClicked = false;
+                fillIsClicked = true;
             });
 
 
         function startDrawing(e) {
+            if(counter === 1) {
+                isDrawing = false;
+                counter = 2;
+            }
+
+            else if(counter === 2 && brushIsClicked) {
+                isDrawing = true;
+            }
+
             // Начинаем рисовать
             if (isDrawing === true) {
 
@@ -69,7 +98,8 @@ function prepareLayersToDraw() {
     }
 
     function draw(e) {
-        if (isDrawing === true)
+
+        if (isDrawing === true && counter === 2)
         {
             // Определяем текущие координаты указателя мыши
             var x = e.pageX - canvas.offsetLeft;
