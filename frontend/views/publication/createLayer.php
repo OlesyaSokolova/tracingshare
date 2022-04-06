@@ -49,22 +49,23 @@ JS;
 <div class="d-flex justify-content-around">
     <div class="toolbar">
         <div class="list-group pmd-list pmd-card-list" style="width: fit-content; padding-right: 10px">
-        <button type="button" id="brush-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+            <button type="button" class="btn btn-outline-primary btn-rounded" id="clear-layer-button" style="margin-bottom: 10px">Очистить слой</button>
+
+            <button type="button" id="brush-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
             <span class="media-body">Кисть</span>
             <img id="brush-icn" src="http://localhost/tracingshare/icons/brush.png" width="50"/>
-        </button>
+            </button>
 
-        <button type="button" id="eraser-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-         <span class="media-body">Ластик</span>
-            <img src="http://localhost/tracingshare/icons/eraser.png" width="50"/>
-        </button>
+            <button type="button" id="eraser-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+             <span class="media-body">Ластик</span>
+                <img src="http://localhost/tracingshare/icons/eraser.png" width="50"/>
+            </button>
 
+            <label for="brushColor" id="change-color-btn">Цвет</label>
+            <input type="color" id="brushColor" class ="color-value" value="#000000" name="drawingColor">
 
-        <label for="brushColor" id="change-color-btn">Цвет</label>
-        <input type="color" id="brushColor" class ="color-value" value="#000000" name="drawingColor">
-
-        <label for="thickness" id="change-thickness-btn">Толщина кисти/ластика: </label>
-        <input type=range id="thickness" style="width: 300px" class="thickness-value" step='1' min='1' max='10' value='5' >
+            <label for="thickness" id="change-thickness-btn">Толщина кисти/ластика: </label>
+            <input type=range id="thickness" style="width: 300px" class="thickness-value" step='1' min='1' max='10' value='5' >
 
         </div>
     </div>

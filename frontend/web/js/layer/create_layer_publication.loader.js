@@ -49,6 +49,13 @@ function prepareLayersToDraw() {
     var previousTool;
 
     //1.5. init buttons
+
+    var clearButton = document.getElementById("clear-layer-button");
+    clearButton.addEventListener(
+        'click', function (event) {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
     var brushButton = document.getElementById("brush-btn");
     brushButton.addEventListener(
     'click', function (event) {
