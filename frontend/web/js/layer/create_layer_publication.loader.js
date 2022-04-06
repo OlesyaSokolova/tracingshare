@@ -18,6 +18,12 @@ function prepareLayersToDraw() {
 
         var context = canvas.getContext("2d");
 
+        const eraserStyle = "rgba(255,255,255,1)";
+        const eraserGlobalCompositeOperation = "destination-out";
+
+        const brushGlobalCompositeOperation = context.globalCompositeOperation;
+        var brushStyle = "rgba(0,0,0,1)"
+
         //1.3. drawing
         var isDrawing = false;
         var isErasing = false;
@@ -73,6 +79,8 @@ function prepareLayersToDraw() {
                 brushIsClicked = false;
                 eraserIsClicked = false;
                 fillIsClicked = true;
+                /*context.fillStyle = 'green';
+                context.fill();*/
             });
 
         function startDrawing(e) {
@@ -83,23 +91,50 @@ function prepareLayersToDraw() {
 
             if(counter === 2 && brushIsClicked) {
                 isDrawing = true;
+                isErasing = false;
+                //isFilling = false;
             }
 
             if (isDrawing === true) {
                 context.beginPath();
                 context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
-        }
+            }
+
+            if(counter === 2 && eraserIsClicked) {
+                isErasing = true;
+                isDrawing = false;
+                //isFilling = false;
+            }
+
+            if (isErasing === true) {
+                context.beginPath();
+                context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+            }
     }
 
     function draw(e) {
 
+
+        var x, y;
         if (isDrawing === true && counter === 2)
         {
-            //Текущие координаты указателя мыши
-            var x = e.pageX - canvas.offsetLeft;
-            var y = e.pageY - canvas.offsetTop;
+            context.globalCompositeOperation = brushGlobalCompositeOperation;
+            context.strokeStyle = brushStyle;
 
-            //Рисуем линию до новой координаты
+            x = e.pageX - canvas.offsetLeft;
+             y = e.pageY - canvas.offsetTop;
+
+            context.lineTo(x, y);
+            context.stroke();
+        }
+
+        else if(isErasing === true && counter === 2) {
+            context.globalCompositeOperation = eraserGlobalCompositeOperation;
+            context.strokeStyle = eraserStyle;
+
+            x = e.pageX - canvas.offsetLeft;
+            y = e.pageY - canvas.offsetTop;
+
             context.lineTo(x, y);
             context.stroke();
         }
@@ -108,6 +143,7 @@ function prepareLayersToDraw() {
 
     function stopDrawing() {
         isDrawing = false;
+        isErasing = false;
     }
 
     classNameContainer = 'toolbar'
@@ -116,7 +152,11 @@ function prepareLayersToDraw() {
         .on('input change', '.color-value', function () {
             $(this).attr('value', $(this).val());
             var newColor = $(this).val();
-            context.strokeStyle = newColor;
+            var red = parseInt(newColor[1]+newColor[2],16);
+            var green = parseInt(newColor[3]+newColor[4],16);
+            var blue = parseInt(newColor[5]+newColor[6],16);
+            brushStyle = "rgba(" + red + ","+ green + "," + blue + ",1)";
+            context.strokeStyle = brushStyle;
         })
 
         .on('input change', '.thickness-value', function () {
