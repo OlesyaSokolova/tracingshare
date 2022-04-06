@@ -82,18 +82,13 @@ function prepareLayersToDraw() {
                 counter = 2;
             }
 
-            else if(counter === 2 && brushIsClicked) {
+            if(counter === 2 && brushIsClicked) {
                 isDrawing = true;
             }
 
-            // Начинаем рисовать
             if (isDrawing === true) {
-
-            // Создаем новый путь (с текущим цветом и толщиной линии)
-            context.beginPath();
-
-            // Нажатием левой кнопки мыши помещаем "кисть" на холст
-            context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+                context.beginPath();
+                context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
         }
     }
 
@@ -101,11 +96,11 @@ function prepareLayersToDraw() {
 
         if (isDrawing === true && counter === 2)
         {
-            // Определяем текущие координаты указателя мыши
+            //Текущие координаты указателя мыши
             var x = e.pageX - canvas.offsetLeft;
             var y = e.pageY - canvas.offsetTop;
 
-            // Рисуем линию до новой координаты
+            //Рисуем линию до новой координаты
             context.lineTo(x, y);
             context.stroke();
         }
