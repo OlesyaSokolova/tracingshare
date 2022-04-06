@@ -1,16 +1,28 @@
 function prepareLayersToDraw() {
 
+    var currentSettings = {
+        drawings: Array()
+    }
+    if(typeof settings != "undefined" && settings !== ''  && settings !== "") {
+
+        currentSettings = JSON.parse(JSON.stringify(settings));
+    }
+
 //1. Preparations
-    //1.1. set original image as background
+    //1.1. set original image as background and create thumbnails
     originalImage = new Image();
     originalImage.src = originalImageSrc;
     var originalImageCtx = drawBackground(originalImage);
+
+    drawOriginalImageLayerThumbnail(originalImage)
+
+    newLayerThumbnail = new Image();
+    drawNewLayerThumbnail(originalImage.width, originalImage.height)
 
     //1.2. create canvas for new layer (to draw)
     var backgroundElement = document.getElementById("background");
     var x = backgroundElement.offsetLeft, y = backgroundElement.offsetTop;
     var canvas = createCanvasToDrawOn(originalImageCtx.canvas.width, originalImageCtx.canvas.height, x, y)
-
 
     //1.3. set event listeners
     canvas.onmousedown = startEditing;
@@ -63,19 +75,6 @@ function prepareLayersToDraw() {
                 brushIsClicked = false;
                 eraserIsClicked = true;
             });
-
-       /* var fillButton = document.getElementById("fill-btn");
-        fillButton.addEventListener(
-            'click', function (event) {
-                counter = 1;
-                $(this).addClass('active');
-                if (previousTool != null && !previousTool.isSameNode(this)) {
-                    $(previousTool).removeClass('active');
-                }
-                previousTool = this;
-                brushIsClicked = false;
-                eraserIsClicked = false;
-            });*/
 
     function startEditing(e) {
         if(counter === 1) {
@@ -149,65 +148,36 @@ function prepareLayersToDraw() {
             context.lineWidth = newThickness;
         })
 
-        /*.on('input change', '.alpha-value', function () {
-            $(this).attr('value', $(this).val());
-            var newAlpha = $(this).val();
-            context.strokeStyle = 'rgba(255, 0, 0, 0.1)';
-        })*/
-
-        //1.3. create thumbnails of all existing layers
-        //1.3.1. init settings: if they are not set,
-        // create settings as associative array for new layer (see below)
-        /*layersSettings = ""
-        if(typeof settings != "undefined" && settings !== ''  && settings !== "") {
-            layersSettings = JSON.parse(JSON.stringify(settings));
-            drawOtherLayersThumbnails(settings)
-        }*/
-        //if user creates new layer from editor, settings should be updated
-
-    //1.4. create thumbnail for original image
-    drawOriginalImageLayerThumbnail(originalImage)
-
-    //1.5. create thumbnail for new layer:
-     newLayerThumbnail = new Image();
-     drawNewLayerThumbnail(originalImage.width, originalImage.height)
-
-
     var saveButton = document.getElementById("save-layer-button");
     saveButton.addEventListener(
         'click', function (event) {
-            var image = contextToDrawOn.getDataUrl()
-            settings = "{" +
-                "\"drawings\": [" +
-                "   {" +
-/*
-                "    image: \" + image+ \",\n" +
-*/
-                "    layerParams: {" +
-                "                   alpha: \"1\"," +
-                "                   color: \"#ffffff\"" +
-                "                }" +
-                "    }]" +
-                "}"
-            settingJSON = JSON.parse(JSON.stringify(settings))
-            settingJSON.drawings[0].layerParams.title = document.getElementById("title").value;
-            /*settings.drawings[0].layerParams.alpha = document.getElementById('alpha_' + i).value;
-            settings.drawings[0].layerParams.color = document.getElementById('color_' + i).value;*/
-            settingJSON.drawings[0].layerParams.description = document.getElementById('layerDesc').value;
+            //var image = context.getDataUrl()
+            layerDescription = document.getElementById('layerDesc').value;
+            layerTitle = document.getElementById('layerTitle').value;
 
-        //console.log(publicationId)
-        $.ajax({
-            type: "POST",
-            url: "/tracingshare/frontend/web/index.php/publication/save-layer",
-            data: newSettings,
-            success: function (data) {
-                alert(data)
-                location.href = "http://localhost/tracingshare/frontend/web/index.php/publication/view?id=" + publicationId
-            },
-            error: function (xhr, status, error) {
-                alert("Произошла ошибка при сохранении данных:" + xhr);
+            var newLayerInfo = {
+                image: "path",
+                layerParams: {
+                    title: layerTitle,
+                    alpha: "1",
+                    color: "#000000",
+                    description: layerDescription
+                }
             }
-        });
-    })
+            currentSettings.drawings.push(newLayerInfo);
+            settingsJSON = JSON.stringify(currentSettings)
+            $.ajax({
+                type: "POST",
+                url: "/tracingshare/frontend/web/index.php/publication/save-layer?id=" + publicationId,
+                data: {params: settingsJSON},
+                success: function (data) {
+                    location.href = "http://localhost/tracingshare/frontend/web/index.php/publication/edit?id=" + publicationId
+                },
+                error: function (xhr, status, error) {
+                    alert("Произошла ошибка при сохранении данных:" + xhr);
+                }
+            });
+        }
+    )
 }
 

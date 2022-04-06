@@ -89,6 +89,24 @@ class PublicationController extends Controller
         }
     }
 
+    public function actionSaveLayer($id)
+    {
+        $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
+
+        $publication = Publication::findOne($id);
+
+        if (strcmp(json_encode($data), "") != 2) {
+            $newSettings = json_encode($data, JSON_UNESCAPED_UNICODE);
+            $publication->settings = $newSettings;
+        }
+        if($publication->update(true, ["settings"])) {
+            Yii::$app->session->setFlash('success', "Успешно сохранено.");
+        }
+        else {
+            Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.");
+        }
+    }
+
     public function actionUploadOriginalImage()
     {
         $model = new Publication();
