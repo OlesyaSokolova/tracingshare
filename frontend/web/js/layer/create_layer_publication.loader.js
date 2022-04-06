@@ -36,7 +36,7 @@ function prepareLayersToDraw() {
             isDrawing = true;
             counter = 1;
                 $(this).addClass('active');
-                if (previousTool != null) {
+                if (previousTool != null && !previousTool.isSameNode(this)) {
                     $(previousTool).removeClass('active');
                 }
                 previousTool = this;
@@ -52,7 +52,7 @@ function prepareLayersToDraw() {
             'click', function (event) {
                 counter = 1;
                 $(this).addClass('active');
-                if (previousTool != null) {
+                if (previousTool != null && !previousTool.isSameNode(this)) {
                     $(previousTool).removeClass('active');
                 }
                 previousTool = this;
@@ -66,7 +66,7 @@ function prepareLayersToDraw() {
             'click', function (event) {
                 counter = 1;
                 $(this).addClass('active');
-                if (previousTool != null) {
+                if (previousTool != null && !previousTool.isSameNode(this)) {
                     $(previousTool).removeClass('active');
                 }
                 previousTool = this;
