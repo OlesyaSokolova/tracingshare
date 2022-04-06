@@ -1,57 +1,55 @@
 function prepareLayersToDraw() {
 
-    //1. Preparations
-        //1.1. set original image as background
-        originalImage = new Image();
-        originalImage.src = originalImageSrc;
-        var originalImageCtx = drawBackground(originalImage);
+//1. Preparations
+    //1.1. set original image as background
+    originalImage = new Image();
+    originalImage.src = originalImageSrc;
+    var originalImageCtx = drawBackground(originalImage);
 
-        //1.2. create canvas for new layer (to draw)
-        var backgroundElement = document.getElementById("background");
-        var x = backgroundElement.offsetLeft, y = backgroundElement.offsetTop;
-        var canvas = createCanvasToDrawOn(originalImageCtx.canvas.width, originalImageCtx.canvas.height, x, y)
-
-        canvas.onmousedown = startDrawing;//if button-brush is clicked && isDrawing is true!!
-        canvas.onmouseup = stopDrawing;
-        canvas.onmouseout = stopDrawing;
-        canvas.onmousemove = draw;
-
-        var context = canvas.getContext("2d");
-
-        const eraserStyle = "rgba(255,255,255,1)";
-        const eraserGlobalCompositeOperation = "destination-out";
-
-        const brushGlobalCompositeOperation = context.globalCompositeOperation;
-        var brushStyle = "rgba(0,0,0,1)"
-
-        //1.3. drawing
-        var isDrawing = false;
-        var isErasing = false;
-        var isFilling = false;
-
-        var brushIsClicked = false;
-        var eraserIsClicked = false;
-        var fillIsClicked = false;
-        var counter = 0;
-        var previousTool;
-
-        //1.4. init buttons
-        var brushButton = document.getElementById("brush-btn");
-        brushButton.addEventListener(
-        'click', function (event) {
-            isDrawing = true;
-            counter = 1;
-                $(this).addClass('active');
-                if (previousTool != null && !previousTool.isSameNode(this)) {
-                    $(previousTool).removeClass('active');
-                }
-                previousTool = this;
-                brushIsClicked = true;
-                eraserIsClicked = false;
-                fillIsClicked = false;
-            });
+    //1.2. create canvas for new layer (to draw)
+    var backgroundElement = document.getElementById("background");
+    var x = backgroundElement.offsetLeft, y = backgroundElement.offsetTop;
+    var canvas = createCanvasToDrawOn(originalImageCtx.canvas.width, originalImageCtx.canvas.height, x, y)
 
 
+    //1.3. set event listeners
+    canvas.onmousedown = startEditing;
+    canvas.onmouseup = stopEditing;
+    canvas.onmouseout = stopEditing;
+    canvas.onmousemove = edit;
+
+    //1.4. init vars and consts
+    var context = canvas.getContext("2d");
+
+    const eraserStyle = "rgba(255,255,255,1)";
+    const eraserGlobalCompositeOperation = "destination-out";
+
+    const brushGlobalCompositeOperation = context.globalCompositeOperation;
+    var brushStyle = "rgba(0,0,0,1)"
+
+    var isDrawing = false;
+    var isErasing = false;
+
+    var brushIsClicked = false;
+    var eraserIsClicked = false;
+
+    var counter = 0;
+    var previousTool;
+
+    //1.5. init buttons
+    var brushButton = document.getElementById("brush-btn");
+    brushButton.addEventListener(
+    'click', function (event) {
+        isDrawing = true;
+        counter = 1;
+            $(this).addClass('active');
+            if (previousTool != null && !previousTool.isSameNode(this)) {
+                $(previousTool).removeClass('active');
+            }
+            previousTool = this;
+            brushIsClicked = true;
+            eraserIsClicked = false;
+        });
 
         var eraserButton = document.getElementById("eraser-btn");
         eraserButton.addEventListener(
@@ -64,10 +62,9 @@ function prepareLayersToDraw() {
                 previousTool = this;
                 brushIsClicked = false;
                 eraserIsClicked = true;
-                fillIsClicked = false;
             });
 
-        var fillButton = document.getElementById("fill-btn");
+       /* var fillButton = document.getElementById("fill-btn");
         fillButton.addEventListener(
             'click', function (event) {
                 counter = 1;
@@ -78,42 +75,30 @@ function prepareLayersToDraw() {
                 previousTool = this;
                 brushIsClicked = false;
                 eraserIsClicked = false;
-                fillIsClicked = true;
-                /*context.fillStyle = 'green';
-                context.fill();*/
-            });
+            });*/
 
-        function startDrawing(e) {
-            if(counter === 1) {
-                isDrawing = false;
-                counter = 2;
-            }
+    function startEditing(e) {
+        if(counter === 1) {
+            isDrawing = false;
+            counter = 2;
+        }
 
-            if(counter === 2 && brushIsClicked) {
-                isDrawing = true;
-                isErasing = false;
-                //isFilling = false;
-            }
+        if(counter === 2 && brushIsClicked) {
+            isDrawing = true;
+            isErasing = false;
+            context.beginPath();
+            context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+        }
 
-            if (isDrawing === true) {
-                context.beginPath();
-                context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
-            }
-
-            if(counter === 2 && eraserIsClicked) {
-                isErasing = true;
-                isDrawing = false;
-                //isFilling = false;
-            }
-
-            if (isErasing === true) {
-                context.beginPath();
-                context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
-            }
+        if(counter === 2 && eraserIsClicked) {
+            isErasing = true;
+            isDrawing = false;
+            context.beginPath();
+            context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+        }
     }
 
-    function draw(e) {
-
+    function edit(e) {
 
         var x, y;
         if (isDrawing === true && counter === 2)
@@ -140,8 +125,7 @@ function prepareLayersToDraw() {
         }
     }
 
-
-    function stopDrawing() {
+    function stopEditing() {
         isDrawing = false;
         isErasing = false;
     }
@@ -174,20 +158,19 @@ function prepareLayersToDraw() {
         //1.3. create thumbnails of all existing layers
         //1.3.1. init settings: if they are not set,
         // create settings as associative array for new layer (see below)
-        layersSettings = ""
+        /*layersSettings = ""
         if(typeof settings != "undefined" && settings !== ''  && settings !== "") {
             layersSettings = JSON.parse(JSON.stringify(settings));
             drawOtherLayersThumbnails(settings)
-        }
+        }*/
         //if user creates new layer from editor, settings should be updated
 
-        //1.4. create thumbnail for original image
-        var originalImageThumbnailLayerCtx = drawOriginalImageLayerThumbnail(originalImage)
+    //1.4. create thumbnail for original image
+    drawOriginalImageLayerThumbnail(originalImage)
 
-        //1.5. create thumbnail for new layer:
-         newLayerThumbnail = new Image();
-        var newLayerCtx = drawNewLayerThumbnail()
-
+    //1.5. create thumbnail for new layer:
+     newLayerThumbnail = new Image();
+     drawNewLayerThumbnail(originalImage.width, originalImage.height)
 
 
     var saveButton = document.getElementById("save-layer-button");
@@ -228,76 +211,3 @@ function prepareLayersToDraw() {
     })
 }
 
-
-function drawBackground(originalImage) {
-    var canvas = document.getElementById('background')
-    var ratio = originalImage.width/originalImage.height
-    var constWidth = 1000
-    var correspondingHeight = constWidth/ratio
-    canvas.width = constWidth
-    canvas.height = correspondingHeight
-
-    originalImageCtx = canvas.getContext('2d');
-    originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
-
-    return originalImageCtx
-}
-
-function drawOriginalImageLayerThumbnail(originalImage) {
-
-    var canvas = document.getElementById('originalImageThumbnail')
-    var ratio = originalImage.width/originalImage.height
-    var constWidth = 200
-    var correspondingHeight = constWidth/ratio
-    canvas.width = constWidth
-    canvas.height = correspondingHeight
-
-    originalImageCtx = canvas.getContext('2d');
-    originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
-
-    return originalImageCtx
-}
-
-function drawOtherLayersThumbnails(settings) {
-
-    var divWithLayers = document.getElementById('otherLayersThumbnails')
-    //create new canvases for each layer
-    /*var canvas =
-    var ratio = originalImage.width/originalImage.height
-    var constWidth = 200
-    var correspondingHeight = constWidth/ratio
-    canvas.width = constWidth
-    canvas.height = correspondingHeight
-
-    originalImageCtx = canvas.getContext('2d');
-    originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
-
-    return originalImageCtx*/
-}
-
-function drawNewLayerThumbnail() {
-
-    var canvas = document.getElementById('newLayerThumbnail')
-    var ratio = originalImage.width/originalImage.height
-    var constWidth = 200
-    var correspondingHeight = constWidth/ratio
-    canvas.width = constWidth
-    canvas.height = correspondingHeight
-
-    originalImageCtx = canvas.getContext('2d');
-    originalImageCtx.drawImage(new Image(), 0, 0,canvas.width,  canvas.height);
-
-    return originalImageCtx
-}
-function createCanvasToDrawOn(width, height, x, y) {
-
-    var canvas = document.getElementById("layerToDrawOn");
-    canvas.width = width;
-    canvas.height = height
-
-    canvas.style.position = "absolute";
-    canvas.style.left = x + 'px';
-    canvas.style.top = y + 'px';
-
-    return canvas;
-}

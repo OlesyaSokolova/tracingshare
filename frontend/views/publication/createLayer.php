@@ -62,23 +62,23 @@ JS;
             <img src="http://localhost/tracingshare/icons/eraser.png" width="50"/>
         </button>
 
-        <button type="button" id="fill-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+       <!-- <button type="button" id="fill-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
             <span class="media-body">Заливка</span>
             <img src="http://localhost/tracingshare/icons/fill.png" width="50"/>
-        </button>
+        </button>-->
 
         <label for="brushColor" id="change-color-btn">Цвет</label>
         <input type="color" id="brushColor" class ="color-value" value="#000000" name="drawingColor">
 
         <label for="thickness" id="change-thickness-btn">Толщина кисти/ластика: </label>
-        <input type=range id="thickness" style="width: 300px" class="thickness-value" step='1' min='1' max='10' value='1' >
+        <input type=range id="thickness" style="width: 300px" class="thickness-value" step='1' min='1' max='10' value='5' >
 <!--        oninput=\"this.nextElementSibling.value = this.value\"
 -->
        <!-- <label for="alpha" id="change-alpha-btn">Прозрачность слоя: </label>
         <input type=range id="alpha" style="width: 300px" class="alpha-value" step='0.02' min='0' max='1' value='1' >
        --> <!--        oninput=\"this.nextElementSibling.value = this.value\"
         -->
-    </div>
+        </div>
     </div>
 
 
