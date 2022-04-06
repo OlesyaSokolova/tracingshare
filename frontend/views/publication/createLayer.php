@@ -73,7 +73,12 @@ JS;
         <label for="thickness" id="change-thickness-btn">Толщина кисти/ластика: </label>
         <input type=range id="thickness" style="width: 300px" class="thickness-value" step='1' min='1' max='10' value='1' >
 <!--        oninput=\"this.nextElementSibling.value = this.value\"
--->    </div>
+-->
+       <!-- <label for="alpha" id="change-alpha-btn">Прозрачность слоя: </label>
+        <input type=range id="alpha" style="width: 300px" class="alpha-value" step='0.02' min='0' max='1' value='1' >
+       --> <!--        oninput=\"this.nextElementSibling.value = this.value\"
+        -->
+    </div>
     </div>
 
 

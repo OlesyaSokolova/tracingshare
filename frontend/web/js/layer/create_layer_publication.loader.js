@@ -125,6 +125,12 @@ function prepareLayersToDraw() {
             context.lineWidth = newThickness;
         })
 
+        /*.on('input change', '.alpha-value', function () {
+            $(this).attr('value', $(this).val());
+            var newAlpha = $(this).val();
+            context.strokeStyle = 'rgba(255, 0, 0, 0.1)';
+        })*/
+
         //1.3. create thumbnails of all existing layers
         //1.3.1. init settings: if they are not set,
         // create settings as associative array for new layer (see below)
