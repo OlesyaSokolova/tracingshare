@@ -46,6 +46,10 @@ AppAsset::register($this);
     if (isset($userRoles['author']) || isset($userRoles['admin'])) {
         $menuItems[] = ['label' => 'Мои публикации', 'url' => ['/site/publications']];
     }
+
+    if (isset($userRoles['admin'])) {
+        $menuItems[] = ['label' => 'Администрирование', 'url' => ['/site/admin']];
+    }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems
