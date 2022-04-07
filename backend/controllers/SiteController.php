@@ -116,7 +116,6 @@ class SiteController extends Controller
 
     private function publicationControllerUrl()
     {
-        //$projectFolder = explode ("/", $_SERVER['HTTP_REFERER'])[3];
         if(isset($_SERVER['HTTPS'])){
             $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
         }
