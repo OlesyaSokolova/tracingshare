@@ -3,12 +3,6 @@ function prepareEditablePublication() {
 
         defaultSettings = JSON.parse(JSON.stringify(settings));
 
-        //1. update settings from query (if exist)
-        //updateSettingsFromQuery(settings);
-
-        //2. put (updated) settings to url
-        //updateAllQueryParameters(settings)
-
         originalImage = new Image();
         originalImage.src = originalImageSrc;
 
@@ -27,7 +21,6 @@ function prepareEditablePublication() {
                     var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
                     drawingsImages[drawingImageId].alpha = newAlpha;
                     updateAllLayers(drawingsImages)
-                    //updateOneQueryParameter(jsonSettings = settings, layerId = drawingImageId, key = "alpha", newValue = newAlpha);
                 })
 
                 .on('input change', '.color-value', function () {
@@ -36,7 +29,6 @@ function prepareEditablePublication() {
                     var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
                     drawingsImages[drawingImageId].color = newColor;
                     updateAllLayers(drawingsImages)
-                    //updateOneQueryParameter(jsonSettings = settings, layerId = drawingImageId, key = "color", newValue = newColor);
                 })
 
             var resetButton = document.getElementById("reset-button");
@@ -44,7 +36,6 @@ function prepareEditablePublication() {
                 reloadSettingsForEdit(defaultSettings, drawingsImages)
             })
         }
-
     }
 
     else {

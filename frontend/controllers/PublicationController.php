@@ -89,6 +89,43 @@ class PublicationController extends Controller
         }
     }
 
+    public function actionSaveLayer($id)
+    {
+        $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
+
+        $publication = Publication::findOne($id);
+
+        if (strcmp(json_encode($data['newSettings']), "") != 2) {
+            $newSettings = json_encode($data['newSettings'], JSON_UNESCAPED_UNICODE);
+            $publication->settings = $newSettings;
+
+            $imageBase64 = $data['newImageUrl'];
+            $img0 = str_replace('data:image/png;base64,', '', $imageBase64);
+            $img0 = str_replace(' ', '+', $img0);
+            $imageToSave = base64_decode($img0);
+            $filePath = Publication::basePath() . '/'
+                . Publication::PREFIX_PATH_DRAWINGS . '/'
+                . $data['newImageName'];
+
+            file_put_contents($filePath, $imageToSave);
+           /*
+            $total = imagecolorstotal($imageToSave);
+            for ($i = 0; $i < $total; $i++) {
+                $red = 0;
+                $green = 0;
+                $blue = 0;
+                imagecolorset($imageToSave, $i, $red, $green, $blue);
+            }*/
+        }
+
+        if($publication->update(true, ["settings"])) {
+            Yii::$app->session->setFlash('success', "Успешно сохранено.");
+        }
+        else {
+            Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.");
+        }
+    }
+
     public function actionUploadOriginalImage()
     {
         $model = new Publication();

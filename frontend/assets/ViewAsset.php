@@ -24,7 +24,7 @@ class ViewAsset extends AssetBundle
         'js/publication.loader.js',
         'js/editable_publication.loader.js',
         'js/layer/create_layer_publication.loader.js',
-        'js/layer/layer_utils.js',
+        'js/layer/editor_utils.js',
         ];
 
     public $depends = [

@@ -6,7 +6,9 @@ use common\models\Publication;
 use yii\bootstrap4\LinkPager;
 use yii\helpers\Url;
 
-$this->title = 'Все публикации'; ?>
+$this->title = 'Все публикации';
+?>
+
 <style>
     .thumbnail {
         background-color: white;
@@ -28,7 +30,7 @@ $this->title = 'Все публикации'; ?>
                        <a href="<?= Url::to(['publication/view', 'id' => $publication->id])?>" class="publication-item">
 
                         <div class="row">
-                            <div class="thumbnail" style="background-image: url(<?= Publication::HTTP_PATH_STORAGE . Publication::PREFIX_PATH_THUMBNAILS . '/' . Publication::THUMBNAIL_PREFIX . $publication->image ?>)"></div>
+                            <div class="thumbnail" style="background-image: url(<?= Publication::getStorageHttpPath() . Publication::PREFIX_PATH_THUMBNAILS . '/' . Publication::THUMBNAIL_PREFIX . $publication->image ?>)"></div>
                         </div>
                         <h5>
                             <?= $publication->name ?>

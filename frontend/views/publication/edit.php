@@ -7,8 +7,8 @@ use yii\helpers\Html;
 if(!empty($publication)) {
 
     $this->title = "Редактирование: ".$publication->name;
-    $originalImageSrc = "\"" . Publication::HTTP_PATH_STORAGE.Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
-    $drawingPathPrefix = "\"" . Publication::HTTP_PATH_STORAGE . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
+    $originalImageSrc = "\"" . Publication::getStorageHttpPath().Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
+    $drawingPathPrefix = "\"" . Publication::getStorageHttpPath(). Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
 
     $script = <<< JS
     
@@ -54,9 +54,6 @@ if ($publication->settings != ''): ?>
 <div class="box" style="
     display: flex
 ">
-    <!--<div class="box" id="instruments">
-        //сетка/список с инструментами
-    </div>-->
 
     <div class="container-publication" data-state="static">
         <div class="canvas-publication">
