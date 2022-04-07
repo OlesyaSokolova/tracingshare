@@ -54,7 +54,6 @@ use common\models\User;
 class Publication extends ActiveRecord
 {
     //const HTTP_PATH_STORAGE = 'http://localhost/tracingshare/storage/';
-    const HTTP_PATH_STORAGE = 'http://localhost/tracingshare/storage/';
     const PREFIX_PATH_IMAGES = 'images';//folder with original images
     const PREFIX_PATH_DRAWINGS = 'drawings';//folder with drawings
     const PREFIX_PATH_THUMBNAILS = 'thumbnails';//folder with thumbnails
@@ -185,9 +184,13 @@ class Publication extends ActiveRecord
     }
 
     public function getAuthorName() {
-        $user = User::findIdentity($this->author_id);
-        return $user->last_name . " " . $user->first_name . " " . $user->patronymic
-            . " (" .$user->email .")" ;
+        if(($this->author_id) != null) {
+            $user = User::findIdentity($this->author_id);
+
+            return $user->last_name . " " . $user->first_name . " " . $user->patronymic
+                . " (" . $user->email . ")";
+        }
+        else return "";
     }
 
     public function updateSettings()

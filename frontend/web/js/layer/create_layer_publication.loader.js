@@ -158,6 +158,7 @@ function prepareLayersToDraw() {
     var saveButton = document.getElementById("save-layer-button");
     saveButton.addEventListener(
         'click', function (event) {
+            changeImageColor()
             var imageDataUrl = canvas.toDataURL("image/png")
             var imageName = generateRandomImageTitle();
             layerDescription = document.getElementById('layerDesc').value;
@@ -203,6 +204,23 @@ function prepareLayersToDraw() {
                 charactersLength));
         }
         return prefix + result + ".png";
+    }
+
+    //https://stackoverflow.com/questions/12992681/html-5-canvas-get-color-of-an-image-and-then-change-the-pixels-with-that-color
+    function changeImageColor() {
+        {
+            const image = context.getImageData(0, 0, canvas.width, canvas.height);
+            const { data } = image;
+            const { length } = data;
+
+            for (let i = 0; i < length; i += 4) { // red, green, blue, and alpha
+                data[i] = 0;//r
+                data[i + 1] = 0;//g
+                data[i + 2] = 0;//b
+            }
+
+            context.putImageData(image, 0, 0);
+        }
     }
 }
 

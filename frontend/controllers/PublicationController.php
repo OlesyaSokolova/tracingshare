@@ -106,7 +106,16 @@ class PublicationController extends Controller
             $filePath = Publication::basePath() . '/'
                 . Publication::PREFIX_PATH_DRAWINGS . '/'
                 . $data['newImageName'];
+
             file_put_contents($filePath, $imageToSave);
+           /*
+            $total = imagecolorstotal($imageToSave);
+            for ($i = 0; $i < $total; $i++) {
+                $red = 0;
+                $green = 0;
+                $blue = 0;
+                imagecolorset($imageToSave, $i, $red, $green, $blue);
+            }*/
         }
 
         if($publication->update(true, ["settings"])) {
