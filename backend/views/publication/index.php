@@ -10,9 +10,7 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\publication\PublicationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Публикации';
-
-?>
+$this->title = 'Публикации'; ?>
 <div class="publication-index">
 
     <h1><?= Html::encode($this->title) ?></h1>

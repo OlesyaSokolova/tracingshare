@@ -6,7 +6,9 @@ use common\models\Publication;
 use yii\bootstrap4\LinkPager;
 use yii\helpers\Url;
 
-$this->title = 'Все публикации'; ?>
+$this->title = 'Все публикации';
+?>
+
 <style>
     .thumbnail {
         background-color: white;
