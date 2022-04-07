@@ -5,12 +5,11 @@
 
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
-$this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index']];
 $this->title = 'Создание пользователя';
 $model->role = 'author';
 ?>
 <div class="user-create">
-    <h1 style="text-align: center;"><?= Html::encode($this->title) ?></h1>
+    <h3 style="text-align: center;"><?= Html::encode($this->title) ?></h3>
     <div class="row justify-content-center">
         <div class="col-lg-5">
 

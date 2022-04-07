@@ -27,8 +27,8 @@ JS;
     $this->registerJs($script, yii\web\View::POS_READY);
 } ?>
 
-<h2><?=$this->title?>
-</h2>
+<h3><?=$this->title?>
+</h3>
 <p>
     <?php
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());

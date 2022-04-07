@@ -10,7 +10,7 @@ use yii\bootstrap4\ActiveForm;
 $this->title = 'Вход';
 ?>
 <div class="site-signup" align="center">
-    <h1 style="text-align: center;"><?= Html::encode($this->title) ?></h1>
+    <h3 style="text-align: center;"><?= Html::encode($this->title) ?></h3>
     <div class="row row justify-content-center">
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'form-login']) ?>

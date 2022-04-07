@@ -9,7 +9,7 @@ use yii\bootstrap4\ActiveForm;
 $this->title = 'Создание публикации';
 ?>
 <div class="publication-upload-original-image">
-    <h1 style="text-align: center;"><?= Html::encode($this->title) ?></h1>
+    <h3 style="text-align: center;"><?= Html::encode($this->title) ?></h3>
     <div class="row justify-content-center">
         <div class="col-lg-5">
 

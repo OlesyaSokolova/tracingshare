@@ -22,7 +22,7 @@ $this->title = 'Публикации'; ?>
         background-repeat: no-repeat;
     }
 </style>
-<h1>Мои публикации</h1>
+<h3>Мои публикации</h3>
 
 <?php
  //if (Yii::$app->user->can('createPost')):?>

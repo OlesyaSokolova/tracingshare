@@ -26,7 +26,7 @@ JS;
 }
 ?>
 
-<h2><?=$this->title?></h2>
+<h3><?=$this->title?></h3>
 
 <p>
 <?php

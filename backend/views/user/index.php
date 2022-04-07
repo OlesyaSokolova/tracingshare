@@ -14,7 +14,7 @@ $this->title = 'Пользователи';
 ?>
 <div class="user-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3><?= Html::encode($this->title) ?></h3>
 
     <p>
         <?= Html::a('Создать пользователя', ['create'], ['class' => 'btn btn-outline-primary btn-rounded']) ?>

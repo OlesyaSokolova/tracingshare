@@ -14,7 +14,7 @@ $this->title = "Пользователь: ". $model->last_name.' '. $model->firs
 ?>
 <div class="user-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3><?= Html::encode($this->title) ?></h3>
 
     <p>
         <?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-outline-primary btn-rounded']) ?>
