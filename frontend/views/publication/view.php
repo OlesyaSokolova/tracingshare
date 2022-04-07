@@ -4,7 +4,10 @@ use frontend\assets\ViewAsset;
 use common\models\Publication;
 use yii\helpers\Html;
 
+
+
 if(!empty($publication)) {
+
     $this->title = $publication->name;
     $originalImageSrc = "\"" . Publication::getStorageHttpPath().Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
     $drawingPathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";

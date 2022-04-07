@@ -85,7 +85,7 @@ class PublicationController extends Controller
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
         else {
-            Yii::$app->session->setFlash('error', "Ошибка при сохранении: изменений нет.");
+            Yii::$app->session->setFlash('info', "Изменений нет.");
         }
     }
 
