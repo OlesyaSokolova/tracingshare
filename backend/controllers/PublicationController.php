@@ -41,13 +41,20 @@ class PublicationController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new PublicationSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $userRoles =  Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+        if(isset($userRoles['admin'])) {
+            $searchModel = new PublicationSearch();
+            $dataProvider = $searchModel->search($this->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+        else {
+            header("Location: ". $this->siteControllerUrl()."/site/login");
+            exit();
+        }
     }
 
     /**
@@ -194,10 +201,9 @@ class PublicationController extends Controller
         ]);
     }
 
-
     private function frontendUrl()
     {
-        $projectFolder = explode ("/", $_SERVER['REQUEST_URI'])[1];
+        $projectFolder = 'tracingshare';
         if(isset($_SERVER['HTTPS'])){
             $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
         }
@@ -205,5 +211,17 @@ class PublicationController extends Controller
             $protocol = 'http';
         }
         return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $projectFolder ."/frontend/web/index.php";
+    }
+
+    private function siteControllerUrl()
+    {
+        $projectFolder = 'tracingshare';
+        if(isset($_SERVER['HTTPS'])){
+            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+        }
+        else{
+            $protocol = 'http';
+        }
+        return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $projectFolder ."/backend/web/index.php";
     }
 }

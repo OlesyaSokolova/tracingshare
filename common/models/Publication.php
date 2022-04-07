@@ -240,7 +240,7 @@ class Publication extends ActiveRecord
     }
 
     public static function getStorageHttpPath() {
-        $projectFolder = explode ("/", $_SERVER['HTTP_REFERER'])[3];
+        $projectFolder = 'tracingshare';
         if(isset($_SERVER['HTTPS'])){
             $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
         }
