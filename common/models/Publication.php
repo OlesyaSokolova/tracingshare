@@ -239,7 +239,7 @@ class Publication extends ActiveRecord
         }
     }
 
-    public static function getHttpPath() {
+    public static function getStorageHttpPath() {
         $projectFolder = explode ("/", $_SERVER['REQUEST_URI'])[1];
         if(isset($_SERVER['HTTPS'])){
             $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";

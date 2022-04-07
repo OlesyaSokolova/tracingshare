@@ -8,7 +8,7 @@ use yii\helpers\Html;
 if(!empty($publication)) {
 
     $this->title = "Создание нового слоя: ".$publication->name;//TODO: layer name
-    $originalImageSrc = "\"" . Publication::getHttpPath() .Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
+    $originalImageSrc = "\"" . Publication::getStorageHttpPath() .Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
     $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . "\"";
 
     $script = <<< JS

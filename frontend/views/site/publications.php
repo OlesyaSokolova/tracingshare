@@ -42,7 +42,7 @@ $this->title = 'Публикации'; ?>
                         <a href="<?= Url::to(['publication/view', 'id' => $publication->id])?>" class="publication-item">
 
                         <div class="row">
-                            <div class="thumbnail" style="background-image: url(<?= Publication::getHttpPath() . Publication::PREFIX_PATH_THUMBNAILS . '/' . Publication::THUMBNAIL_PREFIX . $publication->image?>)"></div>
+                            <div class="thumbnail" style="background-image: url(<?= Publication::getStorageHttpPath() . Publication::PREFIX_PATH_THUMBNAILS . '/' . Publication::THUMBNAIL_PREFIX . $publication->image?>)"></div>
                         </div>
                         <h5>
                             <?= $publication->name ?>

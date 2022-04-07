@@ -52,7 +52,7 @@ $this->title = 'Публикации';
                 'format' => 'html',
                 'label' => 'Изображение',
                 'value' => function ($data) {
-                    return Html::img(Publication::getHttpPath() . Publication::PREFIX_PATH_THUMBNAILS . '/' . Publication::THUMBNAIL_PREFIX . $data['image'],
+                    return Html::img(Publication::getStorageHttpPath() . Publication::PREFIX_PATH_THUMBNAILS . '/' . Publication::THUMBNAIL_PREFIX . $data['image'],
                         ['width' => '300px']);
                 },
             ],
