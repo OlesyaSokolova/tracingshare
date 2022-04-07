@@ -107,9 +107,8 @@ function prepareEditablePublication() {
                 if (userAnswer === true) {
                     settings.drawings.splice(i, 1);
                     var redirectToView = false;
-                    saveData(settings, redirectToView)
-                    //updateAllLayers(initDrawingsArray(settings))
                     initLayersSettingsForEdit(settings)
+                    saveData(settings, redirectToView)
                 }
             })
         }

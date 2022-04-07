@@ -55,8 +55,18 @@ function drawNewLayerThumbnail(width, height) {
     return originalImageCtx
 }
 
+//https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
 function generateRandomImageTitle(prefix, index) {
-    return prefix + index + ".png";
+    const length = 5;
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return prefix + result + ".png";
+    //return prefix + index + ".png";
 }
 
 //https://stackoverflow.com/questions/12992681/html-5-canvas-get-color-of-an-image-and-then-change-the-pixels-with-that-color
