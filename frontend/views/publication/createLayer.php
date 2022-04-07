@@ -9,7 +9,8 @@ if(!empty($publication)) {
 
     $this->title = "Создание нового слоя: ".$publication->name;//TODO: layer name
     $originalImageSrc = "\"" . Publication::getStorageHttpPath() .Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
-    $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . "\"";
+    $baseName = explode('.', $publication->image)[0];
+    $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . $baseName . "_" . "\"";
 
     $script = <<< JS
     

@@ -118,7 +118,6 @@ function initLayersSettings(jsonSettings) {
                             }
                         }
                     }
-
                     clearOtherLayersDivs(i)
                 });
         }

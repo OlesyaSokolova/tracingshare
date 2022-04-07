@@ -55,3 +55,23 @@ function drawNewLayerThumbnail(width, height) {
     return originalImageCtx
 }
 
+function generateRandomImageTitle(prefix, index) {
+    return prefix + index + ".png";
+}
+
+//https://stackoverflow.com/questions/12992681/html-5-canvas-get-color-of-an-image-and-then-change-the-pixels-with-that-color
+function changeImageColor(context, width, height) {
+    {
+        const image = context.getImageData(0, 0, width, height);
+        const {data} = image;
+        const {length} = data;
+
+        for (let i = 0; i < length; i += 4) { // red, green, blue, and alpha
+            data[i] = 0;//r
+            data[i + 1] = 0;//g
+            data[i + 2] = 0;//b
+        }
+        context.putImageData(image, 0, 0);
+    }
+}
+
