@@ -3,7 +3,9 @@ function prepareLayersToDraw() {
     var currentSettings = {
         drawings: Array()
     }
-    if (typeof settings != "undefined" && settings !== '' && settings !== "") {
+    if (typeof settings != "undefined"
+        && settings !== ''
+        && settings !== "") {
 
         currentSettings = JSON.parse(JSON.stringify(settings));
     }

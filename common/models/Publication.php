@@ -164,7 +164,7 @@ class Publication extends ActiveRecord
         }
     }
 
-    private function getDrawings() {
+    public function getDrawings() {
 
         $settingsArray = $this->getSettingsArray();
         $drawings = $settingsArray['drawings'];

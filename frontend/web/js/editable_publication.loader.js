@@ -1,5 +1,8 @@
 function prepareEditablePublication() {
-    if(typeof settings != "undefined" && settings !== ''  && settings !== "") {
+    if(typeof settings != "undefined"
+        && settings !== ''
+        && settings !== ""
+        && settings.drawings.length > 0) {
 
         defaultSettings = JSON.parse(JSON.stringify(settings));
 

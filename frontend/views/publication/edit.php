@@ -43,7 +43,9 @@ JS;
     <?php endif; ?>
 </p>
 <?php
-if ($publication->settings != ''): ?>
+if (strcmp($publication->settings ,'') != 0
+    && sizeof($publication->getDrawings()) > 0
+): ?>
     <p>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить последние сохраненные настройки слоев</button>
     </p>

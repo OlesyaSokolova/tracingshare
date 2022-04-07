@@ -76,8 +76,9 @@ if (isset($userRoles['admin'])):?>
     </div>
 
     <?php
-    //var_dump($publication->settings);
-    if (strcmp($publication->settings ,'') != 0): ?>
+    if (strcmp($publication->settings ,'') != 0
+        && sizeof($publication->getDrawings()) > 0
+        ): ?>
         <div style="padding-left: 20px; margin-right: 20px" id="layers" class = "layers-class">
         </div>
 
