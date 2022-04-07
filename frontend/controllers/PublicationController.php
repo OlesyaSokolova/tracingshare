@@ -85,7 +85,7 @@ class PublicationController extends Controller
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
         else {
-            Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.");
+            Yii::$app->session->setFlash('error', "Ошибка при сохранении: изменений нет.");
         }
     }
 
@@ -108,14 +108,6 @@ class PublicationController extends Controller
                 . $data['newImageName'];
 
             file_put_contents($filePath, $imageToSave);
-           /*
-            $total = imagecolorstotal($imageToSave);
-            for ($i = 0; $i < $total; $i++) {
-                $red = 0;
-                $green = 0;
-                $blue = 0;
-                imagecolorset($imageToSave, $i, $red, $green, $blue);
-            }*/
         }
 
         if($publication->update(true, ["settings"])) {
