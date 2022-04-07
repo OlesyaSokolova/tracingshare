@@ -116,7 +116,9 @@ class Publication extends ActiveRecord
             FileHelper::createDirectory($drawingsDir);
 
             foreach ($this->drawingsFiles as $file) {
-                $filename = self::DRAWING_PREFIX . $file->baseName . '.' . $file->extension;
+                $baseName = explode('.', $this->image)[0];
+                $drawingPrefix =  Publication::DRAWING_PREFIX . $baseName . "_";
+                $filename = $drawingPrefix .$file->baseName . '.' . $file->extension;
                 $drawingPath = $drawingsDir. '/' . $filename;
                 if (file_exists($drawingPath)) {
                     unlink($drawingPath);
@@ -162,6 +164,12 @@ class Publication extends ActiveRecord
         }
     }
 
+    public function getDrawings() {
+
+        $settingsArray = $this->getSettingsArray();
+        $drawings = $settingsArray['drawings'];
+        return $drawings;
+    }
     public function getSettingsArray()
     {
         return json_decode($this->settings, true);
@@ -204,7 +212,9 @@ class Publication extends ActiveRecord
         }
 
         foreach ($this->drawingsFiles as $file) {
-            $filename = self::DRAWING_PREFIX . $file->baseName . '.' . $file->extension;
+            $baseName = explode('.', $this->image)[0];
+            $drawingPrefix =  Publication::DRAWING_PREFIX . $baseName . "_";
+            $filename = $drawingPrefix .$file->baseName . '.' . $file->extension;
             $newLayerInfo = array("image" => $filename,
                "layerParams" => array(
                     "title" => $file->baseName,
@@ -229,11 +239,11 @@ class Publication extends ActiveRecord
             unlink($thumbnailPath);
         }
 
-        if(isset($this->drawingsFiles)) {
-            foreach ($this->drawingsFiles as $file) {
-                $filePath = self::basePath() . '/' . self::PREFIX_PATH_DRAWINGS . '/' . self::DRAWING_PREFIX . $file->baseName . '.' . $file->extension;
-                if (file_exists($filePath)) {
-                    unlink($filePath);
+        if(sizeof($this->getDrawings()) > 0) {
+            foreach ($this->getDrawings() as $drawing) {
+                $drawingPath = self::basePath(). '/' . self::PREFIX_PATH_DRAWINGS . '/' . $drawing['image'];
+                if (file_exists($drawingPath)) {
+                    unlink($drawingPath);
                 }
             }
         }

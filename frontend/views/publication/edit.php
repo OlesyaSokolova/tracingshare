@@ -34,10 +34,18 @@ JS;
     if (Yii::$app->user->can('updateOwnPost',
             ['publication' => $publication]) || isset($userRoles['admin'])):?>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="save-button">Сохранить</button>
+
+        <?= Html::a(Yii::t('app', 'Загрузить слои прорисовок'),
+            ['/publication/upload-drawings', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'upload-drawings-button',]) ?>
+
     <?php endif; ?>
 </p>
 <?php
-if ($publication->settings != ''): ?>
+if (strcmp($publication->settings ,'') != 0
+    && sizeof($publication->getDrawings()) > 0
+): ?>
     <p>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить последние сохраненные настройки слоев</button>
     </p>
@@ -77,7 +85,7 @@ if ($publication->settings != ''): ?>
                     ['class' => 'btn btn-outline-primary btn-rounded', 'style' => 'margin-bottom: 10px',
                         'name' => 'create-layer-button'],) ?>
                 <div id="editForm"">
-                    <div>
+                    </div>
             </div>
 
     <?php /*endif; */?>

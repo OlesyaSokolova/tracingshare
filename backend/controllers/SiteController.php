@@ -28,7 +28,7 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout', 'index', 'frontend'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -108,9 +108,14 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
+    public function actionFrontend()
+    {
+        header("Location: ". $this->frontendUrl());
+        exit();
+    }
+
     private function publicationControllerUrl()
     {
-        //$projectFolder = explode ("/", $_SERVER['HTTP_REFERER'])[3];
         if(isset($_SERVER['HTTPS'])){
             $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
         }
@@ -118,5 +123,17 @@ class SiteController extends Controller
             $protocol = 'http';
         }
         return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $_SERVER['REQUEST_URI'];
+    }
+
+    private function frontendUrl()
+    {
+        $projectFolder = 'tracingshare';
+        if(isset($_SERVER['HTTPS'])){
+            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+        }
+        else{
+            $protocol = 'http';
+        }
+        return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $projectFolder ."/frontend/web/index.php";
     }
 }

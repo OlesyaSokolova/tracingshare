@@ -21,7 +21,7 @@ $this->title = 'Все публикации';
         background-repeat: no-repeat;
     }
 </style>
-<h1><?= $this->title ?></h1>
+<h3><?= $this->title ?></h3>
 <div id="w0" class="list-view">
     <?php if (!empty($publications)):?>
         <div class="row publications" style="position: relative;">

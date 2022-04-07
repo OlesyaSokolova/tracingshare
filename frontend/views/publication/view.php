@@ -4,7 +4,10 @@ use frontend\assets\ViewAsset;
 use common\models\Publication;
 use yii\helpers\Html;
 
+
+
 if(!empty($publication)) {
+
     $this->title = $publication->name;
     $originalImageSrc = "\"" . Publication::getStorageHttpPath().Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
     $drawingPathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
@@ -25,15 +28,22 @@ JS;
 
 <h2><?=$this->title?></h2>
 
-<?php
-if (strcmp($publication->settings ,'') != 0): ?>
 <p>
+<?php
+$userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+if (isset($userRoles['admin'])):?>
+    <?= Html::a(Yii::t('app', 'Перейти к списку всех публикаций (на панель администратора)'),
+        ['/site/admin', 'id' => $publication->id],
+        ['class' => 'btn btn-outline-primary btn-rounded',
+            'name' => 'edit-button',]) ?>
+</p>
+<p>
+    <?php endif;
+    if (strcmp($publication->settings ,'') != 0): ?>
+
     <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить авторские настройки</button>
 </p>
-<?php endif; ?>
-
-    <?php
-    $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+    <?php endif;
 
     if (Yii::$app->user->can('updateOwnPost',
         ['publication' => $publication]) || isset($userRoles['admin'])):?>
@@ -66,8 +76,9 @@ if (strcmp($publication->settings ,'') != 0): ?>
     </div>
 
     <?php
-    //var_dump($publication->settings);
-    if (strcmp($publication->settings ,'') != 0): ?>
+    if (strcmp($publication->settings ,'') != 0
+        && sizeof($publication->getDrawings()) > 0
+        ): ?>
         <div style="padding-left: 20px; margin-right: 20px" id="layers" class = "layers-class">
         </div>
 

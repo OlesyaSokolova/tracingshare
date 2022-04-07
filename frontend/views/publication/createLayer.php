@@ -9,7 +9,8 @@ if(!empty($publication)) {
 
     $this->title = "Создание нового слоя: ".$publication->name;//TODO: layer name
     $originalImageSrc = "\"" . Publication::getStorageHttpPath() .Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
-    $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . "\"";
+    $baseName = explode('.', $publication->image)[0];
+    $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . $baseName . "_" . "\"";
 
     $script = <<< JS
     
@@ -117,7 +118,7 @@ JS;
                 </canvas>
                 <br>
                 <label for="originalImageThumbnailAlpha">Прозрачность: </label>
-                <input type=range name="alphaChannel" id="originalImageThumbnailAlpha" class=\'alpha-value\' step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
+                <input type=range name="alphaChannel" class ="orgnl-img-alpha-value" id="originalImageThumbnailAlpha" step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
             </div>
 
         </div>

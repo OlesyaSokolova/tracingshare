@@ -65,3 +65,4 @@ function addImagesToContext(imagesArray, contextToDrawOn) {
         drawImage(imagesArray[i], contextToDrawOn)
     }
 }
+

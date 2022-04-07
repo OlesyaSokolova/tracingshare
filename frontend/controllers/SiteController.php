@@ -111,6 +111,12 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionAdmin()
+    {
+        header("Location: ". $this->backendUrl()."/publication/index");
+        exit();
+    }
+
     /**
      * Logs in a user.
      *
@@ -267,5 +273,17 @@ class SiteController extends Controller
 
         Yii::$app->session->setFlash('error', 'Произошла ошибка во время подтверждения регистрации: неправильный токен.');
         return $this->goHome();
+    }
+
+    private function backendUrl()
+    {
+        $projectFolder = 'tracingshare';
+        if(isset($_SERVER['HTTPS'])){
+            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+        }
+        else{
+            $protocol = 'http';
+        }
+        return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $projectFolder ."/backend/web/index.php";
     }
 }
