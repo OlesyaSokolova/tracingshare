@@ -83,7 +83,7 @@ if ($publication->settings != ''): ?>
                     ['class' => 'btn btn-outline-primary btn-rounded', 'style' => 'margin-bottom: 10px',
                         'name' => 'create-layer-button'],) ?>
                 <div id="editForm"">
-                    <div>
+                    </div>
             </div>
 
     <?php /*endif; */?>

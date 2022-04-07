@@ -91,6 +91,7 @@ function reloadSettingsForEdit(defaultSettings, drawingsImages) {
 }
 
 function initLayersSettingsForEdit(jsonSettings) {
+
     var drawings = jsonSettings.drawings
     if (Array.isArray(drawings)) {
 
@@ -111,11 +112,17 @@ function initLayersSettingsForEdit(jsonSettings) {
                 '                margin-bottom: 10px">';
 
             var titleId = "title_" + i;
+            var delBtnId = "del_btn_" + i;
             var alphaId = "alpha_" + i;
             var colorId = "color_" + i;
             var descId = "desc_" + i;
 
-            layerInfo += '<label for=\'' + titleId + '\'>Название: </label>'
+            layerInfo +=
+                '<label for=\'' + titleId + '\'>Название: </label>'
+               + '<button type="button" id=\'' + delBtnId  + '\' ' +
+                    'class="btn btn-outline-danger btn-sm" ' +
+                    'style="float: right; margin-bottom: 10px"' +
+                     '>Удалить слой</button>'
                 + '<input type="text" id=\'' + titleId + '\' class="form-control" value=\'' + (drawings[i].layerParams.title) + '\'/>'
                 + '<br>'
 
@@ -130,7 +137,7 @@ function initLayersSettingsForEdit(jsonSettings) {
                 + '<textarea id=\'' + descId + '\' style="width: 500px" class="form-control">'
                 + drawings[i].layerParams.description
                 +'</textarea>'
-                + '<br>'
+                layerInfo += '<br>'
 
             layerInfo += '</div>';
         }
@@ -138,5 +145,28 @@ function initLayersSettingsForEdit(jsonSettings) {
         layerInfo += '</form>';
         var layersEditForm = document.getElementById("editForm");
         layersEditForm.innerHTML = layerInfo
+        initDeleteButtons(settings)
     }
+}
+
+
+function initDeleteButtons(settings) {
+    var layersNumber = settings.drawings.length;
+
+    for (let i = 0; i < layersNumber; i++) {
+        var delBtnId = "del_btn_" + i;
+        var titleId = "title_" + i;
+        var deleteLayerButton = document.getElementById(delBtnId);
+        var layerTitle = document.getElementById(titleId).value;
+        deleteLayerButton.addEventListener('click', function (event) {
+            var userAnswer = confirm("Вы действительно хотите удалить слой \" " + layerTitle +"\"?");
+            if (userAnswer === true) {
+                settings.drawings.splice(i, 1);
+                initLayersSettingsForEdit(settings)
+            }
+        })
+    }
+}
+function deleteLayer(i) {
+    alert(i)
 }
