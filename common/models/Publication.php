@@ -116,7 +116,9 @@ class Publication extends ActiveRecord
             FileHelper::createDirectory($drawingsDir);
 
             foreach ($this->drawingsFiles as $file) {
-                $filename = self::DRAWING_PREFIX . $this->image ."_" .$file->baseName . '.' . $file->extension;
+                $baseName = explode('.', $this->image)[0];
+                $drawingPrefix =  Publication::DRAWING_PREFIX . $baseName . "_";
+                $filename = $drawingPrefix .$file->baseName . '.' . $file->extension;
                 $drawingPath = $drawingsDir. '/' . $filename;
                 if (file_exists($drawingPath)) {
                     unlink($drawingPath);
@@ -210,7 +212,9 @@ class Publication extends ActiveRecord
         }
 
         foreach ($this->drawingsFiles as $file) {
-            $filename = self::DRAWING_PREFIX . $file->baseName . '.' . $file->extension;
+            $baseName = explode('.', $this->image)[0];
+            $drawingPrefix =  Publication::DRAWING_PREFIX . $baseName . "_";
+            $filename = $drawingPrefix .$file->baseName . '.' . $file->extension;
             $newLayerInfo = array("image" => $filename,
                "layerParams" => array(
                     "title" => $file->baseName,
