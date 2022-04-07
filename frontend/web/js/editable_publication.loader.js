@@ -33,7 +33,7 @@ function prepareEditablePublication() {
 
             var resetButton = document.getElementById("reset-button");
             resetButton.addEventListener('click', function (event) {
-                reloadSettingsForEdit(defaultSettings, drawingsImages)
+                reloadSettingsForEdit(defaultSettings)
             })
         }
     }
@@ -49,10 +49,11 @@ function prepareEditablePublication() {
 
     var saveButton = document.getElementById("save-button");
     saveButton.addEventListener('click', function (event) {
-        saveData(settings)
+        var redirectToView = true
+        saveData(settings, redirectToView)
     });
 
-    function saveData(settings) {
+    function saveData(settings, redirectToView) {
         if(typeof settings != 'undefined' && settings !== '' && settings !== "") {
             for (let i = 0; i < settings.drawings.length; i++) {
                 settings.drawings[i].layerParams.title = document.getElementById("title_" + i).value;
@@ -79,7 +80,13 @@ function prepareEditablePublication() {
             data: {params: JSON.stringify(newData)},
             success: function (data) {
                 //alert(data)
-                location.href = "http://localhost/tracingshare/frontend/web/index.php/publication/view?id=" + publicationId
+                if(redirectToView) {
+                    location.href = "http://localhost/tracingshare/frontend/web/index.php/publication/view?id=" + publicationId
+                }
+                else {
+                    //document.location.reload();
+                    updateAllLayers(initDrawingsArray(settings));
+                }
             },
             error: function (xhr, status, error) {
                 alert("Произошла ошибка при сохранении данных:" + xhr);
@@ -99,7 +106,9 @@ function prepareEditablePublication() {
                 var userAnswer = confirm("Вы действительно хотите удалить слой \" " + layerTitle +"\"?");
                 if (userAnswer === true) {
                     settings.drawings.splice(i, 1);
-                    saveData(settings)
+                    var redirectToView = false;
+                    saveData(settings, redirectToView)
+                    //updateAllLayers(initDrawingsArray(settings))
                     initLayersSettingsForEdit(settings)
                 }
             })
@@ -164,9 +173,10 @@ function prepareEditablePublication() {
             initDeleteButtons(settings)
         }
     }
+
+    function reloadSettingsForEdit(defaultSettings) {
+        initLayersSettingsForEdit(defaultSettings)
+        updateAllLayers(initDrawingsArray(defaultSettings))
+    }
 }
 
-function reloadSettingsForEdit(defaultSettings, drawingsImages) {
-    initLayersSettingsForEdit(defaultSettings)
-    updateAllLayers(initDrawingsArray(defaultSettings))
-}
