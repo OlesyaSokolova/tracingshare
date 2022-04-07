@@ -49,6 +49,10 @@ function prepareEditablePublication() {
 
     var saveButton = document.getElementById("save-button");
     saveButton.addEventListener('click', function (event) {
+        saveData(settings)
+    });
+
+    function saveData(settings) {
         if(typeof settings != 'undefined' && settings !== '' && settings !== "") {
             for (let i = 0; i < settings.drawings.length; i++) {
                 settings.drawings[i].layerParams.title = document.getElementById("title_" + i).value;
@@ -81,92 +85,88 @@ function prepareEditablePublication() {
                 alert("Произошла ошибка при сохранении данных:" + xhr);
             }
         });
-    })
+    }
+
+    function initDeleteButtons(settings) {
+        var layersNumber = settings.drawings.length;
+
+        for (let i = 0; i < layersNumber; i++) {
+            var delBtnId = "del_btn_" + i;
+            var titleId = "title_" + i;
+            var deleteLayerButton = document.getElementById(delBtnId);
+            var layerTitle = document.getElementById(titleId).value;
+            deleteLayerButton.addEventListener('click', function (event) {
+                var userAnswer = confirm("Вы действительно хотите удалить слой \" " + layerTitle +"\"?");
+                if (userAnswer === true) {
+                    settings.drawings.splice(i, 1);
+                    saveData(settings)
+                    initLayersSettingsForEdit(settings)
+                }
+            })
+        }
+    }
+
+    function initLayersSettingsForEdit(jsonSettings) {
+
+        var drawings = jsonSettings.drawings
+        if (Array.isArray(drawings)) {
+
+            var layerInfo = '<form>';
+            for (let i = 0; i < drawings.length; i++) {
+                if (typeof drawings[i].layerParams.alpha != 'undefined') {
+                    alphaValue = drawings[i].layerParams.alpha;
+                    colorValue = drawings[i].layerParams.color;
+                } else {
+                    alphaValue = 1;
+                }
+                var layerId = "layer_" + i;
+                layerInfo += '<div className="form-group" id=\'' + layerId + '\' style="border:1px solid black;\n' +
+                    '                border-radius: 10px;\n' +
+                    '                padding-left: 20px;\n' +
+                    '                width: 700px;\n' +
+                    '                text-align: left;\n' +
+                    '                margin-bottom: 10px">';
+
+                var titleId = "title_" + i;
+                var delBtnId = "del_btn_" + i;
+                var alphaId = "alpha_" + i;
+                var colorId = "color_" + i;
+                var descId = "desc_" + i;
+
+                layerInfo +=
+                    '<label for=\'' + titleId + '\'>Название: </label>'
+                    + '<button type="button" id=\'' + delBtnId  + '\' ' +
+                    'class="btn btn-outline-danger btn-sm" ' +
+                    'style="float: right; margin-bottom: 10px"' +
+                    '>Удалить слой</button>'
+                    + '<input type="text" id=\'' + titleId + '\' class="form-control" value=\'' + (drawings[i].layerParams.title) + '\'/>'
+                    + '<br>'
+
+                    + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
+                    + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=\'' + alphaValue + '\' oninput=\"this.nextElementSibling.value = this.value\">'
+                    + '<br>'
+
+                    + '<label for=\'' + colorId + '\'>Цвет: </label>'
+                    + '<input type="color" id=\'' + colorId + '\' class =\'color-value\' value=\'' + colorValue + '\' name="drawingColor"></button>' + '<br>'
+
+                    + '<label for=\'' + descId + '\'>Описание: </label>'
+                    + '<textarea id=\'' + descId + '\' style="width: 500px" class="form-control">'
+                    + drawings[i].layerParams.description
+                    +'</textarea>'
+                layerInfo += '<br>'
+
+                layerInfo += '</div>';
+            }
+
+            layerInfo += '</form>';
+            var layersEditForm = document.getElementById("editForm");
+            layersEditForm.innerHTML = layerInfo
+            initDeleteButtons(settings)
+        }
+    }
 }
 
 function reloadSettingsForEdit(defaultSettings, drawingsImages) {
     initLayersSettingsForEdit(defaultSettings)
     updateAllLayers(initDrawingsArray(defaultSettings))
-    //updateAllQueryParameters(defaultSettings)
-}
-
-function initLayersSettingsForEdit(jsonSettings) {
-
-    var drawings = jsonSettings.drawings
-    if (Array.isArray(drawings)) {
-
-        var layerInfo = '<form>';
-        for (let i = 0; i < drawings.length; i++) {
-            if (typeof drawings[i].layerParams.alpha != 'undefined') {
-                alphaValue = drawings[i].layerParams.alpha;
-                colorValue = drawings[i].layerParams.color;
-            } else {
-                alphaValue = 1;
-            }
-            var layerId = "layer_" + i;
-            layerInfo += '<div className="form-group" id=\'' + layerId + '\' style="border:1px solid black;\n' +
-                '                border-radius: 10px;\n' +
-                '                padding-left: 20px;\n' +
-                '                width: 700px;\n' +
-                '                text-align: left;\n' +
-                '                margin-bottom: 10px">';
-
-            var titleId = "title_" + i;
-            var delBtnId = "del_btn_" + i;
-            var alphaId = "alpha_" + i;
-            var colorId = "color_" + i;
-            var descId = "desc_" + i;
-
-            layerInfo +=
-                '<label for=\'' + titleId + '\'>Название: </label>'
-               + '<button type="button" id=\'' + delBtnId  + '\' ' +
-                    'class="btn btn-outline-danger btn-sm" ' +
-                    'style="float: right; margin-bottom: 10px"' +
-                     '>Удалить слой</button>'
-                + '<input type="text" id=\'' + titleId + '\' class="form-control" value=\'' + (drawings[i].layerParams.title) + '\'/>'
-                + '<br>'
-
-                + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
-                + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=\'' + alphaValue + '\' oninput=\"this.nextElementSibling.value = this.value\">'
-                + '<br>'
-
-                + '<label for=\'' + colorId + '\'>Цвет: </label>'
-                + '<input type="color" id=\'' + colorId + '\' class =\'color-value\' value=\'' + colorValue + '\' name="drawingColor"></button>' + '<br>'
-
-                + '<label for=\'' + descId + '\'>Описание: </label>'
-                + '<textarea id=\'' + descId + '\' style="width: 500px" class="form-control">'
-                + drawings[i].layerParams.description
-                +'</textarea>'
-                layerInfo += '<br>'
-
-            layerInfo += '</div>';
-        }
-
-        layerInfo += '</form>';
-        var layersEditForm = document.getElementById("editForm");
-        layersEditForm.innerHTML = layerInfo
-        initDeleteButtons(settings)
-    }
-}
-
-
-function initDeleteButtons(settings) {
-    var layersNumber = settings.drawings.length;
-
-    for (let i = 0; i < layersNumber; i++) {
-        var delBtnId = "del_btn_" + i;
-        var titleId = "title_" + i;
-        var deleteLayerButton = document.getElementById(delBtnId);
-        var layerTitle = document.getElementById(titleId).value;
-        deleteLayerButton.addEventListener('click', function (event) {
-            var userAnswer = confirm("Вы действительно хотите удалить слой \" " + layerTitle +"\"?");
-            if (userAnswer === true) {
-                settings.drawings.splice(i, 1);
-                initLayersSettingsForEdit(settings)
-            }
-        })
-    }
-}
-function deleteLayer(i) {
-    alert(i)
 }
