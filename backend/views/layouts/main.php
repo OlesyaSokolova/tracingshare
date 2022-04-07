@@ -44,6 +44,7 @@ AppAsset::register($this);
     if (isset($userRoles['admin'])) {
         $menuItems[] = ['label' => 'Публикации', 'url' => ['/publication/index']];
         $menuItems[] = ['label' => 'Пользователи', 'url' => ['/user/index']];
+        $menuItems[] = ['label' => 'Галерея', 'url' => ['/site/frontend']];
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
