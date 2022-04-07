@@ -13,7 +13,7 @@ use yii\grid\GridView;
 $this->title = 'Публикации'; ?>
 <div class="publication-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3><?= Html::encode($this->title) ?></h3>
 
     <p>
         <?= Html::a('Создать публикацию', ['upload'], ['class' => 'btn btn-outline-primary btn-rounded']) ?>

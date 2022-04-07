@@ -65,17 +65,8 @@ class PublicationController extends Controller
      */
     public function actionView($id)
     {
-        $publication = Publication::findOne($id);
-        if (empty($publication)) {
-            throw new HttpException(404);
-        }
-
-        return $this->render('view', [
-            'publication' => $publication,
-            /*'categoryId' => $categoryId,
-            'objectPrev' => $objectPrev,
-            'objectNext' => $objectNext,*/
-        ]);
+        header("Location: ". $this->frontendUrl()."/publication/view?id=".$id);
+        exit();
     }
 
     /**
@@ -203,18 +194,16 @@ class PublicationController extends Controller
 
     private function frontendUrl()
     {
-        $projectFolder = 'tracingshare';
-        if(isset($_SERVER['HTTPS'])){
-            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-        }
-        else{
-            $protocol = 'http';
-        }
-        return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $projectFolder ."/frontend/web/index.php";
+        return $this->getFirstPartOfUrl()."/frontend/web/index.php";
     }
 
     private function siteControllerUrl()
     {
+        return $this->getFirstPartOfUrl()."/backend/web/index.php";
+    }
+
+    private function getFirstPartOfUrl() {
+
         $projectFolder = 'tracingshare';
         if(isset($_SERVER['HTTPS'])){
             $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
@@ -222,6 +211,6 @@ class PublicationController extends Controller
         else{
             $protocol = 'http';
         }
-        return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $projectFolder ."/backend/web/index.php";
+        return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $projectFolder;
     }
 }
