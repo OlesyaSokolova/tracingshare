@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\LoginForm;
+use common\models\UrlUtils;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -62,7 +63,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        header("Location: ". $this->publicationControllerUrl()."/publication/index");
+        header("Location: ". UrlUtils::backendUrl()."/publication/index");
         exit();
     }
 
@@ -110,30 +111,7 @@ class SiteController extends Controller
 
     public function actionFrontend()
     {
-        header("Location: ". $this->frontendUrl());
+        header("Location: ". UrlUtils::frontendUrl());
         exit();
-    }
-
-    private function publicationControllerUrl()
-    {
-        if(isset($_SERVER['HTTPS'])){
-            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-        }
-        else{
-            $protocol = 'http';
-        }
-        return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $_SERVER['REQUEST_URI'];
-    }
-
-    private function frontendUrl()
-    {
-        $projectFolder = 'tracingshare';
-        if(isset($_SERVER['HTTPS'])){
-            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-        }
-        else{
-            $protocol = 'http';
-        }
-        return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $projectFolder ."/frontend/web/index.php";
     }
 }

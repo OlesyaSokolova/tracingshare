@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Publication;
 use backend\models\publication\PublicationSearch;
+use common\models\UrlUtils;
 use Yii;
 use yii\web\Controller;
 use yii\web\HttpException;
@@ -52,7 +53,7 @@ class PublicationController extends Controller
             ]);
         }
         else {
-            header("Location: ". $this->siteControllerUrl()."/site/login");
+            header("Location: ". UrlUtils::backendUrl()."/site/login");
             exit();
         }
     }
@@ -65,7 +66,7 @@ class PublicationController extends Controller
      */
     public function actionView($id)
     {
-        header("Location: ". $this->frontendUrl()."/publication/view?id=".$id);
+        header("Location: ". UrlUtils::frontendUrl()."/publication/view?id=".$id);
         exit();
     }
 
@@ -100,13 +101,13 @@ class PublicationController extends Controller
      */
     public function actionUpdate($id)
     {
-        header("Location: ". $this->frontendUrl()."/publication/edit?id=".$id);
+        header("Location: ". UrlUtils::frontendUrl()."/publication/edit?id=".$id);
         exit();
     }
 
     public function actionEdit($id)
     {
-        header("Location: ". $this->frontendUrl()."/publication/edit?id=".$id);
+        header("Location: ". UrlUtils::frontendUrl()."/publication/edit?id=".$id);
         exit();
     }
 
@@ -192,25 +193,4 @@ class PublicationController extends Controller
         ]);
     }
 
-    private function frontendUrl()
-    {
-        return $this->getFirstPartOfUrl()."/frontend/web/index.php";
-    }
-
-    private function siteControllerUrl()
-    {
-        return $this->getFirstPartOfUrl()."/backend/web/index.php";
-    }
-
-    private function getFirstPartOfUrl() {
-
-        $projectFolder = 'tracingshare';
-        if(isset($_SERVER['HTTPS'])){
-            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-        }
-        else{
-            $protocol = 'http';
-        }
-        return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $projectFolder;
-    }
 }

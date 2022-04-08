@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\Publication;
+use common\models\UrlUtils;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -113,7 +114,7 @@ class SiteController extends Controller
 
     public function actionAdmin()
     {
-        header("Location: ". $this->backendUrl()."/publication/index");
+        header("Location: ". UrlUtils::backendUrl()."/publication/index");
         exit();
     }
 
