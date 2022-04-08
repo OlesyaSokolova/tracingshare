@@ -40,7 +40,8 @@ class PublicationSearch extends Publication
      */
     public function search($params)
     {
-        $query = Publication::find();
+        $query = Publication::find()
+            ->orderBy(['id' => SORT_DESC]);;
 
         // add conditions that should always apply here
 

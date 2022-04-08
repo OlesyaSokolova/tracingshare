@@ -79,7 +79,7 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $query = Publication::find()
-            ->orderBy(['id' => SORT_ASC]);
+            ->orderBy(['id' => SORT_DESC]);
         $countQuery = clone $query;
         $pages = new Pagination(['totalCount' => $countQuery->count()]);
         //$pages = new Pagination(['totalCount' => 100]);
