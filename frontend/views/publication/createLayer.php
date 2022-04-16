@@ -62,6 +62,11 @@ JS;
                 <img src="http://localhost/tracingshare/icons/eraser.png" width="50"/>
             </button>
 
+            <button type="button" id="filler-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+                <span class="media-body">Заливка</span>
+                <img src="http://localhost/tracingshare/icons/fill.png" width="50"/>
+            </button>
+
             <label for="brushColor" id="change-color-btn">Цвет</label>
             <input type="color" id="brushColor" class ="color-value" value="#000000" name="drawingColor">
 

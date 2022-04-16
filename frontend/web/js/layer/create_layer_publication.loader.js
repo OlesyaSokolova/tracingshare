@@ -44,9 +44,11 @@ function prepareLayersToDraw() {
 
         var isDrawing = false;
         var isErasing = false;
+        var isFilling = false;
 
         var brushIsClicked = false;
         var eraserIsClicked = false;
+        var fillerIsClicked = false;
 
         var counter = 0;
         var previousTool;
@@ -62,7 +64,6 @@ function prepareLayersToDraw() {
         var brushButton = document.getElementById("brush-btn");
         brushButton.addEventListener(
             'click', function (event) {
-                isDrawing = true;
                 counter = 1;
                 $(this).addClass('active');
                 if (previousTool != null && !previousTool.isSameNode(this)) {
@@ -71,6 +72,7 @@ function prepareLayersToDraw() {
                 previousTool = this;
                 brushIsClicked = true;
                 eraserIsClicked = false;
+                fillerIsClicked = false;
             });
 
         var eraserButton = document.getElementById("eraser-btn");
@@ -84,7 +86,23 @@ function prepareLayersToDraw() {
                 previousTool = this;
                 brushIsClicked = false;
                 eraserIsClicked = true;
+                fillerIsClicked = false;
+
             });
+
+            var fillerButton = document.getElementById("filler-btn");
+            fillerButton.addEventListener(
+                'click', function (event) {
+                    counter = 1;
+                    $(this).addClass('active');
+                    if (previousTool != null && !previousTool.isSameNode(this)) {
+                        $(previousTool).removeClass('active');
+                    }
+                    previousTool = this;
+                    brushIsClicked = false;
+                    eraserIsClicked = false;
+                    fillerIsClicked = true;
+                });
 
         function startEditing(e) {
             if (counter === 1) {
@@ -104,6 +122,14 @@ function prepareLayersToDraw() {
                 isDrawing = false;
                 context.beginPath();
                 context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+            }
+            if (counter === 2 && fillerIsClicked) {
+                isErasing = false;
+                isDrawing = false;
+                isFilling = true;
+                //context.closePath();
+                context.fillStyle = brushStyle;
+                context.fill();
             }
         }
 
@@ -131,6 +157,20 @@ function prepareLayersToDraw() {
 
                 context.lineTo(x, y);
                 context.stroke();
+            }
+            else if (isFilling === true && counter === 2) {
+                // complete custom shape
+
+                //get path as figure
+                //fill it
+               /* context.globalCompositeOperation = eraserGlobalCompositeOperation;
+                context.strokeStyle = eraserStyle;
+
+                x = e.pageX - canvas.offsetLeft;
+                y = e.pageY - canvas.offsetTop;
+
+                context.lineTo(x, y);
+                context.stroke();*/
             }
         }
 
