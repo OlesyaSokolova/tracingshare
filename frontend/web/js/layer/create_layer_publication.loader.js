@@ -12,9 +12,9 @@ function prepareLayersToDraw() {
 
 //1. Preparations
     //1.1. set original image as background and create thumbnails
-    originalImage = new Image();
-    originalImage.src = originalImageSrc;
-    originalImage.onload = function () {
+        originalImage = new Image();
+        originalImage.src = originalImageSrc;
+        originalImage.onload = function () {
         var originalImageCtx = drawBackground(originalImage);
 
         drawOriginalImageLayerThumbnail(originalImage)
@@ -113,6 +113,9 @@ function prepareLayersToDraw() {
             if (isDrawing === true && counter === 2) {
                 context.globalCompositeOperation = brushGlobalCompositeOperation;
                 context.strokeStyle = brushStyle;
+                context.lineCap = "round";
+                context.lineJoin = "round";
+
 
                 x = e.pageX - canvas.offsetLeft;
                 y = e.pageY - canvas.offsetTop;

@@ -29,16 +29,7 @@ JS;
 <h3><?=$this->title?></h3>
 
 <p>
-<?php
-$userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
-if (isset($userRoles['admin'])):?>
-    <?= Html::a(Yii::t('app', 'Перейти к списку всех публикаций (на панель администратора)'),
-        ['/site/admin', 'id' => $publication->id],
-        ['class' => 'btn btn-outline-primary btn-rounded',
-            'name' => 'edit-button',]) ?>
-</p>
-<p>
-    <?php endif;
+    <?php //endif;
     if (strcmp($publication->settings ,'') != 0): ?>
 
     <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить авторские настройки</button>

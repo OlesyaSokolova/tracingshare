@@ -61,7 +61,13 @@ $this->title = 'Публикации'; ?>
                        $tmp = $data['settings'];
                         if($tmp != '') {
                             $obj = json_decode($tmp, true);
-                            return "Количество слоев прорисовок: " . sizeof($obj['drawings']);
+                            $counter = sizeof($obj['drawings']);
+                            if($counter > 0) {
+                                return "Количество слоев прорисовок: " . $counter;
+                            }
+                            else {
+                                return "1 слой (оригинальное изображение)";
+                            }
                         }
                         else return "1 слой (оригинальное изображение)";
                 },

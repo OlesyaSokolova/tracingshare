@@ -83,8 +83,6 @@ class SiteController extends Controller
             ->orderBy(['id' => SORT_DESC]);
         $countQuery = clone $query;
         $pages = new Pagination(['totalCount' => $countQuery->count()]);
-        //$pages = new Pagination(['totalCount' => 100]);
-
         $publications = $query->offset($pages->offset)
             ->limit($pages->limit)
             ->all();
@@ -101,7 +99,7 @@ class SiteController extends Controller
     {
         $query = Publication::find()
             ->where(['author_id' => Yii::$app->user->getId()])
-            ->orderBy(['id' => SORT_ASC]);
+            ->orderBy(['id' => SORT_DESC]);
         $pages = new Pagination(['totalCount' => $query->count()]);
         $publications = $query->offset($pages->offset)
             ->limit($pages->limit)
@@ -274,17 +272,5 @@ class SiteController extends Controller
 
         Yii::$app->session->setFlash('error', 'Произошла ошибка во время подтверждения регистрации: неправильный токен.');
         return $this->goHome();
-    }
-
-    private function backendUrl()
-    {
-        $projectFolder = 'tracingshare';
-        if(isset($_SERVER['HTTPS'])){
-            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-        }
-        else{
-            $protocol = 'http';
-        }
-        return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/". $projectFolder ."/backend/web/index.php";
     }
 }
