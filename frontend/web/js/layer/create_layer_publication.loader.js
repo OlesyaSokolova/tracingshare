@@ -29,7 +29,7 @@ function prepareLayersToDraw() {
 
         //1.3. set event listeners
         canvas.onmousedown = startEditing;
-        canvas.onmouseup = stopEditing;
+        canvas.onmouseup = stopEditingAndSavePath;
         canvas.onmouseout = stopEditing;
         canvas.onmousemove = edit;
 
@@ -40,7 +40,13 @@ function prepareLayersToDraw() {
         const eraserGlobalCompositeOperation = "destination-out";
 
         const brushGlobalCompositeOperation = context.globalCompositeOperation;
-        var brushStyle = "rgba(0,0,0,1)"
+        var brushStyle = "rgba(0,0,0,1)";
+        var paths = [];
+        for (let i = 0; i < 100; i++) {
+            paths[i] = new Path2D();
+        }
+        var currentPath = null;
+        var usedPaths = [];
 
         var isDrawing = false;
         var isErasing = false;
@@ -113,41 +119,64 @@ function prepareLayersToDraw() {
             if (counter === 2 && brushIsClicked) {
                 isDrawing = true;
                 isErasing = false;
-                context.beginPath();
-                context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+                isFilling = false;
+                //context.beginPath();
+                currentPath = paths.pop();
+                console.log("paths size:"+ paths.length);
+                currentPath.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+                //context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
             }
 
             if (counter === 2 && eraserIsClicked) {
+                //var currentPath = paths.pop();
+                //console.log("paths size:"+ paths.length);
                 isErasing = true;
                 isDrawing = false;
-                context.beginPath();
-                context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+                isFilling = false;
+                //context.beginPath();
+                currentPath.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+                //context.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
             }
             if (counter === 2 && fillerIsClicked) {
                 isErasing = false;
                 isDrawing = false;
                 isFilling = true;
-                //context.closePath();
-                context.fillStyle = brushStyle;
-                context.fill();
+                var ind = paths.length - 1;
+                currentPath = paths[ind];
+                console.log("paths size:"+ paths.length);
+                var x = e.offsetX;
+                var y = e.offsetY;
+                for (let i = 0; i < usedPaths.length; i++) {
+                    if(context.isPointInPath(usedPaths[i], x, y)) {
+                        context.fillStyle = brushStyle;
+                        context.fill(usedPaths[i]);
+                        console.log("filled path" + i)
+                    }
+                }
+                //currentPath.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+                //context.stroke(newPath);
+
             }
+
+            //paths.push(newPath);
         }
 
         function edit(e) {
-
+            var currentPath = paths[paths.length-1];
             var x, y;
             if (isDrawing === true && counter === 2) {
                 context.globalCompositeOperation = brushGlobalCompositeOperation;
                 context.strokeStyle = brushStyle;
                 context.lineCap = "round";
                 context.lineJoin = "round";
-
-
                 x = e.pageX - canvas.offsetLeft;
                 y = e.pageY - canvas.offsetTop;
 
-                context.lineTo(x, y);
-                context.stroke();
+                currentPath.lineTo(x, y);
+                //context.lineTo(x, y);
+                context.stroke(currentPath);
+               // context.lineTo(x, y);
+                //context.stroke();
             } else if (isErasing === true && counter === 2) {
                 context.globalCompositeOperation = eraserGlobalCompositeOperation;
                 context.strokeStyle = eraserStyle;
@@ -155,31 +184,38 @@ function prepareLayersToDraw() {
                 x = e.pageX - canvas.offsetLeft;
                 y = e.pageY - canvas.offsetTop;
 
-                context.lineTo(x, y);
-                context.stroke();
-            }
-            else if (isFilling === true && counter === 2) {
-                // complete custom shape
-
-                //get path as figure
-                //fill it
-               /* context.globalCompositeOperation = eraserGlobalCompositeOperation;
-                context.strokeStyle = eraserStyle;
-
-                x = e.pageX - canvas.offsetLeft;
-                y = e.pageY - canvas.offsetTop;
-
-                context.lineTo(x, y);
-                context.stroke();*/
+                currentPath.lineTo(x, y);
+                //context.lineTo(x, y);
+                context.stroke(currentPath);
+                //context.composedPath()
             }
         }
 
         function stopEditing() {
             isDrawing = false;
             isErasing = false;
+            isFilling = false;
         }
 
-        toolbarClassContainer = 'toolbar'
+        function stopEditingAndSavePath() {
+            //if recently drawn path crosses another one, merge them (originalPath.addPath(recentPath))
+            console.log("here")
+            //console.log("current path" + currentPath);
+            var  str = JSON.stringify(currentPath, null, 4); // (Optional) beautiful indented output.
+            console.log("current path", str)
+            //currentPath.
+            isDrawing = false;
+            isErasing = false;
+            isFilling = false;
+            if(currentPath !== null) {
+                usedPaths.push(currentPath);
+                console.log("used paths:" + usedPaths);
+            }
+
+            //create new path;
+        }
+
+            toolbarClassContainer = 'toolbar'
 
         $('.' + toolbarClassContainer)
             .on('input change', '.color-value', function () {
