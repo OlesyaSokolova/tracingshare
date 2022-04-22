@@ -79,8 +79,7 @@ JS;
 
     <div class="canvasDiv" data-state="static" style="border:1px solid black;
             border-radius: 10px;
-            width: max-content;
-            padding: 30px">
+            width: max-content;">
         <canvas id="background">
         </canvas>
         <canvas id="layerToDrawOn">
