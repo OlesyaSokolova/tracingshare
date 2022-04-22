@@ -208,6 +208,7 @@ function prepareLayersToDraw() {
             clickedColorR = r;
             clickedColorG = g;
             clickedColorB = b;
+            clickedColorA = a;
 
             //console.log("new color:   " + newColorR +","+ newColorG +","+ newColorB);
 
@@ -250,7 +251,7 @@ function prepareLayersToDraw() {
                     // Go up as long as the color matches and are inside the canvas
                     while(y-- >= drawingBoundTop && matchClickedColor(pixelPos))
                     {
-                        //console.log("UP: " + (x - drawingAreaX - 2) + "," + (y - drawingAreaY - 2));
+                        console.log("UP: " + x + "," + y);
                         pixelPos -= (canvas.width) * 4;
                     }
                     pixelPos += (canvas.width) * 4;
@@ -268,7 +269,7 @@ function prepareLayersToDraw() {
                             if(matchClickedColor(pixelPos - 4)){
                                 if(!reachLeft){
                                     pixelStack.push([x - 1, y]);
-                                    //console.log("PUSH: " + ((x-1) - drawingAreaX - 2) + "," + (y - drawingAreaY - 2));
+                                    console.log("PUSH: " + (x-1) + " " +  y)
                                     reachLeft = true;
                                 }
                             }else if(reachLeft){
@@ -280,7 +281,7 @@ function prepareLayersToDraw() {
                             if(matchClickedColor(pixelPos + 4)){
                                 if(!reachRight){
                                     pixelStack.push([x + 1, y]);
-                                    //console.log("PUSH: " + ((x+1) - drawingAreaX - 2) + "," + (y - drawingAreaY - 2));
+                                    console.log("PUSH: " + (x+1) + " " + y);
                                     reachRight = true;
                                 }
                             }else if(reachRight){
@@ -309,9 +310,10 @@ function prepareLayersToDraw() {
                 r = colorLayerData.data[pixelPos];
                 g = colorLayerData.data[pixelPos+1];
                 b = colorLayerData.data[pixelPos+2];
+                a = colorLayerData.data[pixelPos+3];
 
                 // If the current pixel matches the clicked color
-                if(r === clickedColorR && g === clickedColorG && b === clickedColorB) return true;
+                if(r === clickedColorR && g === clickedColorG && b === clickedColorB && a === clickedColorA) return true;
 
                 // If current pixel matches the new color
                 if(r === 0 && g === 0 && b === 0) return false;
