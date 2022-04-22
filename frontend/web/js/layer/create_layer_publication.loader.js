@@ -16,7 +16,6 @@ function prepareLayersToDraw() {
         originalImage.src = originalImageSrc;
         originalImage.onload = function () {
         var originalImageCtx = drawBackground(originalImage);
-        console.log(originalImageCtx.canvas.width);
 
         drawOriginalImageLayerThumbnail(originalImage)
 
@@ -234,8 +233,8 @@ function prepareLayersToDraw() {
             {
                 colorLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
                 var newPos, x, y, pixelPos, reachLeft, reachRight;
-                var drawingBoundLeft = backgroundX;
-                var drawingBoundTop = backgroundY;
+                var drawingBoundLeft = backgroundX - canvas.offsetLeft;
+                var drawingBoundTop = backgroundY - canvas.offsetTop;
                 var drawingBoundRight = backgroundX + canvas.width - 1;
                 var drawingBoundBottom = backgroundY + canvas.height - 1;
 
@@ -253,6 +252,7 @@ function prepareLayersToDraw() {
                     {
                         console.log("UP: " + x + "," + y);
                         pixelPos -= (canvas.width) * 4;
+                        //colorPixel(pixelPos);
                     }
                     pixelPos += (canvas.width) * 4;
                     ++y;
@@ -269,7 +269,7 @@ function prepareLayersToDraw() {
                             if(matchClickedColor(pixelPos - 4)){
                                 if(!reachLeft){
                                     pixelStack.push([x - 1, y]);
-                                    console.log("PUSH: " + (x-1) + " " +  y)
+                                    //console.log("PUSH: " + (x-1) + " " +  y)
                                     reachLeft = true;
                                 }
                             }else if(reachLeft){
@@ -281,7 +281,7 @@ function prepareLayersToDraw() {
                             if(matchClickedColor(pixelPos + 4)){
                                 if(!reachRight){
                                     pixelStack.push([x + 1, y]);
-                                    console.log("PUSH: " + (x+1) + " " + y);
+                                    //console.log("PUSH: " + (x+1) + " " + y);
                                     reachRight = true;
                                 }
                             }else if(reachRight){
@@ -305,7 +305,7 @@ function prepareLayersToDraw() {
                 var a = colorLayerData.data[pixelPos+3];
 
                 // If current pixel is black then it is an outline
-                if(r + g + b === 0 && a === 255){ return false; }
+                //if(r + g + b === 0 && a === 255){ return false; }
 
                 r = colorLayerData.data[pixelPos];
                 g = colorLayerData.data[pixelPos+1];
