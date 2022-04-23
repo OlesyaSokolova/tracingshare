@@ -189,17 +189,19 @@ function prepareLayersToDraw() {
         }
 //http://www.williammalone.com/articles/html5-canvas-javascript-paint-bucket-tool/
         function fillArea(x, y) {
-            var pixelPos = (y*(canvas.width) + x)*4;
-            clickedColor.r = drawingLayerData.data[pixelPos + 0];
-            clickedColor.g = drawingLayerData.data[pixelPos + 1];
-            clickedColor.b = drawingLayerData.data[pixelPos + 2];
-            clickedColor.a = drawingLayerData.data[pixelPos + 3];
+            var currentPixelIndex = (y*(canvas.width) + x)*4;
+            clickedColor.r = drawingLayerData.data[currentPixelIndex];
+            clickedColor.g = drawingLayerData.data[currentPixelIndex + 1];
+            clickedColor.b = drawingLayerData.data[currentPixelIndex + 2];
+            clickedColor.a = drawingLayerData.data[currentPixelIndex + 3];
 
-            /*if(clickedColorR == newColorR && clickedColorG == newColorG && clickedColorB == newColorB)
+            if(clickedColor.r === currentColor.r
+                && clickedColor.g === currentColor.g
+                && clickedColor.b === currentColor.b
+                && clickedColor.a === currentColor.a)
             {
-                //console.log("Return because trying to fill with the same color");
                 return;
-            }*/
+            }
 
             pixelStack = [[x, y]];
 
@@ -209,7 +211,7 @@ function prepareLayersToDraw() {
             function floodFill()
             {
                 drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
-                var newPos, x, y, pixelPos, reachLeft, reachRight;
+                var newPos, x, y, currentPixelIndex, reachLeft, reachRight;
                 var drawingBoundLeft = backgroundX - canvas.offsetLeft;
                 var drawingBoundTop = backgroundY - canvas.offsetTop;
                 var drawingBoundRight = backgroundX + canvas.width - 1;
@@ -223,25 +225,25 @@ function prepareLayersToDraw() {
 
                     //console.log("POP: " + (x - drawingAreaX - 2) + "," + (y - drawingAreaY - 2));
 
-                    pixelPos = (y*(canvas.width) + x) * 4;
+                    currentPixelIndex = (y*(canvas.width) + x) * 4;
                     // Go up as long as the color matches and are inside the canvas
-                    while(y-- >= drawingBoundTop && matchClickedColor(pixelPos))
+                    while(y-- >= drawingBoundTop && matchClickedColor(currentPixelIndex))
                     {
-                        pixelPos -= (canvas.width) * 4;
+                        currentPixelIndex -= (canvas.width) * 4;
                     }
-                    pixelPos += (canvas.width) * 4;
+                    currentPixelIndex += (canvas.width) * 4;
                     ++y;
                     reachLeft = false;
                     reachRight = false;
 
                     // Go down as long as the color matches and in inside the canvas
-                    while(y++ < drawingBoundBottom && matchClickedColor(pixelPos))
+                    while(y++ < drawingBoundBottom && matchClickedColor(currentPixelIndex))
                     {
-                        colorPixel(pixelPos);
+                        colorPixel(currentPixelIndex);
 
                         if(x > drawingBoundLeft)
                         {
-                            if(matchClickedColor(pixelPos - 4)){
+                            if(matchClickedColor(currentPixelIndex - 4)){
                                 if(!reachLeft){
                                     pixelStack.push([x - 1, y]);
                                     reachLeft = true;
@@ -252,7 +254,7 @@ function prepareLayersToDraw() {
                         }
                         if(x < drawingBoundRight)
                         {
-                            if(matchClickedColor(pixelPos + 4)){
+                            if(matchClickedColor(currentPixelIndex + 4)){
                                 if(!reachRight){
                                     pixelStack.push([x + 1, y]);
                                     reachRight = true;
@@ -261,7 +263,7 @@ function prepareLayersToDraw() {
                                 reachRight = false;
                             }
                         }
-                        pixelPos += canvas.width * 4;
+                        currentPixelIndex += canvas.width * 4;
                     }
                 }
                 if(drawingLayerData){
@@ -270,12 +272,12 @@ function prepareLayersToDraw() {
                 }
             }
 
-            function matchClickedColor(pixelPos)
+            function matchClickedColor(currentPixelIndex)
             {
-                var r = drawingLayerData.data[pixelPos];
-                var g = drawingLayerData.data[pixelPos+1];
-                var b = drawingLayerData.data[pixelPos+2];
-                var a = drawingLayerData.data[pixelPos+3];
+                var r = drawingLayerData.data[currentPixelIndex];
+                var g = drawingLayerData.data[currentPixelIndex+1];
+                var b = drawingLayerData.data[currentPixelIndex+2];
+                var a = drawingLayerData.data[currentPixelIndex+3];
 
                 // If the current pixel matches the clicked color
                 if(r === clickedColor.r && g === clickedColor.g && b === clickedColor.b && a === clickedColor.a) return true;
@@ -286,12 +288,12 @@ function prepareLayersToDraw() {
                 return false;
             }
 
-            function colorPixel(pixelPos)
+            function colorPixel(currentPixelIndex)
             {
-                drawingLayerData.data[pixelPos] = currentColor.r;
-                drawingLayerData.data[pixelPos+1] = currentColor.g;
-                drawingLayerData.data[pixelPos+2] = currentColor.b;
-                drawingLayerData.data[pixelPos+3] = currentColor.a;
+                drawingLayerData.data[currentPixelIndex] = currentColor.r;
+                drawingLayerData.data[currentPixelIndex+1] = currentColor.g;
+                drawingLayerData.data[currentPixelIndex+2] = currentColor.b;
+                drawingLayerData.data[currentPixelIndex+3] = currentColor.a;
             }
 
 

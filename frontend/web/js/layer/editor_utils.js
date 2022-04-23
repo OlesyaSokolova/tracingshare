@@ -72,16 +72,15 @@ function generateRandomImageTitle(prefix, index) {
 //https://stackoverflow.com/questions/12992681/html-5-canvas-get-color-of-an-image-and-then-change-the-pixels-with-that-color
 function changeImageColor(context, width, height) {
     {
-        const image = context.getImageData(0, 0, width, height);
-        const {data} = image;
-        const {length} = data;
+        const imageData = context.getImageData(0, 0, width, height);
 
-        for (let i = 0; i < length; i += 4) { // red, green, blue, and alpha
-            data[i] = 0;//r
-            data[i + 1] = 0;//g
-            data[i + 2] = 0;//b
+        for (let i = 0; i < imageData.left; i += 4) { // red, green, blue, and alpha
+            imageData[i] = 0;//r
+            imageData[i + 1] = 0;//g
+            imageData[i + 2] = 0;//b
+            imageData[i + 3] = 255;//a
         }
-        context.putImageData(image, 0, 0);
+        context.putImageData(imageData, 0, 0);
     }
 }
 
