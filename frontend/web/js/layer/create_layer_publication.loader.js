@@ -36,7 +36,6 @@ function prepareLayersToDraw() {
 
         //1.4. init vars and consts
         var context = canvas.getContext("2d");
-        var pixelsData = context.getImageData(0, 0, canvas.width, canvas.height);
 
         const eraserStyle = "rgba(255,255,255,255)";
         const eraserGlobalCompositeOperation = "destination-out";
@@ -323,6 +322,27 @@ function prepareLayersToDraw() {
                 //drawingsImages[drawingImageId].alpha = newAlpha;
                 //updateAllLayers(drawingsImages)
                 originalImageCtx = redrawBackground(originalImage, newAlpha)
+            })
+            .on('input change', '.new-layer-alpha-value', function () {
+                $(this).attr('value', $(this).val());
+                var newAlpha = parseFloat($(this).val());
+                //var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
+                //drawingsImages[drawingImageId].alpha = newAlpha;
+                //updateAllLayers(drawingsImages)
+                //context = redrawLayer(context, newAlpha)
+                const image = context.getImageData(0, 0, canvas.width, canvas.height);
+                const {data} = image;
+                const {length} = data;
+
+                for (let i = 0; i < length; i += 4) { // red, green, blue, and alpha
+                    if(data[i + 3] > 0) {
+                        data[i + 3] = newAlpha*255;
+                    }
+                }
+                context.putImageData(image, 0, 0);
+                //drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
+                //context.putImageData(drawingLayerData, 0, 0);
+                //drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
             })
 
         var saveButton = document.getElementById("save-layer-button");

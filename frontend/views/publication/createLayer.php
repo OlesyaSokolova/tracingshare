@@ -100,7 +100,7 @@ JS;
                 </canvas>
                 <br>
                 <label for="newLayerThumbnailAlpha">Прозрачность: </label>
-                <input type=range name="alphaChannel" id="newLayerThumbnailAlpha" class=\'alpha-value\' step='0.02' min='0' max='1' value='1'>
+                <input type=range name="alphaChannel" class ="new-layer-alpha-value" id="newLayerThumbnailAlpha" step='0.02' min='0.02' max='1' value='1'>
             </div>
 
             <div style="border:1px solid black;

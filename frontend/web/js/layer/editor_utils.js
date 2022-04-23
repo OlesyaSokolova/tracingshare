@@ -33,6 +33,35 @@ function redrawBackground(originalImage, newAlpha) {
     return originalImageCtx
 }
 
+function redrawLayer(context, newAlpha) {
+
+    var imageData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
+    //context.globalAlpha = newAlpha;
+
+    //var imageData = context.getImageData(0, 0, width, height);
+
+    for (let i = 0; i < imageData.length; i += 4) { // red, green, blue, and alpha
+        imageData[i] = 0;//r
+        imageData[i + 1] = 0;//g
+        imageData[i + 2] = 0;//b
+        console.log("before: " + imageData[i + 3])
+        imageData[i + 3] = 255;//a
+        console.log("after: " + imageData[i + 3])
+    }
+    context.putImageData(imageData, 0, 0);
+    //context.putImageData(imageData, 0, 0);
+
+    /*context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    context.globalCompositeOperation = "source-in";
+    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+    context.globalCompositeOperation = "source-over";*/
+    //context.fillStyle = "rgba(255, 255, 255, 100)";
+    //context.putImageData(imageData, 0, 0);
+    //context.restore();
+
+    return context;
+}
+
 function drawOriginalImageLayerThumbnail(originalImage) {
 
     var canvas = document.getElementById('originalImageThumbnail')
@@ -93,15 +122,19 @@ function generateRandomImageTitle(prefix, index) {
 //https://stackoverflow.com/questions/12992681/html-5-canvas-get-color-of-an-image-and-then-change-the-pixels-with-that-color
 function changeImageColor(context, width, height) {
     {
-        const imageData = context.getImageData(0, 0, width, height);
+        const image = context.getImageData(0, 0, width, height);
+        const {data} = image;
+        const {length} = data;
 
-        for (let i = 0; i < imageData.left; i += 4) { // red, green, blue, and alpha
-            imageData[i] = 0;//r
-            imageData[i + 1] = 0;//g
-            imageData[i + 2] = 0;//b
-            imageData[i + 3] = 255;//a
+        for (let i = 0; i < length; i += 4) { // red, green, blue, and alpha
+            data[i] = 0;//r
+            data[i + 1] = 0;//g
+            data[i + 2] = 0;//b
+            if(data[i + 3] > 0) {
+                data[i + 3] = 255;
+            }
         }
-        context.putImageData(imageData, 0, 0);
+        context.putImageData(image, 0, 0);
     }
 }
 
