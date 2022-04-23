@@ -62,24 +62,14 @@ function prepareLayersToDraw() {
                 a: 255
             };
 
-
-            //var outlineLayerData;
-            var colorLayerData;
+            var drawingLayerData;
             var pixelStack = [];
-            var newColorR;
-            var newColorG;
-            var newColorB;
-            var newColorA;
             var clickedColorR;
             var clickedColorG;
             var clickedColorB;
             var clickedColorA;
-            var pixelsDrawn;
 
-            colorLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
-        //var breakCycle = false;
-            //var tmp = 20000000;
-            var counterPixels = 0;
+            drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
 
         //1.5. init buttons
 
@@ -156,7 +146,7 @@ function prepareLayersToDraw() {
                 isErasing = false;
                 isDrawing = false;
                 isFilling = true;
-                colorLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
+                drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
                 fillArea(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop)
             }
         }
@@ -174,6 +164,7 @@ function prepareLayersToDraw() {
 
                 context.lineTo(x, y);
                 context.stroke();
+
             } else if (isErasing === true && counter === 2) {
                 context.globalCompositeOperation = eraserGlobalCompositeOperation;
                 context.strokeStyle = eraserStyle;
@@ -183,9 +174,6 @@ function prepareLayersToDraw() {
 
                 context.lineTo(x, y);
                 context.stroke();
-            }
-            else if (isFilling === true && counter === 2) {
-                //do nothing
             }
         }
 
@@ -197,33 +185,23 @@ function prepareLayersToDraw() {
 //http://www.williammalone.com/articles/html5-canvas-javascript-paint-bucket-tool/
         function fillArea(x, y) {
             var pixelPos = (y*(canvas.width) + x)*4;
-            //console.log("outline: " + outlineLayerData.data[pixelPos] +","+ outlineLayerData.data[pixelPos+1] +","+ outlineLayerData.data[pixelPos+2] +","+ outlineLayerData.data[pixelPos+3]);
-            var r = colorLayerData.data[pixelPos + 0];
-            var g = colorLayerData.data[pixelPos + 1];
-            var b = colorLayerData.data[pixelPos + 2];
-            var a = colorLayerData.data[pixelPos + 3];
-            console.log("clicked color:   " + r +","+ g +","+ b +","+ a);
+            var r = drawingLayerData.data[pixelPos + 0];
+            var g = drawingLayerData.data[pixelPos + 1];
+            var b = drawingLayerData.data[pixelPos + 2];
+            var a = drawingLayerData.data[pixelPos + 3];
 
             clickedColorR = r;
             clickedColorG = g;
             clickedColorB = b;
             clickedColorA = a;
 
-            //console.log("new color:   " + newColorR +","+ newColorG +","+ newColorB);
 
             /*if(clickedColorR == newColorR && clickedColorG == newColorG && clickedColorB == newColorB)
             {
                 //console.log("Return because trying to fill with the same color");
                 return;
-            }
-
-            if(outlineLayerData.data[pixelPos] + outlineLayerData.data[pixelPos+1] + outlineLayerData.data[pixelPos+2] == 0 && outlineLayerData.data[pixelPos+ 3] == 255)
-            {
-                //console.log("Return because clicked outline: " + outlineLayerData.data[pixelPos+4]);
-                return;
             }*/
 
-            //console.log("PUSH: " + (startX - drawingAreaX - 2) + "," + (startY - drawingAreaY - 2));
             pixelStack = [[x, y]];
 
             floodFill();
@@ -231,7 +209,7 @@ function prepareLayersToDraw() {
 
             function floodFill()
             {
-                colorLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
+                drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
                 var newPos, x, y, pixelPos, reachLeft, reachRight;
                 var drawingBoundLeft = backgroundX - canvas.offsetLeft;
                 var drawingBoundTop = backgroundY - canvas.offsetTop;
@@ -291,26 +269,26 @@ function prepareLayersToDraw() {
                         pixelPos += canvas.width * 4;
                     }
                 }
-                if(colorLayerData){
-                    context.putImageData(colorLayerData, 0, 0);
-                    colorLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
+                if(drawingLayerData){
+                    context.putImageData(drawingLayerData, 0, 0);
+                    drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
                 }
             }
 
             function matchClickedColor(pixelPos)
             {
-                var r = colorLayerData.data[pixelPos];
-                var g = colorLayerData.data[pixelPos+1];
-                var b = colorLayerData.data[pixelPos+2];
-                var a = colorLayerData.data[pixelPos+3];
+                var r = drawingLayerData.data[pixelPos];
+                var g = drawingLayerData.data[pixelPos+1];
+                var b = drawingLayerData.data[pixelPos+2];
+                var a = drawingLayerData.data[pixelPos+3];
 
                 // If current pixel is black then it is an outline
                 //if(r + g + b === 0 && a === 255){ return false; }
 
-                r = colorLayerData.data[pixelPos];
-                g = colorLayerData.data[pixelPos+1];
-                b = colorLayerData.data[pixelPos+2];
-                a = colorLayerData.data[pixelPos+3];
+                r = drawingLayerData.data[pixelPos];
+                g = drawingLayerData.data[pixelPos+1];
+                b = drawingLayerData.data[pixelPos+2];
+                a = drawingLayerData.data[pixelPos+3];
 
                 // If the current pixel matches the clicked color
                 if(r === clickedColorR && g === clickedColorG && b === clickedColorB && a === clickedColorA) return true;
@@ -324,10 +302,10 @@ function prepareLayersToDraw() {
             function colorPixel(pixelPos)
             {
                 console.log("color pixel")
-                colorLayerData.data[pixelPos] = 0;
-                colorLayerData.data[pixelPos+1] = 0;
-                colorLayerData.data[pixelPos+2] = 0;
-                colorLayerData.data[pixelPos+3] = 255;
+                drawingLayerData.data[pixelPos] = 0;
+                drawingLayerData.data[pixelPos+1] = 0;
+                drawingLayerData.data[pixelPos+2] = 0;
+                drawingLayerData.data[pixelPos+3] = 255;
             }
 
 
