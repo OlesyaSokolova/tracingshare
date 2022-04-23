@@ -100,7 +100,7 @@ JS;
                 </canvas>
                 <br>
                 <label for="newLayerThumbnailAlpha">Прозрачность: </label>
-                <input type=range name="alphaChannel" id="newLayerThumbnailAlpha" class=\'alpha-value\' step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
+                <input type=range name="alphaChannel" id="newLayerThumbnailAlpha" class=\'alpha-value\' step='0.02' min='0' max='1' value='1'>
             </div>
 
             <div style="border:1px solid black;
@@ -122,7 +122,7 @@ JS;
                 </canvas>
                 <br>
                 <label for="originalImageThumbnailAlpha">Прозрачность: </label>
-                <input type=range name="alphaChannel" class ="orgnl-img-alpha-value" id="originalImageThumbnailAlpha" step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
+                <input type=range name="alphaChannel" class ="orgnl-img-alpha-value" id="originalImageThumbnailAlpha" step='0.02' min='0' max='1' value='1'>
             </div>
 
         </div>

@@ -340,14 +340,12 @@ function prepareLayersToDraw() {
             originalImageCtx.globalCompositeOperation = "source-in";
             originalImageCtx.fillRect(0, 0, canvas.width, canvas.height);
             originalImageCtx.globalCompositeOperation = "source-over";
-            originalImageCtx.drawImage(originalImage, 0, 0, canvas.width, canvas.height)
 
-            //5. render virtual canvase with image on contextToDrawOn
-           // contextToDrawOn.drawImage(canvas, 0, 0, canvas.width, canvas.height);
             originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
 
             //return originalImageCtx
         }
+
 
         var saveButton = document.getElementById("save-layer-button");
         saveButton.addEventListener(
