@@ -38,7 +38,7 @@ function prepareLayersToDraw() {
         var context = canvas.getContext("2d");
         var pixelsData = context.getImageData(0, 0, canvas.width, canvas.height);
 
-        const eraserStyle = "rgba(255,255,255,1)";
+        const eraserStyle = "rgba(255,255,255,255)";
         const eraserGlobalCompositeOperation = "destination-out";
 
         const brushGlobalCompositeOperation = context.globalCompositeOperation;
@@ -71,11 +71,11 @@ function prepareLayersToDraw() {
             b: 0,
             a: 0
         }
-       /* var clickedColorR;
-        var clickedColorG;
-        var clickedColorB;
-        var clickedColorA;*/
-
+        const IMAGE_DATA_PIXEL_SHIFT = 4;
+        const IMAGE_DATA_RED_SHIFT = 0;
+        const IMAGE_DATA_GREEN_SHIFT = 1;
+        const IMAGE_DATA_BLUE_SHIFT = 2;
+        const IMAGE_DATA_ALPHA_SHIFT = 3;
         //1.5. init buttons
 
         var clearButton = document.getElementById("clear-layer-button");
@@ -187,13 +187,13 @@ function prepareLayersToDraw() {
             isErasing = false;
             isFilling = false;
         }
-//http://www.williammalone.com/articles/html5-canvas-javascript-paint-bucket-tool/
+
         function fillArea(x, y) {
-            var currentPixelIndex = (y*(canvas.width) + x)*4;
-            clickedColor.r = drawingLayerData.data[currentPixelIndex];
-            clickedColor.g = drawingLayerData.data[currentPixelIndex + 1];
-            clickedColor.b = drawingLayerData.data[currentPixelIndex + 2];
-            clickedColor.a = drawingLayerData.data[currentPixelIndex + 3];
+            var currentPixelIndex = (y * (canvas.width) + x) * IMAGE_DATA_PIXEL_SHIFT;
+            clickedColor.r = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_RED_SHIFT];
+            clickedColor.g = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_GREEN_SHIFT];
+            clickedColor.b = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_BLUE_SHIFT];
+            clickedColor.a = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_ALPHA_SHIFT];
 
             if(clickedColor.r === currentColor.r
                 && clickedColor.g === currentColor.g
@@ -208,94 +208,91 @@ function prepareLayersToDraw() {
             floodFill();
         }
 
-            function floodFill()
-            {
+        //http://www.williammalone.com/articles/html5-canvas-javascript-paint-bucket-tool/
+        function floodFill() {
+
+            drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
+            var newPixelIndex, x, y, currentPixelIndex, reachLeft, reachRight;
+            var drawingBoundLeft = backgroundX - canvas.offsetLeft;
+            var drawingBoundTop = backgroundY - canvas.offsetTop;
+            var drawingBoundRight = backgroundX + canvas.width - 1;
+            var drawingBoundBottom = backgroundY + canvas.height - 1;
+
+            while(pixelStack.length) {
+                newPixelIndex = pixelStack.pop();
+                x = newPixelIndex[0];
+                y = newPixelIndex[1];
+                currentPixelIndex = (y*(canvas.width) + x) * IMAGE_DATA_PIXEL_SHIFT;
+                // Go up as long as the color matches and are inside the canvas
+                while(y-- >= drawingBoundTop && matchClickedColor(currentPixelIndex)) {
+                    currentPixelIndex -= (canvas.width) * IMAGE_DATA_PIXEL_SHIFT;
+                }
+                currentPixelIndex += (canvas.width) * IMAGE_DATA_PIXEL_SHIFT;
+                ++y;
+                reachLeft = false;
+                reachRight = false;
+
+                // Go down as long as the color matches and in inside the canvas
+                while(y++ < drawingBoundBottom && matchClickedColor(currentPixelIndex)) {
+                    colorPixel(currentPixelIndex);
+
+                    if(x > drawingBoundLeft) {
+                        if(matchClickedColor(currentPixelIndex - IMAGE_DATA_PIXEL_SHIFT)){
+                            if(!reachLeft) {
+                                pixelStack.push([x - 1, y]);
+                                reachLeft = true;
+                            }
+                        } else if(reachLeft) {
+                            reachLeft = false;
+                        }
+                    }
+                    if(x < drawingBoundRight)
+                    {
+                        if(matchClickedColor(currentPixelIndex + IMAGE_DATA_PIXEL_SHIFT)){
+                            if(!reachRight){
+                                pixelStack.push([x + 1, y]);
+                                reachRight = true;
+                            }
+                        } else if(reachRight){
+                            reachRight = false;
+                        }
+                    }
+                    currentPixelIndex += canvas.width * IMAGE_DATA_PIXEL_SHIFT;
+                }
+            }
+            //update image data
+            if(drawingLayerData){
+                context.putImageData(drawingLayerData, 0, 0);
                 drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
-                var newPos, x, y, currentPixelIndex, reachLeft, reachRight;
-                var drawingBoundLeft = backgroundX - canvas.offsetLeft;
-                var drawingBoundTop = backgroundY - canvas.offsetTop;
-                var drawingBoundRight = backgroundX + canvas.width - 1;
-                var drawingBoundBottom = backgroundY + canvas.height - 1;
-
-                while(pixelStack.length)
-                {
-                    newPos = pixelStack.pop();
-                    x = newPos[0];
-                    y = newPos[1];
-
-                    //console.log("POP: " + (x - drawingAreaX - 2) + "," + (y - drawingAreaY - 2));
-
-                    currentPixelIndex = (y*(canvas.width) + x) * 4;
-                    // Go up as long as the color matches and are inside the canvas
-                    while(y-- >= drawingBoundTop && matchClickedColor(currentPixelIndex))
-                    {
-                        currentPixelIndex -= (canvas.width) * 4;
-                    }
-                    currentPixelIndex += (canvas.width) * 4;
-                    ++y;
-                    reachLeft = false;
-                    reachRight = false;
-
-                    // Go down as long as the color matches and in inside the canvas
-                    while(y++ < drawingBoundBottom && matchClickedColor(currentPixelIndex))
-                    {
-                        colorPixel(currentPixelIndex);
-
-                        if(x > drawingBoundLeft)
-                        {
-                            if(matchClickedColor(currentPixelIndex - 4)){
-                                if(!reachLeft){
-                                    pixelStack.push([x - 1, y]);
-                                    reachLeft = true;
-                                }
-                            }else if(reachLeft){
-                                reachLeft = false;
-                            }
-                        }
-                        if(x < drawingBoundRight)
-                        {
-                            if(matchClickedColor(currentPixelIndex + 4)){
-                                if(!reachRight){
-                                    pixelStack.push([x + 1, y]);
-                                    reachRight = true;
-                                }
-                            }else if(reachRight){
-                                reachRight = false;
-                            }
-                        }
-                        currentPixelIndex += canvas.width * 4;
-                    }
-                }
-                if(drawingLayerData){
-                    context.putImageData(drawingLayerData, 0, 0);
-                    drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
-                }
             }
+        }
 
-            function matchClickedColor(currentPixelIndex)
-            {
-                var r = drawingLayerData.data[currentPixelIndex];
-                var g = drawingLayerData.data[currentPixelIndex+1];
-                var b = drawingLayerData.data[currentPixelIndex+2];
-                var a = drawingLayerData.data[currentPixelIndex+3];
+        function matchClickedColor(currentPixelIndex)
+        {
+            var r = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_RED_SHIFT];
+            var g = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_GREEN_SHIFT];
+            var b = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_BLUE_SHIFT];
+            var a = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_ALPHA_SHIFT];
 
-                // If the current pixel matches the clicked color
-                if(r === clickedColor.r && g === clickedColor.g && b === clickedColor.b && a === clickedColor.a) return true;
+            // If the current pixel matches the clicked color
+            if(r === clickedColor.r
+                && g === clickedColor.g
+                && b === clickedColor.b
+                && a === clickedColor.a) return true;
 
-                // If current pixel matches the new color
-                //if(r === 0 && g === 0 && b === 0) return false;
+            // If current pixel matches the new color
+            //if(r === 0 && g === 0 && b === 0) return false;
 
-                return false;
-            }
+            return false;
+        }
 
-            function colorPixel(currentPixelIndex)
-            {
-                drawingLayerData.data[currentPixelIndex] = currentColor.r;
-                drawingLayerData.data[currentPixelIndex+1] = currentColor.g;
-                drawingLayerData.data[currentPixelIndex+2] = currentColor.b;
-                drawingLayerData.data[currentPixelIndex+3] = currentColor.a;
-            }
-
+        function colorPixel(currentPixelIndex)
+        {
+            drawingLayerData.data[currentPixelIndex + IMAGE_DATA_RED_SHIFT] = currentColor.r;
+            drawingLayerData.data[currentPixelIndex + IMAGE_DATA_GREEN_SHIFT] = currentColor.g;
+            drawingLayerData.data[currentPixelIndex + IMAGE_DATA_BLUE_SHIFT] = currentColor.b;
+            drawingLayerData.data[currentPixelIndex + IMAGE_DATA_ALPHA_SHIFT] = currentColor.a;
+        }
 
         toolbarClassContainer = 'toolbar'
 
