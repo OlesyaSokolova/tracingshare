@@ -42,7 +42,15 @@ function prepareLayersToDraw() {
         const eraserGlobalCompositeOperation = "destination-out";
 
         const brushGlobalCompositeOperation = context.globalCompositeOperation;
-        var brushStyle = "rgba(0,0,0,1)"
+
+       var currentColor = {
+            r: 0,
+            g: 0,
+            b: 0,
+            a: 255
+        };
+
+        var brushStyle = colorToRGBAString(currentColor);
 
         var isDrawing = false;
         var isErasing = false;
@@ -55,21 +63,18 @@ function prepareLayersToDraw() {
         var counter = 0;
         var previousTool;
 
-        const curColor = {
-                r: 0,
-                g: 0,
-                b: 0,
-                a: 255
-            };
-
-            var drawingLayerData;
-            var pixelStack = [];
-            var clickedColorR;
-            var clickedColorG;
-            var clickedColorB;
-            var clickedColorA;
-
-            drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
+        var drawingLayerData;
+        var pixelStack = [];
+        var clickedColor = {
+            r: 0,
+            g: 0,
+            b: 0,
+            a: 0
+        }
+       /* var clickedColorR;
+        var clickedColorG;
+        var clickedColorB;
+        var clickedColorA;*/
 
         //1.5. init buttons
 
@@ -185,16 +190,10 @@ function prepareLayersToDraw() {
 //http://www.williammalone.com/articles/html5-canvas-javascript-paint-bucket-tool/
         function fillArea(x, y) {
             var pixelPos = (y*(canvas.width) + x)*4;
-            var r = drawingLayerData.data[pixelPos + 0];
-            var g = drawingLayerData.data[pixelPos + 1];
-            var b = drawingLayerData.data[pixelPos + 2];
-            var a = drawingLayerData.data[pixelPos + 3];
-
-            clickedColorR = r;
-            clickedColorG = g;
-            clickedColorB = b;
-            clickedColorA = a;
-
+            clickedColor.r = drawingLayerData.data[pixelPos + 0];
+            clickedColor.g = drawingLayerData.data[pixelPos + 1];
+            clickedColor.b = drawingLayerData.data[pixelPos + 2];
+            clickedColor.a = drawingLayerData.data[pixelPos + 3];
 
             /*if(clickedColorR == newColorR && clickedColorG == newColorG && clickedColorB == newColorB)
             {
@@ -228,26 +227,23 @@ function prepareLayersToDraw() {
                     // Go up as long as the color matches and are inside the canvas
                     while(y-- >= drawingBoundTop && matchClickedColor(pixelPos))
                     {
-                        console.log("UP: " + x + "," + y);
                         pixelPos -= (canvas.width) * 4;
-                        //colorPixel(pixelPos);
                     }
                     pixelPos += (canvas.width) * 4;
                     ++y;
                     reachLeft = false;
                     reachRight = false;
+
                     // Go down as long as the color matches and in inside the canvas
                     while(y++ < drawingBoundBottom && matchClickedColor(pixelPos))
                     {
                         colorPixel(pixelPos);
-                        //console.log("COLOR: " + (x - drawingAreaX - 2) + "," + (y - drawingAreaY - 2));
 
                         if(x > drawingBoundLeft)
                         {
                             if(matchClickedColor(pixelPos - 4)){
                                 if(!reachLeft){
                                     pixelStack.push([x - 1, y]);
-                                    //console.log("PUSH: " + (x-1) + " " +  y)
                                     reachLeft = true;
                                 }
                             }else if(reachLeft){
@@ -259,7 +255,6 @@ function prepareLayersToDraw() {
                             if(matchClickedColor(pixelPos + 4)){
                                 if(!reachRight){
                                     pixelStack.push([x + 1, y]);
-                                    //console.log("PUSH: " + (x+1) + " " + y);
                                     reachRight = true;
                                 }
                             }else if(reachRight){
@@ -282,43 +277,34 @@ function prepareLayersToDraw() {
                 var b = drawingLayerData.data[pixelPos+2];
                 var a = drawingLayerData.data[pixelPos+3];
 
-                // If current pixel is black then it is an outline
-                //if(r + g + b === 0 && a === 255){ return false; }
-
-                r = drawingLayerData.data[pixelPos];
-                g = drawingLayerData.data[pixelPos+1];
-                b = drawingLayerData.data[pixelPos+2];
-                a = drawingLayerData.data[pixelPos+3];
-
                 // If the current pixel matches the clicked color
-                if(r === clickedColorR && g === clickedColorG && b === clickedColorB && a === clickedColorA) return true;
+                if(r === clickedColor.r && g === clickedColor.g && b === clickedColor.b && a === clickedColor.a) return true;
 
                 // If current pixel matches the new color
-                if(r === 0 && g === 0 && b === 0) return false;
+                //if(r === 0 && g === 0 && b === 0) return false;
 
                 return false;
             }
 
             function colorPixel(pixelPos)
             {
-                console.log("color pixel")
-                drawingLayerData.data[pixelPos] = 0;
-                drawingLayerData.data[pixelPos+1] = 0;
-                drawingLayerData.data[pixelPos+2] = 0;
-                drawingLayerData.data[pixelPos+3] = 255;
+                drawingLayerData.data[pixelPos] = currentColor.r;
+                drawingLayerData.data[pixelPos+1] = currentColor.g;
+                drawingLayerData.data[pixelPos+2] = currentColor.b;
+                drawingLayerData.data[pixelPos+3] = currentColor.a;
             }
 
 
-            toolbarClassContainer = 'toolbar'
+        toolbarClassContainer = 'toolbar'
 
         $('.' + toolbarClassContainer)
             .on('input change', '.color-value', function () {
                 $(this).attr('value', $(this).val());
                 var newColor = $(this).val();
-                var red = parseInt(newColor[1] + newColor[2], 16);
-                var green = parseInt(newColor[3] + newColor[4], 16);
-                var blue = parseInt(newColor[5] + newColor[6], 16);
-                brushStyle = "rgba(" + red + "," + green + "," + blue + ",1)";
+                currentColor.r = parseInt(newColor[1] + newColor[2], 16);
+                currentColor.g = parseInt(newColor[3] + newColor[4], 16);
+                currentColor.b = parseInt(newColor[5] + newColor[6], 16);
+                brushStyle = colorToRGBAString(currentColor);
                 context.strokeStyle = brushStyle;
             })
 
