@@ -12,6 +12,56 @@ function drawBackground(originalImage) {
     return originalImageCtx
 }
 
+function redrawBackground(originalImage, newAlpha) {
+    var canvas = document.getElementById('background')
+    var ratio = originalImage.width/originalImage.height
+    var constWidth = 1000
+    var correspondingHeight = constWidth/ratio
+    canvas.width = constWidth
+    canvas.height = correspondingHeight
+
+    originalImageCtx = canvas.getContext('2d');
+    originalImageCtx.globalAlpha = newAlpha;
+
+    originalImageCtx.clearRect(0, 0, canvas.width, canvas.height);
+    originalImageCtx.globalCompositeOperation = "source-in";
+    originalImageCtx.fillRect(0, 0, canvas.width, canvas.height);
+    originalImageCtx.globalCompositeOperation = "source-over";
+
+    originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
+
+    return originalImageCtx
+}
+
+function redrawLayer(context, newAlpha) {
+
+    var imageData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
+    //context.globalAlpha = newAlpha;
+
+    //var imageData = context.getImageData(0, 0, width, height);
+
+    for (let i = 0; i < imageData.length; i += 4) { // red, green, blue, and alpha
+        imageData[i] = 0;//r
+        imageData[i + 1] = 0;//g
+        imageData[i + 2] = 0;//b
+        console.log("before: " + imageData[i + 3])
+        imageData[i + 3] = 255;//a
+        console.log("after: " + imageData[i + 3])
+    }
+    context.putImageData(imageData, 0, 0);
+    //context.putImageData(imageData, 0, 0);
+
+    /*context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    context.globalCompositeOperation = "source-in";
+    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+    context.globalCompositeOperation = "source-over";*/
+    //context.fillStyle = "rgba(255, 255, 255, 100)";
+    //context.putImageData(imageData, 0, 0);
+    //context.restore();
+
+    return context;
+}
+
 function drawOriginalImageLayerThumbnail(originalImage) {
 
     var canvas = document.getElementById('originalImageThumbnail')
@@ -80,8 +130,15 @@ function changeImageColor(context, width, height) {
             data[i] = 0;//r
             data[i + 1] = 0;//g
             data[i + 2] = 0;//b
+            if(data[i + 3] > 0) {
+                data[i + 3] = 255;
+            }
         }
         context.putImageData(image, 0, 0);
     }
+}
+
+function colorToRGBAString(color) {
+    return "rgba(" + color.r + "," + color.g + "," + color.b + "," + color.a +")";
 }
 

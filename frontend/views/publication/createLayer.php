@@ -62,6 +62,11 @@ JS;
                 <img src="http://localhost/tracingshare/icons/eraser.png" width="50"/>
             </button>
 
+            <button type="button" id="filler-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+                <span class="media-body">Заливка</span>
+                <img src="http://localhost/tracingshare/icons/fill.png" width="50"/>
+            </button>
+
             <label for="brushColor" id="change-color-btn">Цвет</label>
             <input type="color" id="brushColor" class ="color-value" value="#000000" name="drawingColor">
 
@@ -74,8 +79,7 @@ JS;
 
     <div class="canvasDiv" data-state="static" style="border:1px solid black;
             border-radius: 10px;
-            width: max-content;
-            padding: 30px">
+            width: max-content;">
         <canvas id="background">
         </canvas>
         <canvas id="layerToDrawOn">
@@ -96,7 +100,7 @@ JS;
                 </canvas>
                 <br>
                 <label for="newLayerThumbnailAlpha">Прозрачность: </label>
-                <input type=range name="alphaChannel" id="newLayerThumbnailAlpha" class=\'alpha-value\' step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
+                <input type=range name="alphaChannel" class ="new-layer-alpha-value" id="newLayerThumbnailAlpha" step='0.02' min='0.02' max='1' value='1'>
             </div>
 
             <div style="border:1px solid black;
@@ -118,7 +122,7 @@ JS;
                 </canvas>
                 <br>
                 <label for="originalImageThumbnailAlpha">Прозрачность: </label>
-                <input type=range name="alphaChannel" class ="orgnl-img-alpha-value" id="originalImageThumbnailAlpha" step='0.02' min='0' max='1' value='1' oninput=\"this.nextElementSibling.value = this.value\">
+                <input type=range name="alphaChannel" class ="orgnl-img-alpha-value" id="originalImageThumbnailAlpha" step='0.02' min='0' max='1' value='1'>
             </div>
 
         </div>
