@@ -322,30 +322,8 @@ function prepareLayersToDraw() {
                 //var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
                 //drawingsImages[drawingImageId].alpha = newAlpha;
                 //updateAllLayers(drawingsImages)
-                redrawBackground(newAlpha)
+                originalImageCtx = redrawBackground(originalImage, newAlpha)
             })
-
-        function redrawBackground(newAlpha) {
-            var canvas = document.getElementById('background')
-            var ratio = originalImage.width/originalImage.height
-            var constWidth = 1000
-            var correspondingHeight = constWidth/ratio
-            canvas.width = constWidth
-            canvas.height = correspondingHeight
-
-            originalImageCtx = canvas.getContext('2d');
-            originalImageCtx.globalAlpha = newAlpha;
-            //4. fill the context with color of current image
-            originalImageCtx.clearRect(0, 0, canvas.width, canvas.height);
-            originalImageCtx.globalCompositeOperation = "source-in";
-            originalImageCtx.fillRect(0, 0, canvas.width, canvas.height);
-            originalImageCtx.globalCompositeOperation = "source-over";
-
-            originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
-
-            //return originalImageCtx
-        }
-
 
         var saveButton = document.getElementById("save-layer-button");
         saveButton.addEventListener(
