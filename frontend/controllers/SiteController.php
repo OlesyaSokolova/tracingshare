@@ -82,7 +82,8 @@ class SiteController extends Controller
         $query = Publication::find()
             ->orderBy(['id' => SORT_DESC]);
         $countQuery = clone $query;
-        $pages = new Pagination(['totalCount' => $countQuery->count()]);
+        $pages = new Pagination(['totalCount' => $countQuery->count(),
+            'pageSize' => Publication::PAGE_SIZE]);
         $publications = $query->offset($pages->offset)
             ->limit($pages->limit)
             ->all();
@@ -100,7 +101,8 @@ class SiteController extends Controller
         $query = Publication::find()
             ->where(['author_id' => Yii::$app->user->getId()])
             ->orderBy(['id' => SORT_DESC]);
-        $pages = new Pagination(['totalCount' => $query->count()]);
+        $pages = new Pagination(['totalCount' => $query->count(),
+        'pageSize' => Publication::PAGE_SIZE]);
         $publications = $query->offset($pages->offset)
             ->limit($pages->limit)
             ->all();
