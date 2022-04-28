@@ -10,25 +10,25 @@ function prepareLayersToDraw() {
         currentSettings = JSON.parse(JSON.stringify(settings));
     }
 
-//1. Preparations
-    //1.1. set original image as background and create thumbnails
         originalImage = new Image();
         originalImage.src = originalImageSrc;
+        var drawingsImages;
         originalImage.onload = function () {
+        drawingsImages = initDrawingsArray(settings)
         var originalImageCtx = drawBackground(originalImage);
 
         drawOriginalImageLayerThumbnail(originalImage)
 
         newLayerThumbnail = new Image();
-        drawNewLayerThumbnail(originalImage.width, originalImage.height)
+        drawNewLayerThumbnail(originalImage.width, originalImage.height);
 
-        //1.2. create canvas for new layer (to draw)
+        drawExistingLayersThumbnails(drawingsImages)
+
         var backgroundElement = document.getElementById("background");
         const backgroundX = backgroundElement.offsetLeft, backgroundY = backgroundElement.offsetTop;
         var canvas = createCanvasToDrawOn(originalImageCtx.canvas.width, originalImageCtx.canvas.height,
                                           backgroundX, backgroundY);
 
-        //1.3. set event listeners
         canvas.onmousedown = startEditing;
         canvas.onmouseup = stopEditing;
         canvas.onmouseout = stopEditing;
@@ -385,6 +385,62 @@ function prepareLayersToDraw() {
                 });
             }
         )
+        function drawExistingLayersThumbnails(drawingsImages) {
+
+            if (Array.isArray(drawingsImages)) {
+                var inputAlpha = '<div id="drawings" style="width: 200px">';
+                for (let i = 0; i < drawingsImages.length; i++) {
+                    if (typeof drawingsImages.alpha != 'undefined') {
+                        alphaValue = drawingsImages.alpha;
+                        //colorValue = drawingsImages.color;
+                    } else {
+                        alphaValue = 1;
+                    }
+                    var currentId = "layer_" + i;
+                    inputAlpha += '<div id=\'' + currentId + '\' class = "bordered_div" style="border:1px solid black; border-radius: 10px; text-align: center; margin-bottom: 10px">';
+                    inputAlpha += (drawingsImages[i].title) + '<br>'
+                        + '<input type=\'range\' name="alphaChannel" id=\'' + i + '\' class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=\'' + alphaValue + '\' oninput=\"this.nextElementSibling.value = this.value\">'
+                        + '<br>'
+                       /* + '<label for="drawingColor">Цвет: </label>'
+                        + '<input type="color" id=\'' + i + '\' class =\'color-value\' value=\'' + colorValue + '\' name="drawingColor"></button>' + '<br>';
+                   */ inputAlpha += '</div>';
+                }
+                inputAlpha += '</div>';
+                var layersDiv = document.getElementById("otherLayersThumbnails");
+                layersDiv.innerHTML = inputAlpha
+
+                /*var descriptionDiv = document.getElementById('description');
+                var layerTitle = document.getElementById('layer_title');
+                for (let i = 0; i < drawings.length; i++) {
+                    document.getElementById('layer_' + i)
+                        .addEventListener('click', function (event) {
+                            descriptionDiv.innerText = drawings[i].layerParams.description
+                            this.style.background = "#d6d5d5";
+                            layerTitle.innerText = drawings[i].layerParams.title
+
+                            function clearOtherLayersDivs(i) {
+                                for (let j = 0; j < drawings.length; j++) {
+                                    if(i !== j) {
+                                        document.getElementById('layer_' + j).style.background = "#ffffff";
+                                    }
+                                }
+                            }
+                            clearOtherLayersDivs(i)
+                        });
+                }*/
+                //initDeleteButtons(settings)
+                for (let i = 0; i < drawingsImages.length; i++) {
+                    (function(e) {
+                        var layerImage = new Image();
+                        layerImage.src = drawingsImages[e].image;
+                        layerImage.onload = function () {
+                            //var originalImageCtx = drawBackground(originalImage);
+                            drawExistingLayerThumbnails(layerId, layerImage, canvas.width, canvas.height);
+                        }
+                    })(i);
+                }
+            }
+        }
     }
 }
 

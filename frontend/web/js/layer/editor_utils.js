@@ -105,6 +105,22 @@ function drawNewLayerThumbnail(width, height) {
     return originalImageCtx
 }
 
+function drawExistingLayerThumbnail(elementId, layerImage, width, height) {
+
+    var canvas = document.getElementById(elementId)
+    //add element as child to id = otherLayersThumbnails
+    var ratio = width/height
+    var constWidth = 200
+    var correspondingHeight = constWidth/ratio
+    canvas.width = constWidth
+    canvas.height = correspondingHeight
+
+    originalImageCtx = canvas.getContext('2d');
+    originalImageCtx.drawImage(layerImage, 0, 0, canvas.width,  canvas.height);
+
+    return originalImageCtx
+}
+
 //https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
 function generateRandomImageTitle(prefix, index) {
     const length = 5;

@@ -11,6 +11,7 @@ if(!empty($publication)) {
     $originalImageSrc = "\"" . Publication::getStorageHttpPath() .Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
     $baseName = explode('.', $publication->image)[0];
     $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . $baseName . "_" . "\"";
+    $drawingPathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
 
     $script = <<< JS
     
@@ -18,6 +19,7 @@ if(!empty($publication)) {
     originalImageSrc = $originalImageSrc
     prefix = $drawingPrefix
     settings = $publication->settings
+    drawingPathPrefix =  $drawingPathPrefix
    
     prepareLayersToDraw()
 
@@ -103,12 +105,13 @@ JS;
                 <input type=range name="alphaChannel" class ="new-layer-alpha-value" id="newLayerThumbnailAlpha" step='0.02' min='0.02' max='1' value='1'>
             </div>
 
-            <div style="border:1px solid black;
+          <!--  <div style="border:1px solid black;
                 border-radius: 10px;
                 padding-left: 20px;
                 width: 400px;
                 text-align: left;
-                margin-bottom: 10px" id = "otherLayersThumbnails">
+                margin-bottom: 10px"-->
+                 <div id = "otherLayersThumbnails">
             </div>
 
             <div style="border:1px solid black;

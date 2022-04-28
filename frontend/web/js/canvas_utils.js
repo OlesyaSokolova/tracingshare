@@ -39,8 +39,9 @@ function initDrawingsArray(jsonSettings) {
         drawingImage.src = drawingPathPrefix + drawingsJson[i].image;
         alpha = parseFloat(drawingsJson[i].layerParams.alpha)
         color = drawingsJson[i].layerParams.color
+        title = drawingsJson[i].layerParams.title
 
-        drawingsImages.push({"image": drawingImage, "alpha": alpha, "color": color});
+        drawingsImages.push({"image": drawingImage, "alpha": alpha, "color": color, "title": title});
     }
     return drawingsImages
 }
