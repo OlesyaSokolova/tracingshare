@@ -115,10 +115,10 @@ function drawExistingLayerThumbnail(elementId, layerImage, width, height) {
     canvas.width = constWidth
     canvas.height = correspondingHeight
 
-    originalImageCtx = canvas.getContext('2d');
-    originalImageCtx.drawImage(layerImage, 0, 0, canvas.width,  canvas.height);
+    newLayerCtx = canvas.getContext('2d');
+    newLayerCtx.drawImage(layerImage, 0, 0, canvas.width,  canvas.height);
 
-    return originalImageCtx
+    return newLayerCtx
 }
 
 //https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript

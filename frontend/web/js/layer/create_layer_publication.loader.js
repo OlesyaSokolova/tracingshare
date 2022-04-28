@@ -388,7 +388,7 @@ function prepareLayersToDraw() {
         function drawExistingLayersThumbnails(drawingsImages) {
 
             if (Array.isArray(drawingsImages)) {
-                var inputAlpha = '<div id="drawings" style="width: 200px">';
+                var currentLayerElement = '<div id="layers" style="width: 200px">';
                 for (let i = 0; i < drawingsImages.length; i++) {
                     if (typeof drawingsImages.alpha != 'undefined') {
                         alphaValue = drawingsImages.alpha;
@@ -396,18 +396,18 @@ function prepareLayersToDraw() {
                     } else {
                         alphaValue = 1;
                     }
-                    var currentId = "layer_" + i;
-                    inputAlpha += '<div id=\'' + currentId + '\' class = "bordered_div" style="border:1px solid black; border-radius: 10px; text-align: center; margin-bottom: 10px">';
-                    inputAlpha += (drawingsImages[i].title) + '<br>'
+                    var layerId = "layer_" + i;
+                    currentLayerElement += '<canvas id=\'' + layerId + '\' class = "bordered_div" style="border:1px solid black; border-radius: 10px; text-align: center; margin-bottom: 10px">';
+                    currentLayerElement += (drawingsImages[i].title) + '<br>'
                         + '<input type=\'range\' name="alphaChannel" id=\'' + i + '\' class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=\'' + alphaValue + '\' oninput=\"this.nextElementSibling.value = this.value\">'
                         + '<br>'
                        /* + '<label for="drawingColor">Цвет: </label>'
                         + '<input type="color" id=\'' + i + '\' class =\'color-value\' value=\'' + colorValue + '\' name="drawingColor"></button>' + '<br>';
-                   */ inputAlpha += '</div>';
+                   */ currentLayerElement += '</div>';
                 }
-                inputAlpha += '</div>';
+                currentLayerElement += '</div>';
                 var layersDiv = document.getElementById("otherLayersThumbnails");
-                layersDiv.innerHTML = inputAlpha
+                layersDiv.innerHTML = currentLayerElement
 
                 /*var descriptionDiv = document.getElementById('description');
                 var layerTitle = document.getElementById('layer_title');
@@ -430,14 +430,9 @@ function prepareLayersToDraw() {
                 }*/
                 //initDeleteButtons(settings)
                 for (let i = 0; i < drawingsImages.length; i++) {
-                    (function(e) {
-                        var layerImage = new Image();
-                        layerImage.src = drawingsImages[e].image;
-                        layerImage.onload = function () {
-                            //var originalImageCtx = drawBackground(originalImage);
-                            drawExistingLayerThumbnails(layerId, layerImage, canvas.width, canvas.height);
-                        }
-                    })(i);
+                    layerId = "layer_" + i;
+                    //var originalImageCtx = drawBackground(originalImage);
+                    drawExistingLayerThumbnail(layerId, drawingsImages[i].image, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
                 }
             }
         }
