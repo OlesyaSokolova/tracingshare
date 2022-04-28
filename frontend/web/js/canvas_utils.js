@@ -37,11 +37,12 @@ function initDrawingsArray(jsonSettings) {
     for (let i = 0; i < drawingsJson.length; i++) {
         drawingImage = new Image();
         drawingImage.src = drawingPathPrefix + drawingsJson[i].image;
-        alpha = parseFloat(drawingsJson[i].layerParams.alpha)
-        color = drawingsJson[i].layerParams.color
-        title = drawingsJson[i].layerParams.title
-
-        drawingsImages.push({"image": drawingImage, "alpha": alpha, "color": color, "title": title});
+            alpha = parseFloat(drawingsJson[i].layerParams.alpha)
+            color = drawingsJson[i].layerParams.color
+            title = drawingsJson[i].layerParams.title
+            //drawingImage.onload = function () {
+            drawingsImages.push({"image": drawingImage, "alpha": alpha, "color": color, "title": title});
+       // }
     }
     return drawingsImages
 }

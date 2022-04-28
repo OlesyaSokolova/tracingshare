@@ -405,7 +405,7 @@ function prepareLayersToDraw() {
                         '            width: 400px;\n' +
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
-                    currentLayerElement += (drawingsImages[i].title) + '<br>'
+                    currentLayerElement += (drawingsImages[i].title) + ':<br>'
                         + '<canvas id=\'' + canvasId + '\'></canvas>'
                         + '<br>'
                         + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
@@ -437,9 +437,8 @@ function prepareLayersToDraw() {
                 }*/
                 //initDeleteButtons(settings)
                 for (let i = 0; i < drawingsImages.length; i++) {
-                    canvasId = "canvas_" + i;
-                    //var originalImageCtx = drawBackground(originalImage);
-                    drawExistingLayerThumbnail(canvasId, drawingsImages[i].image, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
+                        //var originalImageCtx = drawBackground(originalImage);
+                        drawExistingLayerThumbnail("canvas_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
                 }
             }
         }

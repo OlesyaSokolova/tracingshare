@@ -105,18 +105,25 @@ function drawNewLayerThumbnail(width, height) {
     return originalImageCtx
 }
 
-function drawExistingLayerThumbnail(elementId, layerImage, width, height) {
+function drawExistingLayerThumbnail(elementId, layerImage, color, width, height) {
 
     var canvas = document.getElementById(elementId)
     //add element as child to id = otherLayersThumbnails
-    var ratio = width/height
+    var ratio = width / height
     var constWidth = 200
-    var correspondingHeight = constWidth/ratio
+    var correspondingHeight = constWidth / ratio
     canvas.width = constWidth
     canvas.height = correspondingHeight
+    var newLayerCtx = canvas.getContext('2d');
 
-    newLayerCtx = canvas.getContext('2d');
-    newLayerCtx.drawImage(layerImage, 0, 0, canvas.width,  canvas.height);
+    newLayerCtx.clearRect(0, 0, canvas.width, canvas.height);
+    newLayerCtx.drawImage(layerImage, 0, 0, canvas.width, canvas.height)
+    newLayerCtx.fillStyle = color;
+    newLayerCtx.globalCompositeOperation = "source-in";
+    newLayerCtx.fillRect(0, 0, canvas.width, canvas.height);
+    newLayerCtx.globalCompositeOperation = "source-over";
+
+    //newLayerCtx.drawImage(layerImage, 0, 0, canvas.width,  canvas.height);
 
     return newLayerCtx
 }
