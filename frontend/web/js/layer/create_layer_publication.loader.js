@@ -358,8 +358,10 @@ function prepareLayersToDraw() {
                     image: imageName,
                     layerParams: {
                         title: layerTitle,
-                        alpha: "1",
-                        color: "#000000",
+                        alpha: (currentColor.a)/255,
+                        color: colorToHEXString(currentColor),
+                        //alpha: "1",
+                        //color: "#000000",
                         description: layerDescription
                     }
                 }
