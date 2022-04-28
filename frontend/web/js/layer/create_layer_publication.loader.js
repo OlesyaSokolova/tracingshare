@@ -438,9 +438,14 @@ function prepareLayersToDraw() {
                 //initDeleteButtons(settings)
                 for (let i = 0; i < drawingsImages.length; i++) {
                     //var originalImageCtx = drawBackground(originalImage);
-                    var layerImage = drawingsImages[i].image;
-                    layerImage.onload = function () {
+                    var currentImage = drawingsImages[i].image;
+                    if (isImageOk(currentImage)) {
                         drawExistingLayerThumbnail("canvas_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
+                    }
+                    else {
+                        layerImage.onload = function () {
+                            drawExistingLayerThumbnail("canvas_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
+                        }
                     }
                 }
             }
