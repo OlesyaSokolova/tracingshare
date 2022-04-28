@@ -437,8 +437,11 @@ function prepareLayersToDraw() {
                 }*/
                 //initDeleteButtons(settings)
                 for (let i = 0; i < drawingsImages.length; i++) {
-                        //var originalImageCtx = drawBackground(originalImage);
+                    //var originalImageCtx = drawBackground(originalImage);
+                    var layerImage = drawingsImages[i].image;
+                    layerImage.onload = function () {
                         drawExistingLayerThumbnail("canvas_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
+                    }
                 }
             }
         }
