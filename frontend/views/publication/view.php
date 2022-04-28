@@ -31,28 +31,34 @@ JS;
 <p>
     <?php //endif;
     if (strcmp($publication->settings ,'') != 0): ?>
-
     <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить авторские настройки</button>
-</p>
+
     <?php endif;
 
     if (Yii::$app->user->can('updateOwnPost',
         ['publication' => $publication]) || isset($userRoles['admin'])):?>
 
-        <?= Html::a(Yii::t('app', 'Редактировать'),
-            ['/publication/edit', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'edit-button',]) ?>
-
+        <?= Html::a(Yii::t('app', 'Удалить'),
+            ['/publication/delete', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-danger btn-rounded',
+                'name' => 'delete-button',]) ?>
+</p>
         <?= Html::a(Yii::t('app', 'Загрузить слои прорисовок'),
             ['/publication/upload-drawings', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'upload-drawings-button',]) ?>
 
-        <?= Html::a(Yii::t('app', 'Удалить'),
-            ['/publication/delete', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-danger btn-rounded',
-                'name' => 'delete-button',]) ?>
+        <?= Html::a(Yii::t('app', 'Редактировать демонстрационные настройки'),
+            ['/publication/edit', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'edit-button',]) ?>
+
+        <?= Html::a(Yii::t('app', 'Рисовать'),
+            ['/publication/create-layer', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'create-layer-button',]) ?>
+
+
 
     <?php endif; ?>
 <br>
