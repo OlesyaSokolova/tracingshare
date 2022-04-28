@@ -81,6 +81,7 @@ JS;
 
     <div class="canvasDiv" data-state="static" style="border:1px solid black;
             border-radius: 10px;
+            height: fit-content;
             width: max-content;">
         <canvas id="background">
         </canvas>

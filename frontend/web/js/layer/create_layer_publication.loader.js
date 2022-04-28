@@ -397,13 +397,20 @@ function prepareLayersToDraw() {
                         alphaValue = 1;
                     }
                     var layerId = "layer_" + i;
-                    currentLayerElement += '<canvas id=\'' + layerId + '\' class = "bordered_div" style="border:1px solid black; border-radius: 10px; text-align: center; margin-bottom: 10px">';
+                    var canvasId = "canvas_" + i;
+                    var alphaId = "alpha_" + i;
+                    currentLayerElement += '<div id=\'' + layerId + '\' class = "bordered_div" style="border:1px solid black;\n' +
+                        '            border-radius: 10px;\n' +
+                        '            padding-left: 20px;\n' +
+                        '            width: 400px;\n' +
+                        '            text-align: left;\n' +
+                        '            margin-bottom: 10px">';
                     currentLayerElement += (drawingsImages[i].title) + '<br>'
-                        + '<input type=\'range\' name="alphaChannel" id=\'' + i + '\' class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=\'' + alphaValue + '\' oninput=\"this.nextElementSibling.value = this.value\">'
+                        + '<canvas id=\'' + canvasId + '\'></canvas>'
                         + '<br>'
-                       /* + '<label for="drawingColor">Цвет: </label>'
-                        + '<input type="color" id=\'' + i + '\' class =\'color-value\' value=\'' + colorValue + '\' name="drawingColor"></button>' + '<br>';
-                   */ currentLayerElement += '</div>';
+                        + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
+                        + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=\'' + alphaValue + '\' oninput=\"this.nextElementSibling.value = this.value\">'
+                    currentLayerElement += '</div>';
                 }
                 currentLayerElement += '</div>';
                 var layersDiv = document.getElementById("otherLayersThumbnails");
@@ -430,9 +437,9 @@ function prepareLayersToDraw() {
                 }*/
                 //initDeleteButtons(settings)
                 for (let i = 0; i < drawingsImages.length; i++) {
-                    layerId = "layer_" + i;
+                    canvasId = "canvas_" + i;
                     //var originalImageCtx = drawBackground(originalImage);
-                    drawExistingLayerThumbnail(layerId, drawingsImages[i].image, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
+                    drawExistingLayerThumbnail(canvasId, drawingsImages[i].image, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
                 }
             }
         }
