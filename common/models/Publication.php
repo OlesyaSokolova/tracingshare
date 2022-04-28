@@ -13,40 +13,7 @@ use common\models\User;
 * @property string name
 * @property string description //description of publication
 * @property string image //link to an original image
-* @property string thumbnail //link to an thumbnail image
 * @property string settings //TEXT - json as string with drawings (and later maybe textures will be added)
-/*{
-"drawings":[
-{
-"image":"1_dr.png",
-"layerParams":{
-"title":"Слой 1",
-"alpha":"0.98",
-"color":"#0a0000",
-"description":"Основная композиция плоскости представлена массивными фигурами животных, выполненными в традициях Минусинского стиля (неолит)."
-}
-},
-{
-"image":"2_dr.png",
-"layerParams":{
-"title":"Слой 2",
-"alpha":"1",
-"color":"#3a6e3a",
-"description":"На плоскости прослежена голова животного, перекрывающая нижнюю часть самой крупной фигуры марала(?). Время её создания также соотносится с эпохой неолита."
-}
-},
-{
-"image":"3_dr.png",
-"layerParams":{
-"title":"Слой 3",
-"alpha":"1",
-"color":"#0000ff",
-"description":"На плоскости зафиксированы 2 нефигуративных изображения, время создания которых не определено (cлой 3 - зеленый)."
-}
-}
-]
-}
-
  *
 * @property string author_id //id of author from table "author"
 */
@@ -65,6 +32,7 @@ class Publication extends ActiveRecord
     const DEFAULT_ALPHA = "1";
     const DEFAULT_COLOR = "#000000";
     const DEFAULT_DESCRIPTION = " ";
+    const PAGE_SIZE = 12;
 
 
     public $imageFile;

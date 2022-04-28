@@ -8,10 +8,11 @@ function prepareEditablePublication() {
 
         originalImage = new Image();
         originalImage.src = originalImageSrc;
+        var drawingsImages;
 
         originalImage.onload = function () {
             var originalImageCtx = drawOriginalImage(originalImage)
-            var drawingsImages = initDrawingsArray(jsonSettings = settings)
+            drawingsImages = initDrawingsArray(jsonSettings = settings)
             addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = originalImageCtx)
             initLayersSettingsForEdit(jsonSettings = settings)
 
@@ -109,6 +110,7 @@ function prepareEditablePublication() {
                 var userAnswer = confirm("Вы действительно хотите удалить слой \" " + layerTitle +"\"?");
                 if (userAnswer === true) {
                     settings.drawings.splice(i, 1);
+                    drawingsImages.splice(i, 1);
                     var redirectToView = false;
                     initLayersSettingsForEdit(settings)
                     saveData(settings, redirectToView)
