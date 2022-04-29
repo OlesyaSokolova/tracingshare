@@ -30,6 +30,7 @@ function drawImage(imageWithSettings, contextToDrawOn) {
         contextToDrawOn.drawImage(canvas, 0, 0, canvas.width, canvas.height);
     }
 }
+
 function initDrawingsArray(jsonSettings) {
     var drawingsImages = []
     if(typeof jsonSettings != "undefined"

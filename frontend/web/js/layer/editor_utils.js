@@ -12,6 +12,7 @@ function drawBackground(originalImage) {
     return originalImageCtx
 }
 
+//todo: эта функция действительно используется??
 function redrawBackground(originalImage, newAlpha) {
     var canvas = document.getElementById('background')
     var ratio = originalImage.width/originalImage.height
@@ -31,6 +32,27 @@ function redrawBackground(originalImage, newAlpha) {
     originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
 
     return originalImageCtx
+}
+
+function drawLayer(imageWithSettings, contextToDrawOn) {
+    if (imageWithSettings.image.complete && imageWithSettings.image.naturalHeight !== 0) {
+
+
+        //2. set size of contextToDrawOn for the canvas
+        var width = contextToDrawOn.canvas.width
+        var height = contextToDrawOn.canvas.height
+
+        //3. set alpha channel for current image
+        contextToDrawOn.globalAlpha = imageWithSettings.alpha;
+
+        //4. fill the context with color of current image
+        contextToDrawOn.clearRect(0, 0, width, height);
+        contextToDrawOn.globalCompositeOperation = "source-in";
+        contextToDrawOn.fillRect(0, 0, width, height);
+        contextToDrawOn.globalCompositeOperation = "source-over";
+
+        contextToDrawOn.drawImage(imageWithSettings.image, 0, 0, width,  height);
+    }
 }
 
 function redrawLayer(context, newAlpha) {
