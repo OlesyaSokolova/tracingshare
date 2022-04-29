@@ -16,12 +16,12 @@ function prepareLayersToDraw() {
             }
         //create context and thumbnail for background
         var originalImageCtx = drawBackground(originalImage);
-        var originalImageThumbnailId = "thumbnail_"+ (drawingsImages.length + 1);
+        var originalImageThumbnailId = "thumbnail_"+ (drawingsImages.length);
         drawOriginalImageLayerThumbnail(originalImageThumbnailId, originalImage);
 
         //create thumbnail for new layer
         newLayerThumbnail = new Image();
-        var newLayerThumbnailId = "thumbnail_"+ drawingsImages.length;
+        var newLayerThumbnailId = "thumbnail_" + (drawingsImages.length + 1);
         drawNewLayerThumbnail(newLayerThumbnailId, originalImage.width, originalImage.height);
 
         //create thumbnails for existing layers
@@ -94,6 +94,7 @@ function prepareLayersToDraw() {
 
         var counter = 0;
         var previousTool;
+        var previousThumbnail = document.getElementById("thumbnail_div_" + (drawingsImages.length + 1));
 
         var drawingLayerData;
         var pixelStack = [];
@@ -430,10 +431,10 @@ function prepareLayersToDraw() {
                     } else {
                         alphaValue = 1;
                     }
-                    var layerId = "layer_" + i;
+                    var divId = "thumbnail_div_" + i;
                     var thumbnailId = "thumbnail_" + i;
                     var alphaId = "alpha_" + i;
-                    currentLayerElement += '<div id=\'' + layerId + '\' class = "bordered_div" style="border:1px solid black;\n' +
+                    currentLayerElement += '<div id=\'' + divId + '\' class = "bordered_div" style="border:1px solid black;\n' +
                         '            border-radius: 10px;\n' +
                         '            padding-left: 20px;\n' +
                         '            width: 400px;\n' +
@@ -450,25 +451,6 @@ function prepareLayersToDraw() {
                 var layersDiv = document.getElementById("otherLayersThumbnails");
                 layersDiv.innerHTML = currentLayerElement
 
-                /*var descriptionDiv = document.getElementById('description');
-                var layerTitle = document.getElementById('layer_title');
-                for (let i = 0; i < drawings.length; i++) {
-                    document.getElementById('layer_' + i)
-                        .addEventListener('click', function (event) {
-                            descriptionDiv.innerText = drawings[i].layerParams.description
-                            this.style.background = "#d6d5d5";
-                            layerTitle.innerText = drawings[i].layerParams.title
-
-                            function clearOtherLayersDivs(i) {
-                                for (let j = 0; j < drawings.length; j++) {
-                                    if(i !== j) {
-                                        document.getElementById('layer_' + j).style.background = "#ffffff";
-                                    }
-                                }
-                            }
-                            clearOtherLayersDivs(i)
-                        });
-                }*/
                 //initDeleteButtons(settings)
                 for (let i = 0; i < drawingsImages.length; i++) {
                     var currentImage = drawingsImages[i].image;
@@ -484,21 +466,17 @@ function prepareLayersToDraw() {
                 //initThumbnailsClickListeners();
                 //var descriptionDiv = document.getElementById('description');
                 //var layerTitle = document.getElementById('layer_title');
-                for (let i = 0; i < drawings.length; i++) {
-                   document.getElementById('thumbnail_' + i)
+                //+2 because of new layer and original image
+                for (let i = 0; i < drawingsImages.length + 2; i++) {
+                   document.getElementById('thumbnail_div_' + i)
                        .addEventListener('click', function (event) {
-                           //descriptionDiv.innerText = drawings[i].layerParams.description
+                           //$(this).addClass('active');
                            this.style.background = "#d6d5d5";
-                           //layerTitle.innerText = drawings[i].layerParams.title
-
-                           function clearOtherLayersDivs(i) {
-                               for (let j = 0; j < drawings.length; j++) {
-                                   if(i !== j) {
-                                       document.getElementById('layer_' + j).style.background = "#ffffff";
-                                   }
-                               }
+                           if (previousThumbnail != null && !previousThumbnail.isSameNode(this)) {
+                               //$(previousThumbnail).removeClass('active');
+                               previousThumbnail.style.background = "#ffffff";
                            }
-                           clearOtherLayersDivs(i)
+                           previousThumbnail = this;
                        });
                }
             }

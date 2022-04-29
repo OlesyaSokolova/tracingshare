@@ -100,19 +100,21 @@ JS;
     <div id="layers" class = "layers-class" style="width: fit-content; padding-left: 10px">
         <div class="thumbnails-layers">
 
-            <div style="border:1px solid black;
+            <?php $idCounter = (sizeof($publication->getDrawings()) + 1);?>
+            <div id="<?= "thumbnail_div_".$idCounter ?>"style="border:1px solid black;
             border-radius: 10px;
             padding-left: 20px;
             width: 400px;
             text-align: left;
-            margin-bottom: 10px">
-                <?php $canvasId = "thumbnail_" . sizeof($publication->getDrawings());
+            margin-bottom: 10px;
+            background: #d6d5d5">
+                <?php $canvasId = "thumbnail_" . $idCounter;
                 echo '<label for="'. $canvasId. '">Новый слой: </label>';
                 echo '<canvas id="'.$canvasId.'" > </canvas>';?>
                 <!--<canvas id="newLayerThumbnail">
                 </canvas>-->
                 <br>
-                <?php $alphaId = "alpha_" . sizeof($publication->getDrawings());
+                <?php $alphaId = "alpha_" . $idCounter;
                 echo '<label for="'. $alphaId. '">Прозрачность: </label>';
                 echo '<input type=range name=\"alphaChannel\" class ="alpha-value" id="'.$alphaId.'" step=\'0.02\' min=\'0.02\' max=\'1\' value=\'1\'>' ?>
 <!--                <input type=range name="alphaChannel" class ="new-layer-alpha-value" id="'.$alphaId.'" step='0.02' min='0.02' max='1' value='1'>
@@ -127,19 +129,20 @@ JS;
                  <div id = "otherLayersThumbnails">
                 </div>
 
-            <div style="border:1px solid black;
+            <?php $idCounter = (sizeof($publication->getDrawings()));?>
+            <div id="<?= "thumbnail_div_".$idCounter ?>" style="border:1px solid black;
             border-radius: 10px;
             padding-left: 20px;
             width: 400px;
             text-align: left;
             margin-bottom: 10px">
-                <?php $canvasId = "thumbnail_" . (sizeof($publication->getDrawings())+1);
+                <?php $canvasId = "thumbnail_" . $idCounter;
                 echo '<label for="'. $canvasId. '">Фоновое изображение: </label>';
                 echo '<canvas id="'.$canvasId.'" > </canvas>';?>
                 <!--<canvas id="newLayerThumbnail">
                 </canvas>-->
                 <br>
-                <?php $alphaId = "alpha_" . (sizeof($publication->getDrawings())+1);
+                <?php $alphaId = "alpha_" . $idCounter;
                 echo '<label for="'. $alphaId. '">Прозрачность: </label>';
                 echo '<input type=range name=\"alphaChannel\" class ="alpha-value" id="'.$alphaId.'" step=\'0.02\' min=\'0.02\' max=\'1\' value=\'1\'>' ?>
                 <!--                <input type=range name="alphaChannel" class ="new-layer-alpha-value" id="'.$alphaId.'" step='0.02' min='0.02' max='1' value='1'>
