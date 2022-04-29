@@ -26,34 +26,40 @@ function prepareLayersToDraw() {
         drawExistingLayersThumbnails(drawingsImages);
 
         //create array of contexts and canvases for layers to draw on:
+        var mutableCanvasesAndContexts = [];
         var backgroundElement = document.getElementById("background");
         const backgroundX = backgroundElement.offsetLeft, backgroundY = backgroundElement.offsetTop;
+        const newLayerCanvasId = "newLayerCanvas";
         var newLayerCanvas = createCanvasToDrawOn("newLayerCanvas", originalImageCtx.canvas.width, originalImageCtx.canvas.height,
                                           backgroundX, backgroundY);
-        var canvas = newLayerCanvas
+        var newLayerContext = newLayerCanvas.getContext("2d");
+        mutableCanvasesAndContexts.push({"id": newLayerCanvasId, "canvas": newLayerCanvas, "context": newLayerContext });
+
         for (let i = 0; i < drawingsImages.length; i++) {
-            //var originalImageCtx = drawBackground(originalImage);
             var currentImage = drawingsImages[i].image;
             var canvasId = "layer_" + i + "_canvas";
+            var currentCanvas;
             if (isImageOk(currentImage)) {
-                createCanvasToDrawOn(canvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+                currentCanvas = createCanvasToDrawOn(canvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
                     backgroundX, backgroundY);            }
             else {
                 currentImage.onload = function () {
-                    createCanvasToDrawOn(canvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+                    currentCanvas = createCanvasToDrawOn(canvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
                         backgroundX, backgroundY);
                 }
             }
+            var currentContext = currentCanvas.getContext('2d');
+            mutableCanvasesAndContexts.push({"id": canvasId, "canvas": currentCanvas, "context": currentContext });
         }
 
+        var canvas = mutableCanvasesAndContexts.find(x => x.id === newLayerCanvasId).canvas;
+        var context = mutableCanvasesAndContexts.find(x => x.id === newLayerCanvasId).context;
         canvas.onmousedown = startEditing;
         canvas.onmouseup = stopEditing;
         canvas.onmouseout = stopEditing;
         canvas.onmousemove = edit;
 
         //1.4. init vars and consts
-        var context = canvas.getContext("2d");
-
         const eraserStyle = "rgba(255,255,255,255)";
         const eraserGlobalCompositeOperation = "destination-out";
 
