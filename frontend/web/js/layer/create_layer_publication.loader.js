@@ -420,10 +420,11 @@ function prepareLayersToDraw() {
                             image: imageName,
                             layerParams: {
                                 title: layerTitle,
-                                //alpha: (currentColor.a) / 255,
+                                alpha: tmp.context.globalAlpha,
                                 //color: colorToHEXString(currentColor),
-                                alpha: "1",
-                                color: "#000000",
+                                color: tmp.context.fillStyle,
+                                //alpha: "1",
+                                //color: "#000000",
                                 description: layerDescription
                             }
                         }
@@ -458,8 +459,8 @@ function prepareLayersToDraw() {
             if (Array.isArray(drawingsImages)) {
                 var currentLayerElement = '<div id="layers" style="width: 200px">';
                 for (let i = 0; i < drawingsImages.length; i++) {
-                    if (typeof drawingsImages.alpha != 'undefined') {
-                        alphaValue = drawingsImages.alpha;
+                    if (typeof drawingsImages[i].alpha != 'undefined') {
+                        alphaValue = drawingsImages[i].alpha;
                         //colorValue = drawingsImages.color;
                     } else {
                         alphaValue = 1;
