@@ -297,6 +297,7 @@ function prepareLayersToDraw() {
             }
             //update image data
             if(drawingLayerData){
+                //context.globalAlpha = (currentColor.a)/255;
                 context.putImageData(drawingLayerData, 0, 0);
                 drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
             }
@@ -363,6 +364,7 @@ function prepareLayersToDraw() {
             .on('input change', '.alpha-value', function () {
                 $(this).attr('value', $(this).val());
                 var newAlpha = parseFloat($(this).val());
+                currentColor.a = newAlpha*255;
                 var idInt = parseInt(($(this).attr('id')).split('_')[1]);
                 var layerId = "layer_" + idInt + "_canvas";
                 var tmp = mutableCanvasesAndContexts.find(x => x.id === layerId);
@@ -385,6 +387,7 @@ function prepareLayersToDraw() {
                         data[i + 3] = newAlpha*255;
                     }
                 }
+                contextToChange.globalAlpha = newAlpha
                 contextToChange.putImageData(image, 0, 0);
                 //drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
                 //context.putImageData(drawingLayerData, 0, 0);
@@ -422,7 +425,7 @@ function prepareLayersToDraw() {
                                 title: layerTitle,
                                 alpha: tmp.context.globalAlpha,
                                 //color: colorToHEXString(currentColor),
-                                color: tmp.context.fillStyle,
+                                color: tmp.context.strokeStyle,
                                 //alpha: "1",
                                 //color: "#000000",
                                 description: layerDescription
