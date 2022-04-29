@@ -490,8 +490,8 @@ function prepareLayersToDraw() {
                 //initThumbnailsClickListeners();
                 //var descriptionDiv = document.getElementById('description');
                 //var layerTitle = document.getElementById('layer_title');
-                //+2 because of new layer and original image
-                for (let i = 0; i < drawingsImages.length + 2; i++) {
+                //+2 because of new layer
+                for (let i = 0; i < drawingsImages.length + 1; i++) {
                    document.getElementById('thumbnail_div_' + i)
                        .addEventListener('click', function (event) {
                            //$(this).addClass('active');
