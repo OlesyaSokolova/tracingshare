@@ -77,9 +77,10 @@ function drawOriginalImageLayerThumbnail(originalImage) {
     return originalImageCtx
 }
 
-function createCanvasToDrawOn(width, height, x, y) {
+function createCanvasToDrawOn(canvasId, width, height, x, y) {
 
-    var canvas = document.getElementById("layerToDrawOn");
+    //var canvas = document.getElementById("layerToDrawOn");
+    var canvas = document.getElementById(canvasId);
     canvas.width = width;
     canvas.height = height
 

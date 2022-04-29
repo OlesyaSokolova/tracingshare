@@ -14,20 +14,37 @@ function prepareLayersToDraw() {
                 currentSettings = JSON.parse(JSON.stringify(settings));
                 drawingsImages = initDrawingsArray(currentSettings)
             }
-
+        //create context and thumbnail for background
         var originalImageCtx = drawBackground(originalImage);
+        drawOriginalImageLayerThumbnail(originalImage);
 
-        drawOriginalImageLayerThumbnail(originalImage)
-
+        //create thumbnail for new layer
         newLayerThumbnail = new Image();
         drawNewLayerThumbnail(originalImage.width, originalImage.height);
 
-        drawExistingLayersThumbnails(drawingsImages)
+        //create thumbnails for existing layers
+        drawExistingLayersThumbnails(drawingsImages);
 
+        //create array of contexts and canvases for layers to draw on:
         var backgroundElement = document.getElementById("background");
         const backgroundX = backgroundElement.offsetLeft, backgroundY = backgroundElement.offsetTop;
-        var canvas = createCanvasToDrawOn(originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+        var newLayerCanvas = createCanvasToDrawOn("newLayerCanvas", originalImageCtx.canvas.width, originalImageCtx.canvas.height,
                                           backgroundX, backgroundY);
+        var canvas = newLayerCanvas
+        for (let i = 0; i < drawingsImages.length; i++) {
+            //var originalImageCtx = drawBackground(originalImage);
+            var currentImage = drawingsImages[i].image;
+            var canvasId = "layer_" + i + "_canvas";
+            if (isImageOk(currentImage)) {
+                createCanvasToDrawOn(canvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+                    backgroundX, backgroundY);            }
+            else {
+                currentImage.onload = function () {
+                    createCanvasToDrawOn(canvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+                        backgroundX, backgroundY);
+                }
+            }
+        }
 
         canvas.onmousedown = startEditing;
         canvas.onmouseup = stopEditing;
@@ -437,13 +454,12 @@ function prepareLayersToDraw() {
                 }*/
                 //initDeleteButtons(settings)
                 for (let i = 0; i < drawingsImages.length; i++) {
-                    //var originalImageCtx = drawBackground(originalImage);
                     var currentImage = drawingsImages[i].image;
                     if (isImageOk(currentImage)) {
                         drawExistingLayerThumbnail("canvas_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
                     }
                     else {
-                        layerImage.onload = function () {
+                        currentImage.onload = function () {
                             drawExistingLayerThumbnail("canvas_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
                         }
                     }

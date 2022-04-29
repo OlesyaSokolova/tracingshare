@@ -85,7 +85,15 @@ JS;
             width: max-content;">
         <canvas id="background">
         </canvas>
-        <canvas id="layerToDrawOn">
+        <?php if (strcmp($publication->settings ,'') != 0
+            && sizeof($publication->getDrawings()) > 0) {
+            for($i=0; $i < sizeof($publication->getDrawings()); $i++) {
+                $canvasId = "layer_" . $i . "_canvas";
+                echo '<canvas id="'.$canvasId.'" ></canvas>';
+                }
+            }
+        ?>
+        <canvas id="newLayerCanvas">
         </canvas>
     </div>
 

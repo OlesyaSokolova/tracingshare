@@ -218,6 +218,7 @@ class Publication extends ActiveRecord
     }
 
     public static function getStorageHttpPath() {
+        //TODO: FIX THIS MAGIC CONSTANT (urlManager get absolute url
         $projectFolder = 'tracingshare';
         if(isset($_SERVER['HTTPS'])){
             $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
