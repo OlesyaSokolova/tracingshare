@@ -351,23 +351,32 @@ function prepareLayersToDraw() {
         thumbnailsClassContainer = 'thumbnails-layers'
 
         $('.' + thumbnailsClassContainer)
-            .on('input change', '.alpha-value', function () {
+            /*.on('input change', '.alpha-value', function () {
                 $(this).attr('value', $(this).val());
                 var newAlpha = parseFloat($(this).val());
                 //var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
                 //drawingsImages[drawingImageId].alpha = newAlpha;
                 //updateAllLayers(drawingsImages)
                 originalImageCtx = redrawBackground(originalImage, newAlpha)
-            })
+            })*/
             //todo: remove one of the listeners
             .on('input change', '.alpha-value', function () {
                 $(this).attr('value', $(this).val());
                 var newAlpha = parseFloat($(this).val());
-                //var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
+                var idInt = parseInt(($(this).attr('id')).split('_')[1]);
+                var layerId = "layer_" + idInt + "_canvas";
+                var tmp = mutableCanvasesAndContexts.find(x => x.id === layerId);
+                var contextToChange;
+                if(typeof tmp === 'undefined') {
+                    contextToChange = originalImageCtx
+                }
+                else {
+                    contextToChange = tmp.context;
+                }
                 //drawingsImages[drawingImageId].alpha = newAlpha;
                 //updateAllLayers(drawingsImages)
                 //context = redrawLayer(context, newAlpha)
-                const image = context.getImageData(0, 0, canvas.width, canvas.height);
+                const image = contextToChange.getImageData(0, 0, canvas.width, canvas.height);
                 const {data} = image;
                 const {length} = data;
 
@@ -376,7 +385,7 @@ function prepareLayersToDraw() {
                         data[i + 3] = newAlpha*255;
                     }
                 }
-                context.putImageData(image, 0, 0);
+                contextToChange.putImageData(image, 0, 0);
                 //drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
                 //context.putImageData(drawingLayerData, 0, 0);
                 //drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
@@ -411,10 +420,10 @@ function prepareLayersToDraw() {
                             image: imageName,
                             layerParams: {
                                 title: layerTitle,
-                                alpha: (currentColor.a) / 255,
-                                color: colorToHEXString(currentColor),
-                                //alpha: "1",
-                                //color: "#000000",
+                                //alpha: (currentColor.a) / 255,
+                                //color: colorToHEXString(currentColor),
+                                alpha: "1",
+                                color: "#000000",
                                 description: layerDescription
                             }
                         }
@@ -430,7 +439,7 @@ function prepareLayersToDraw() {
                     layersUrls: layersUrls,
                     newSettings: currentSettings,
                 };
-                console.log(newData)
+                //console.log(newData)
                 $.ajax({
                     type: "POST",
                     url: "/tracingshare/frontend/web/index.php/publication/save-layers?id=" + publicationId,
@@ -468,7 +477,7 @@ function prepareLayersToDraw() {
                         + '<canvas id=\'' + thumbnailId + '\'></canvas>'
                         + '<br>'
                         + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
-                        + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=\'' + alphaValue + '\'>'
+                        + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + alphaValue + '\'>'
                     currentLayerElement += '</div>';
                 }
                 currentLayerElement += '</div>';
