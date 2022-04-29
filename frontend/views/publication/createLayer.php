@@ -79,11 +79,18 @@ JS;
     </div>
 
 
+    <?php $layersCounter = 0;
+    if (strcmp($publication->settings ,'') != 0
+            && sizeof($publication->getDrawings()) > 0) {
+        $layersCounter = sizeof($publication->getDrawings());
+            }
+    $canvasId = "layer_" . ($layersCounter + 1)  . "_canvas";
+    ?>
     <div class="canvasDiv" data-state="static" style="border:1px solid black;
             border-radius: 10px;
             height: fit-content;
             width: max-content;">
-        <canvas id="background">
+        <canvas id="<?= $canvasId ?>">
         </canvas>
         <?php if (strcmp($publication->settings ,'') != 0
             && sizeof($publication->getDrawings()) > 0) {
@@ -92,15 +99,16 @@ JS;
                 echo '<canvas id="'.$canvasId.'" ></canvas>';
                 }
             }
+        $canvasId = "layer_" . $layersCounter  . "_canvas";
         ?>
-        <canvas id="newLayerCanvas">
+        <canvas id="<?= $canvasId ?>">
         </canvas>
     </div>
 
     <div id="layers" class = "layers-class" style="width: fit-content; padding-left: 10px">
         <div class="thumbnails-layers">
 
-            <?php $idCounter = (sizeof($publication->getDrawings()) + 1);?>
+            <?php $idCounter = (sizeof($publication->getDrawings()));?>
             <div id="<?= "thumbnail_div_".$idCounter ?>"style="border:1px solid black;
             border-radius: 10px;
             padding-left: 20px;
@@ -129,7 +137,7 @@ JS;
                  <div id = "otherLayersThumbnails">
                 </div>
 
-            <?php $idCounter = (sizeof($publication->getDrawings()));?>
+            <?php $idCounter = (sizeof($publication->getDrawings()) + 1);?>
             <div id="<?= "thumbnail_div_".$idCounter ?>" style="border:1px solid black;
             border-radius: 10px;
             padding-left: 20px;

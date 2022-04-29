@@ -12,16 +12,17 @@ function prepareLayersToDraw() {
                 && settings !== ''
                 && settings !== "") {
                 currentSettings = JSON.parse(JSON.stringify(settings));
-                drawingsImages = initDrawingsArray(currentSettings)
+                drawingsImages = initDrawingsArray(currentSettings);
             }
         //create context and thumbnail for background
-        var originalImageCtx = drawBackground(originalImage);
-        var originalImageThumbnailId = "thumbnail_"+ (drawingsImages.length);
+        var backroundId = "layer_" + (drawingsImages.length + 1) + "_canvas";
+        var originalImageCtx = drawBackground(backroundId, originalImage);
+        var originalImageThumbnailId = "thumbnail_"+ (drawingsImages.length + 1);
         drawOriginalImageLayerThumbnail(originalImageThumbnailId, originalImage);
 
         //create thumbnail for new layer
         newLayerThumbnail = new Image();
-        var newLayerThumbnailId = "thumbnail_" + (drawingsImages.length + 1);
+        var newLayerThumbnailId = "thumbnail_" + (drawingsImages.length);
         drawNewLayerThumbnail(newLayerThumbnailId, originalImage.width, originalImage.height);
 
         //create thumbnails for existing layers
@@ -29,13 +30,8 @@ function prepareLayersToDraw() {
 
         //create array of contexts and canvases for layers to draw on:
         var mutableCanvasesAndContexts = [];
-        var backgroundElement = document.getElementById("background");
+        var backgroundElement = document.getElementById(backroundId);
         const backgroundX = backgroundElement.offsetLeft, backgroundY = backgroundElement.offsetTop;
-        const newLayerCanvasId = "newLayerCanvas";
-        var newLayerCanvas = createCanvasToDrawOn("newLayerCanvas", originalImageCtx.canvas.width, originalImageCtx.canvas.height,
-                                          backgroundX, backgroundY);
-        var newLayerContext = newLayerCanvas.getContext("2d");
-        mutableCanvasesAndContexts.push({"id": newLayerCanvasId, "canvas": newLayerCanvas, "context": newLayerContext });
 
         for (let i = 0; i < drawingsImages.length; i++) {
             var currentImage = drawingsImages[i].image;
@@ -61,6 +57,12 @@ function prepareLayersToDraw() {
             //currentContex = currentCanvas.getContext('2d');
             ///drawLayer(currentImage, currentContex);
         }
+
+        const newLayerCanvasId = "layer_" + (drawingsImages.length) + "_canvas";
+        var newLayerCanvas = createCanvasToDrawOn(newLayerCanvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+            backgroundX, backgroundY);
+        var newLayerContext = newLayerCanvas.getContext("2d");
+        mutableCanvasesAndContexts.push({"id": newLayerCanvasId, "canvas": newLayerCanvas, "context": newLayerContext });
 
         var canvas = mutableCanvasesAndContexts.find(x => x.id === newLayerCanvasId).canvas;
         var context = mutableCanvasesAndContexts.find(x => x.id === newLayerCanvasId).context;
@@ -94,7 +96,7 @@ function prepareLayersToDraw() {
 
         var counter = 0;
         var previousTool;
-        var previousThumbnail = document.getElementById("thumbnail_div_" + (drawingsImages.length + 1));
+        var previousThumbnail = document.getElementById("thumbnail_div_" + (drawingsImages.length));
 
         var drawingLayerData;
         var pixelStack = [];
@@ -383,33 +385,60 @@ function prepareLayersToDraw() {
         var saveButton = document.getElementById("save-layer-button");
         saveButton.addEventListener(
             'click', function (event) {
-                changeImageColor(context, canvas.width, canvas.height)
-                var imageDataUrl = canvas.toDataURL("image/png")
-                var imageName = generateRandomImageTitle(prefix, currentSettings.drawings.length+1);
-                layerDescription = document.getElementById('layerDesc').value;
-                layerTitle = document.getElementById('layerTitle').value;
+                var imagesUrls = [];
+                for(let i = 0; i < mutableCanvasesAndContexts.length; i++) {
+                    var tmp = mutableCanvasesAndContexts[i];
 
-                var newLayerInfo = {
-                    image: imageName,
-                    layerParams: {
-                        title: layerTitle,
-                        alpha: (currentColor.a)/255,
-                        color: colorToHEXString(currentColor),
-                        //alpha: "1",
-                        //color: "#000000",
-                        description: layerDescription
+                    var contextToSave = tmp.context;
+                    changeImageColor(contextToSave, canvas.width, canvas.height)
+
+                    var canvasToSave = tmp.canvas;
+                    var imageDataUrl = canvasToSave.toDataURL("image/png")
+
+                    var layerId = tmp.id;
+                    if(!layerId === "newLayerCanvas") {
+                        imagesUrls.push({"id": i, "data": imageDataUrl});
+                    }
+                    else {
+                        imagesUrls.push({"id": layerId, "data": imageDataUrl});
+                    }
+
+                    if (layerId === "newLayerCanvas") {
+                        var imageName = generateRandomImageTitle(prefix, currentSettings.drawings.length + 1);
+                        //todo: описание и название разные для разных слоев
+                        var layerDescription = document.getElementById('layerDesc').value;
+                        var layerTitle = document.getElementById('layerTitle').value;
+
+                        var newLayerInfo = {
+                            image: imageName,
+                            layerParams: {
+                                title: layerTitle,
+                                alpha: (currentColor.a) / 255,
+                                color: colorToHEXString(currentColor),
+                                //alpha: "1",
+                                //color: "#000000",
+                                description: layerDescription
+                            }
+                        }
+                        currentSettings.drawings.push(newLayerInfo);
+                    }
+                    else if(layerId === "layer_" + i + "_canvas") {
+                        //currentSettings.drawings[i - 1].layerParams.title = document.getElementById("title_" + i).value;
+                        //currentSettings.drawings[i - 1].layerParams.alpha = document.getElementById('alpha_' + i).value;
+                        //currentSettings.drawings[i - 1].layerParams.color = document.getElementById('color_' + i).value;
+                        //currentSettings.drawings[i - 1].layerParams.description = document.getElementById('desc_' + i).value;
                     }
                 }
-                currentSettings.drawings.push(newLayerInfo);
                 //settingsJSON = JSON.stringify(currentSettings)
                 var newData = {
                     newImageName: imageName,
-                    newImageUrl: imageDataUrl,
+                    newImagesUrls: imagesUrls,
                     newSettings: currentSettings,
                 };
+                console.log(newData)
                 $.ajax({
                     type: "POST",
-                    url: "/tracingshare/frontend/web/index.php/publication/save-layer?id=" + publicationId,
+                    url: "/tracingshare/frontend/web/index.php/publication/save-layers?id=" + publicationId,
                     data: {params: JSON.stringify(newData)},
                     success: function (data) {
                         location.href = "http://localhost/tracingshare/frontend/web/index.php/publication/edit?id=" + publicationId
@@ -471,6 +500,11 @@ function prepareLayersToDraw() {
                    document.getElementById('thumbnail_div_' + i)
                        .addEventListener('click', function (event) {
                            //$(this).addClass('active');
+                           var canvasId = "layer_" + i + "_canvas";
+                           canvas = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
+                           context = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
+                           //TODO: change brush style to current color
+                           //brushStyle = context.fillStyle;
                            this.style.background = "#d6d5d5";
                            if (previousThumbnail != null && !previousThumbnail.isSameNode(this)) {
                                //$(previousThumbnail).removeClass('active');

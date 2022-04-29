@@ -1,5 +1,5 @@
-function drawBackground(originalImage) {
-    var canvas = document.getElementById('background')
+function drawBackground(elementId, originalImage) {
+    var canvas = document.getElementById(elementId)
     var ratio = originalImage.width/originalImage.height
     var constWidth = 1000
     var correspondingHeight = constWidth/ratio

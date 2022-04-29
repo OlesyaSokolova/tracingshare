@@ -89,7 +89,7 @@ class PublicationController extends Controller
         }
     }
 
-    public function actionSaveLayer($id)
+    public function actionSaveLayers($id)
     {
         $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
 
@@ -99,15 +99,18 @@ class PublicationController extends Controller
             $newSettings = json_encode($data['newSettings'], JSON_UNESCAPED_UNICODE);
             $publication->settings = $newSettings;
 
-            $imageBase64 = $data['newImageUrl'];
-            $img0 = str_replace('data:image/png;base64,', '', $imageBase64);
-            $img0 = str_replace(' ', '+', $img0);
-            $imageToSave = base64_decode($img0);
-            $filePath = Publication::basePath() . '/'
-                . Publication::PREFIX_PATH_DRAWINGS . '/'
-                . $data['newImageName'];
+            $imageBase64 = $data['newImagesUrls'];
+           /* for($i = 0; $i < $data['newImagesUrls']; $i++) {
+                $imageBase64 = $data['newImagesUrls'];
+                $img0 = str_replace('data:image/png;base64,', '', $imageBase64);
+                $img0 = str_replace(' ', '+', $img0);
+                $imageToSave = base64_decode($img0);
+                $filePath = Publication::basePath() . '/'
+                    . Publication::PREFIX_PATH_DRAWINGS . '/'
+                    . $data['newImageName'];
 
-            file_put_contents($filePath, $imageToSave);
+                file_put_contents($filePath, $imageToSave);
+            }*/
         }
 
         if($publication->update(true, ["settings"])) {
