@@ -31,18 +31,22 @@ function drawImage(imageWithSettings, contextToDrawOn) {
     }
 }
 function initDrawingsArray(jsonSettings) {
-
-    var drawingsJson = jsonSettings.drawings;
     var drawingsImages = []
-    for (let i = 0; i < drawingsJson.length; i++) {
-        drawingImage = new Image();
-        drawingImage.src = drawingPathPrefix + drawingsJson[i].image;
+    if(typeof jsonSettings != "undefined"
+        && jsonSettings !== ''
+        && jsonSettings !== ""
+        && jsonSettings.drawings.length > 0) {
+        var drawingsJson = jsonSettings.drawings;
+        for (let i = 0; i < drawingsJson.length; i++) {
+            drawingImage = new Image();
+            drawingImage.src = drawingPathPrefix + drawingsJson[i].image;
             alpha = parseFloat(drawingsJson[i].layerParams.alpha)
             color = drawingsJson[i].layerParams.color
             title = drawingsJson[i].layerParams.title
             //drawingImage.onload = function () {
             drawingsImages.push({"image": drawingImage, "alpha": alpha, "color": color, "title": title});
-       // }
+            // }
+        }
     }
     return drawingsImages
 }

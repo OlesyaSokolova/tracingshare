@@ -12,15 +12,15 @@ if(!empty($publication)) {
     $baseName = explode('.', $publication->image)[0];
     $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . $baseName . "_" . "\"";
     $drawingPathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
-
+    $currentSettings = "\"" . $publication->settings . "\"";
     $script = <<< JS
     
     publicationId = $publication->id
     originalImageSrc = $originalImageSrc
     prefix = $drawingPrefix
-    settings = $publication->settings
     drawingPathPrefix =  $drawingPathPrefix
-   
+    settings = $publication->settings
+    
     prepareLayersToDraw()
 
 JS;

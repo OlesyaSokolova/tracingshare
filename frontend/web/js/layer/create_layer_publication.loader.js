@@ -3,18 +3,18 @@ function prepareLayersToDraw() {
     var currentSettings = {
         drawings: Array()
     }
-    if (typeof settings != "undefined"
-        && settings !== ''
-        && settings !== "") {
-
-        currentSettings = JSON.parse(JSON.stringify(settings));
-    }
 
         originalImage = new Image();
         originalImage.src = originalImageSrc;
         var drawingsImages;
         originalImage.onload = function () {
-        drawingsImages = initDrawingsArray(settings)
+            if (typeof settings != "undefined"
+                && settings !== ''
+                && settings !== "") {
+                currentSettings = JSON.parse(JSON.stringify(settings));
+                drawingsImages = initDrawingsArray(currentSettings)
+            }
+
         var originalImageCtx = drawBackground(originalImage);
 
         drawOriginalImageLayerThumbnail(originalImage)
