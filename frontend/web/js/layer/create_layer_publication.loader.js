@@ -6,7 +6,7 @@ function prepareLayersToDraw() {
 
         originalImage = new Image();
         originalImage.src = originalImageSrc;
-        var drawingsImages;
+        var drawingsImages = [];
         originalImage.onload = function () {
             if (typeof settings != "undefined"
                 && settings !== ''
@@ -385,7 +385,9 @@ function prepareLayersToDraw() {
         var saveButton = document.getElementById("save-layer-button");
         saveButton.addEventListener(
             'click', function (event) {
-                var imagesUrls = [];
+                var layersUrls = [];
+                var layersNames = [];
+                //console.log(currentSettings)
                 for(let i = 0; i < mutableCanvasesAndContexts.length; i++) {
                     var tmp = mutableCanvasesAndContexts[i];
 
@@ -395,16 +397,12 @@ function prepareLayersToDraw() {
                     var canvasToSave = tmp.canvas;
                     var imageDataUrl = canvasToSave.toDataURL("image/png")
 
-                    var layerId = tmp.id;
-                    if(!layerId === "newLayerCanvas") {
-                        imagesUrls.push({"id": i, "data": imageDataUrl});
-                    }
-                    else {
-                        imagesUrls.push({"id": layerId, "data": imageDataUrl});
-                    }
+                    layersUrls.push(imageDataUrl);
 
-                    if (layerId === "newLayerCanvas") {
+                    if (i >= currentSettings.drawings.length) {
+                        //create new layer
                         var imageName = generateRandomImageTitle(prefix, currentSettings.drawings.length + 1);
+                        layersNames.push(imageName)
                         //todo: описание и название разные для разных слоев
                         var layerDescription = document.getElementById('layerDesc').value;
                         var layerTitle = document.getElementById('layerTitle').value;
@@ -422,17 +420,14 @@ function prepareLayersToDraw() {
                         }
                         currentSettings.drawings.push(newLayerInfo);
                     }
-                    else if(layerId === "layer_" + i + "_canvas") {
-                        //currentSettings.drawings[i - 1].layerParams.title = document.getElementById("title_" + i).value;
-                        //currentSettings.drawings[i - 1].layerParams.alpha = document.getElementById('alpha_' + i).value;
-                        //currentSettings.drawings[i - 1].layerParams.color = document.getElementById('color_' + i).value;
-                        //currentSettings.drawings[i - 1].layerParams.description = document.getElementById('desc_' + i).value;
+                    else {
+                        layersNames.push(currentSettings.drawings[i].image)
                     }
                 }
                 //settingsJSON = JSON.stringify(currentSettings)
                 var newData = {
-                    newImageName: imageName,
-                    newImagesUrls: imagesUrls,
+                    layersFilesNames: layersNames,
+                    layersUrls: layersUrls,
                     newSettings: currentSettings,
                 };
                 console.log(newData)
