@@ -47,11 +47,13 @@ function drawLayer(imageWithSettings, contextToDrawOn) {
 
         //4. fill the context with color of current image
         contextToDrawOn.clearRect(0, 0, width, height);
+        contextToDrawOn.drawImage(imageWithSettings.image, 0, 0, width, height)
+        contextToDrawOn.fillStyle = imageWithSettings.color;
         contextToDrawOn.globalCompositeOperation = "source-in";
         contextToDrawOn.fillRect(0, 0, width, height);
         contextToDrawOn.globalCompositeOperation = "source-over";
 
-        contextToDrawOn.drawImage(imageWithSettings.image, 0, 0, width,  height);
+        //contextToDrawOn.drawImage(imageWithSettings.image, 0, 0, width,  height);
     }
 }
 
