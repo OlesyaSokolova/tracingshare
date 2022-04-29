@@ -105,8 +105,9 @@ JS;
         </canvas>
     </div>
 
-    <div id="layers" class = "layers-class" style="width: fit-content; padding-left: 10px">
-        <div class="thumbnails-layers">
+<!--    <div class="overflow-auto">
+-->    <div id="layers" class = "layers-class" style="width: fit-content; padding-left: 10px;">
+        <div class="thumbnails-layers" style="overflow-y: scroll; height: 700px">
 
             <?php $idCounter = (sizeof($publication->getDrawings()));?>
             <div id="<?= "thumbnail_div_".$idCounter ?>"style="border:1px solid black;
@@ -156,9 +157,9 @@ JS;
                 <!--                <input type=range name="alphaChannel" class ="new-layer-alpha-value" id="'.$alphaId.'" step='0.02' min='0.02' max='1' value='1'>
                 -->
             </div>
-
         </div>
-    </div>
+<!--    </div>
+-->    </div>
 </div>
 
 <form style="padding-top: 20px">

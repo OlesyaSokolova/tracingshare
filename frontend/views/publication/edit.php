@@ -76,12 +76,12 @@ if (strcmp($publication->settings ,'') != 0
 
 
    <!-- --><?php /*if (strcmp($publication->settings ,'') != 0): */?>
-            <div id="layers" class = "layers-class" style="padding-left: 20px;">
+            <div id="layers" class = "layers-class" style="padding-left: 20px; ">
                 <?= Html::a(Yii::t('app', 'Создать новый слой'),
                     ['/publication/create-layer', 'id' => $publication->id],
                     ['class' => 'btn btn-outline-primary btn-rounded', 'style' => 'margin-bottom: 10px',
                         'name' => 'create-layer-button'],) ?>
-                <div id="editForm"">
+                <div id="editForm" style="overflow-y: scroll; height: 700px">
                     </div>
             </div>
 

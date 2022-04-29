@@ -352,15 +352,7 @@ function prepareLayersToDraw() {
         thumbnailsClassContainer = 'thumbnails-layers'
 
         $('.' + thumbnailsClassContainer)
-            /*.on('input change', '.alpha-value', function () {
-                $(this).attr('value', $(this).val());
-                var newAlpha = parseFloat($(this).val());
-                //var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
-                //drawingsImages[drawingImageId].alpha = newAlpha;
-                //updateAllLayers(drawingsImages)
-                originalImageCtx = redrawBackground(originalImage, newAlpha)
-            })*/
-            //todo: remove one of the listeners
+
             .on('input change', '.alpha-value', function () {
                 $(this).attr('value', $(this).val());
                 var newAlpha = parseFloat($(this).val());
@@ -375,9 +367,6 @@ function prepareLayersToDraw() {
                 else {
                     contextToChange = tmp.context;
                 }
-                //drawingsImages[drawingImageId].alpha = newAlpha;
-                //updateAllLayers(drawingsImages)
-                //context = redrawLayer(context, newAlpha)
                 const image = contextToChange.getImageData(0, 0, canvas.width, canvas.height);
                 const {data} = image;
                 const {length} = data;
@@ -389,9 +378,6 @@ function prepareLayersToDraw() {
                 }
                 contextToChange.globalAlpha = newAlpha
                 contextToChange.putImageData(image, 0, 0);
-                //drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
-                //context.putImageData(drawingLayerData, 0, 0);
-                //drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
             })
 
         var saveButton = document.getElementById("save-layer-button");
@@ -503,7 +489,7 @@ function prepareLayersToDraw() {
                 //initThumbnailsClickListeners();
                 //var descriptionDiv = document.getElementById('description');
                 //var layerTitle = document.getElementById('layer_title');
-                //+2 because of new layer
+                //+1 because of new layer
                 for (let i = 0; i < drawingsImages.length + 1; i++) {
                    document.getElementById('thumbnail_div_' + i)
                        .addEventListener('click', function (event) {
