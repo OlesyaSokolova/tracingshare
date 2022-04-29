@@ -86,9 +86,9 @@ function redrawLayer(context, newAlpha) {
     return context;
 }
 
-function drawOriginalImageLayerThumbnail(originalImage) {
+function drawOriginalImageLayerThumbnail(elementId, originalImage) {
 
-    var canvas = document.getElementById('originalImageThumbnail')
+    var canvas = document.getElementById(elementId)
     var ratio = originalImage.width/originalImage.height
     var constWidth = 200
     var correspondingHeight = constWidth/ratio
@@ -115,9 +115,8 @@ function createCanvasToDrawOn(canvasId, width, height, x, y) {
     return canvas;
 }
 
-function drawNewLayerThumbnail(width, height) {
-
-    var canvas = document.getElementById('newLayerThumbnail')
+function drawNewLayerThumbnail(elementId, width, height) {
+    var canvas = document.getElementById(elementId)
     var ratio = width/height
     var constWidth = 200
     var correspondingHeight = constWidth/ratio

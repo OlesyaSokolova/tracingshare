@@ -106,13 +106,17 @@ JS;
             width: 400px;
             text-align: left;
             margin-bottom: 10px">
-                <label for="newLayerThumbnail">Новый слой: </label>
-                <canvas id="newLayerThumbnail">
-                </canvas>
+                <?php $canvasId = "thumbnail_" . sizeof($publication->getDrawings());
+                echo '<label for="'. $canvasId. '">Новый слой: </label>';
+                echo '<canvas id="'.$canvasId.'" > </canvas>';?>
+                <!--<canvas id="newLayerThumbnail">
+                </canvas>-->
                 <br>
-                <label for="newLayerThumbnailAlpha">Прозрачность: </label>
-                <input type=range name="alphaChannel" class ="new-layer-alpha-value" id="newLayerThumbnailAlpha" step='0.02' min='0.02' max='1' value='1'>
-            </div>
+                <?php $alphaId = "alpha_" . sizeof($publication->getDrawings());
+                echo '<label for="'. $alphaId. '">Прозрачность: </label>';
+                echo '<input type=range name=\"alphaChannel\" class ="alpha-value" id="'.$alphaId.'" step=\'0.02\' min=\'0.02\' max=\'1\' value=\'1\'>' ?>
+<!--                <input type=range name="alphaChannel" class ="new-layer-alpha-value" id="'.$alphaId.'" step='0.02' min='0.02' max='1' value='1'>
+-->         </div>
 
           <!--  <div style="border:1px solid black;
                 border-radius: 10px;
@@ -121,7 +125,7 @@ JS;
                 text-align: left;
                 margin-bottom: 10px"-->
                  <div id = "otherLayersThumbnails">
-            </div>
+                </div>
 
             <div style="border:1px solid black;
             border-radius: 10px;
@@ -129,12 +133,17 @@ JS;
             width: 400px;
             text-align: left;
             margin-bottom: 10px">
-                <label for="originalImageThumbnail">Оригинальное изображение: </label>
-                <canvas id="originalImageThumbnail">
-                </canvas>
+                <?php $canvasId = "thumbnail_" . (sizeof($publication->getDrawings())+1);
+                echo '<label for="'. $canvasId. '">Фоновое изображение: </label>';
+                echo '<canvas id="'.$canvasId.'" > </canvas>';?>
+                <!--<canvas id="newLayerThumbnail">
+                </canvas>-->
                 <br>
-                <label for="originalImageThumbnailAlpha">Прозрачность: </label>
-                <input type=range name="alphaChannel" class ="orgnl-img-alpha-value" id="originalImageThumbnailAlpha" step='0.02' min='0' max='1' value='1'>
+                <?php $alphaId = "alpha_" . (sizeof($publication->getDrawings())+1);
+                echo '<label for="'. $alphaId. '">Прозрачность: </label>';
+                echo '<input type=range name=\"alphaChannel\" class ="alpha-value" id="'.$alphaId.'" step=\'0.02\' min=\'0.02\' max=\'1\' value=\'1\'>' ?>
+                <!--                <input type=range name="alphaChannel" class ="new-layer-alpha-value" id="'.$alphaId.'" step='0.02' min='0.02' max='1' value='1'>
+                -->
             </div>
 
         </div>

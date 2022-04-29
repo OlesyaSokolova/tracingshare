@@ -16,11 +16,13 @@ function prepareLayersToDraw() {
             }
         //create context and thumbnail for background
         var originalImageCtx = drawBackground(originalImage);
-        drawOriginalImageLayerThumbnail(originalImage);
+        var originalImageThumbnailId = "thumbnail_"+ (drawingsImages.length + 1);
+        drawOriginalImageLayerThumbnail(originalImageThumbnailId, originalImage);
 
         //create thumbnail for new layer
         newLayerThumbnail = new Image();
-        drawNewLayerThumbnail(originalImage.width, originalImage.height);
+        var newLayerThumbnailId = "thumbnail_"+ drawingsImages.length;
+        drawNewLayerThumbnail(newLayerThumbnailId, originalImage.width, originalImage.height);
 
         //create thumbnails for existing layers
         drawExistingLayersThumbnails(drawingsImages);
@@ -346,7 +348,7 @@ function prepareLayersToDraw() {
         thumbnailsClassContainer = 'thumbnails-layers'
 
         $('.' + thumbnailsClassContainer)
-            .on('input change', '.orgnl-img-alpha-value', function () {
+            .on('input change', '.alpha-value', function () {
                 $(this).attr('value', $(this).val());
                 var newAlpha = parseFloat($(this).val());
                 //var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
@@ -354,7 +356,8 @@ function prepareLayersToDraw() {
                 //updateAllLayers(drawingsImages)
                 originalImageCtx = redrawBackground(originalImage, newAlpha)
             })
-            .on('input change', '.new-layer-alpha-value', function () {
+            //todo: remove one of the listeners
+            .on('input change', '.alpha-value', function () {
                 $(this).attr('value', $(this).val());
                 var newAlpha = parseFloat($(this).val());
                 //var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
@@ -428,7 +431,7 @@ function prepareLayersToDraw() {
                         alphaValue = 1;
                     }
                     var layerId = "layer_" + i;
-                    var canvasId = "canvas_" + i;
+                    var thumbnailId = "thumbnail_" + i;
                     var alphaId = "alpha_" + i;
                     currentLayerElement += '<div id=\'' + layerId + '\' class = "bordered_div" style="border:1px solid black;\n' +
                         '            border-radius: 10px;\n' +
@@ -437,10 +440,10 @@ function prepareLayersToDraw() {
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
                     currentLayerElement += (drawingsImages[i].title) + ':<br>'
-                        + '<canvas id=\'' + canvasId + '\'></canvas>'
+                        + '<canvas id=\'' + thumbnailId + '\'></canvas>'
                         + '<br>'
                         + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
-                        + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=\'' + alphaValue + '\' oninput=\"this.nextElementSibling.value = this.value\">'
+                        + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=\'' + alphaValue + '\'>'
                     currentLayerElement += '</div>';
                 }
                 currentLayerElement += '</div>';
@@ -470,14 +473,34 @@ function prepareLayersToDraw() {
                 for (let i = 0; i < drawingsImages.length; i++) {
                     var currentImage = drawingsImages[i].image;
                     if (isImageOk(currentImage)) {
-                        drawExistingLayerThumbnail("canvas_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
+                        drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
                     }
                     else {
                         currentImage.onload = function () {
-                            drawExistingLayerThumbnail("canvas_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
+                            drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
                         }
                     }
                 }
+                //initThumbnailsClickListeners();
+                //var descriptionDiv = document.getElementById('description');
+                //var layerTitle = document.getElementById('layer_title');
+                for (let i = 0; i < drawings.length; i++) {
+                   document.getElementById('thumbnail_' + i)
+                       .addEventListener('click', function (event) {
+                           //descriptionDiv.innerText = drawings[i].layerParams.description
+                           this.style.background = "#d6d5d5";
+                           //layerTitle.innerText = drawings[i].layerParams.title
+
+                           function clearOtherLayersDivs(i) {
+                               for (let j = 0; j < drawings.length; j++) {
+                                   if(i !== j) {
+                                       document.getElementById('layer_' + j).style.background = "#ffffff";
+                                   }
+                               }
+                           }
+                           clearOtherLayersDivs(i)
+                       });
+               }
             }
         }
     }
