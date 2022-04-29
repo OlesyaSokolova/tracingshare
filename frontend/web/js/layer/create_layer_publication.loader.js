@@ -363,21 +363,28 @@ function prepareLayersToDraw() {
                 var contextToChange;
                 if(typeof tmp === 'undefined') {
                     contextToChange = originalImageCtx
+                    contextToChange.globalAlpha = newAlpha;
+
+                    contextToChange.clearRect(0, 0, canvas.width, canvas.height);
+                    contextToChange.globalCompositeOperation = "source-in";
+                    contextToChange.fillRect(0, 0, canvas.width, canvas.height);
+                    contextToChange.globalCompositeOperation = "source-over";
+                    contextToChange.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
                 }
                 else {
                     contextToChange = tmp.context;
-                }
-                const image = contextToChange.getImageData(0, 0, canvas.width, canvas.height);
-                const {data} = image;
-                const {length} = data;
+                    const image = contextToChange.getImageData(0, 0, canvas.width, canvas.height);
+                    const {data} = image;
+                    const {length} = data;
 
-                for (let i = 0; i < length; i += 4) { // red, green, blue, and alpha
-                    if(data[i + 3] > 0) {
-                        data[i + 3] = newAlpha*255;
+                    for (let i = 0; i < length; i += 4) { // red, green, blue, and alpha
+                        if(data[i + 3] > 0) {
+                            data[i + 3] = newAlpha*255;
+                        }
                     }
+                    contextToChange.globalAlpha = newAlpha
+                    contextToChange.putImageData(image, 0, 0);
                 }
-                contextToChange.globalAlpha = newAlpha
-                contextToChange.putImageData(image, 0, 0);
             })
 
         var saveButton = document.getElementById("save-layer-button");
