@@ -41,19 +41,22 @@ function prepareLayersToDraw() {
             if (isImageOk(currentImage)) {
                 currentCanvas = createCanvasToDrawOn(canvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
                     backgroundX, backgroundY);
-                    currentContext = currentCanvas.getContext('2d');
+                currentContext = currentCanvas.getContext('2d');
+                    /*currentContext = currentCanvas.getContext('2d');
                     drawLayer(drawingsImages[i], currentContext);
                     mutableCanvasesAndContexts.push({"id": canvasId, "canvas": currentCanvas, "context": currentContext });
-
+*/
             } else {
-                currentImage.onload = function () {
-                    currentCanvas = createCanvasToDrawOn(canvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+                    currentImage.onload = function () {
+                    currentCanvas = createCanvasToDrawOn("layer_" + i + "_canvas", originalImageCtx.canvas.width, originalImageCtx.canvas.height,
                         backgroundX, backgroundY);
                     currentContext = currentCanvas.getContext('2d');
-                    drawLayer(drawingsImages[i], currentContext);
-                    mutableCanvasesAndContexts.push({"id": canvasId, "canvas": currentCanvas, "context": currentContext });
+
                 }
             }
+
+            drawLayer(drawingsImages[i], currentContext);
+            mutableCanvasesAndContexts.push({"id": canvasId, "canvas": currentCanvas, "context": currentContext });
             //currentContex = currentCanvas.getContext('2d');
             ///drawLayer(currentImage, currentContex);
         }
