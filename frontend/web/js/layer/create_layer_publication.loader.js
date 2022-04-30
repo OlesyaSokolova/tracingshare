@@ -363,6 +363,10 @@ function prepareLayersToDraw() {
                 var contextToChange;
                 if(typeof tmp === 'undefined') {
                     contextToChange = originalImageCtx
+
+                    brushStyle = colorToRGBAString(currentColor);
+                    contextToChange.strokeStyle = brushStyle;
+
                     contextToChange.globalAlpha = newAlpha;
 
                     contextToChange.clearRect(0, 0, canvas.width, canvas.height);
@@ -373,6 +377,8 @@ function prepareLayersToDraw() {
                 }
                 else {
                     contextToChange = tmp.context;
+                    brushStyle = colorToRGBAString(currentColor);
+                    contextToChange.strokeStyle = brushStyle;
                     const image = contextToChange.getImageData(0, 0, canvas.width, canvas.height);
                     const {data} = image;
                     const {length} = data;
