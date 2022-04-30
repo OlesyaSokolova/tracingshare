@@ -81,8 +81,14 @@ if (strcmp($publication->settings ,'') != 0
                     ['/publication/create-layer', 'id' => $publication->id],
                     ['class' => 'btn btn-outline-primary btn-rounded', 'style' => 'margin-bottom: 10px',
                         'name' => 'create-layer-button'],) ?>
-                <div id="editForm" style="overflow-y: scroll; height: 700px">
+                <?php
+                if (strcmp($publication->settings ,'') != 0
+                    && sizeof($publication->getDrawings()) > 0
+                ): ?>
+                    <div id="editForm" style="overflow-y: scroll; height: 700px">
                     </div>
+                <?php endif; ?>
+
             </div>
 
     <?php /*endif; */?>

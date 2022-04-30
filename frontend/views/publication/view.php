@@ -34,7 +34,7 @@ JS;
     <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить авторские настройки</button>
 </p>
     <?php endif;
-
+    $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     if (Yii::$app->user->can('updateOwnPost',
         ['publication' => $publication]) || isset($userRoles['admin'])):?>
 
