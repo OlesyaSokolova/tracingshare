@@ -136,7 +136,7 @@ function prepareEditablePublication() {
                 layerInfo += '<div className="form-group" id=\'' + layerId + '\' style="border:1px solid black;\n' +
                     '                border-radius: 10px;\n' +
                     '                padding-left: 20px;\n' +
-                    '                width: 700px;\n' +
+                    '                width: 400px;\n' +
                     '                text-align: left;\n' +
                     '                margin-bottom: 10px">';
 
@@ -152,18 +152,18 @@ function prepareEditablePublication() {
                     'class="btn btn-outline-danger btn-sm" ' +
                     'style="float: right; margin-bottom: 10px"' +
                     '>Удалить слой</button>'
-                    + '<input type="text" id=\'' + titleId + '\' class="form-control" value=\'' + (drawings[i].layerParams.title) + '\'/>'
+                    + '<input type="text" style="width: 300px" id=\'' + titleId + '\' class="form-control" value=\'' + (drawings[i].layerParams.title) + '\'/>'
                     + '<br>'
 
                     + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
-                    + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=\'' + alphaValue + '\' oninput=\"this.nextElementSibling.value = this.value\">'
+                    + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0\' max=\'1\' value=\'' + alphaValue + '\'>'
                     + '<br>'
 
                     + '<label for=\'' + colorId + '\'>Цвет: </label>'
                     + '<input type="color" id=\'' + colorId + '\' class =\'color-value\' value=\'' + colorValue + '\' name="drawingColor"></button>' + '<br>'
 
                     + '<label for=\'' + descId + '\'>Описание: </label>'
-                    + '<textarea id=\'' + descId + '\' style="width: 500px" class="form-control">'
+                    + '<textarea id=\'' + descId + '\' style="width: 300px" class="form-control">'
                     + drawings[i].layerParams.description
                     +'</textarea>'
                 layerInfo += '<br>'

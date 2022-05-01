@@ -32,7 +32,7 @@ class Publication extends ActiveRecord
     const DEFAULT_ALPHA = "1";
     const DEFAULT_COLOR = "#000000";
     const DEFAULT_DESCRIPTION = " ";
-    const PAGE_SIZE = 12;
+    const PAGE_SIZE = 8;
 
 
     public $imageFile;

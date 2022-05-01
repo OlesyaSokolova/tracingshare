@@ -56,7 +56,7 @@ function drawOriginalImage(originalImage) {
 
     var canvas = document.getElementById('publicationCanvas')
     var ratio = originalImage.width/originalImage.height
-    var constWidth = 700
+    var constWidth = 1000
     var correspondingHeight = constWidth/ratio
     canvas.width = constWidth
     canvas.height = correspondingHeight

@@ -7,7 +7,7 @@ use yii\helpers\Html;
 
 if(!empty($publication)) {
 
-    $this->title = "Создание нового слоя: ".$publication->name;//TODO: layer name
+    $this->title = "Рисование: ".$publication->name;//TODO: layer name
     $originalImageSrc = "\"" . Publication::getStorageHttpPath() .Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
     $baseName = explode('.', $publication->image)[0];
     $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . $baseName . "_" . "\"";
@@ -31,7 +31,7 @@ JS;
 
 <h3><?=$this->title?>
 </h3>
-<p>
+<p class="d-flex justify-content-left">
     <?php
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     if (Yii::$app->user->can('updateOwnPost',
@@ -40,15 +40,14 @@ JS;
     <?php endif; ?>
 </p>
 
-<form>
+<!--<form>
     <div class="form-group">
         <label for="title">Название слоя: </label>
         <input type="text" style="size: auto" class="form-control" id="layerTitle" value="Новый слой">
     </div>
-</form>
+</form>-->
 
-<!--TODO: add btn to clear canvas
---><!--TODO: add button to create new layer in the editor -->
+<!--TODO: add button to create new layer in the editor -->
 <div class="d-flex justify-content-around">
     <div class="toolbar">
         <div class="list-group pmd-list pmd-card-list" style="width: fit-content; padding-right: 10px">
@@ -107,13 +106,14 @@ JS;
 
 <!--    <div class="overflow-auto">
 -->    <div id="layers" class = "layers-class" style="width: fit-content; padding-left: 10px;">
-        <div class="thumbnails-layers" style="overflow-y: scroll; height: 500px">
+        <div class="thumbnails-layers" style="overflow-y: scroll; height: 1500px">
 
             <?php $idCounter = (sizeof($publication->getDrawings()));?>
             <div id="<?= "thumbnail_div_".$idCounter ?>"style="border:1px solid black;
             border-radius: 10px;
             padding-left: 20px;
             width: 400px;
+            height: 200px;
             text-align: left;
             margin-bottom: 10px;
             background: #d6d5d5">
@@ -143,6 +143,7 @@ JS;
             border-radius: 10px;
             padding-left: 20px;
             width: 400px;
+            height: 250px;
             text-align: left;
             margin-bottom: 10px">
                 <?php $canvasId = "thumbnail_" . $idCounter;
@@ -162,10 +163,10 @@ JS;
 -->    </div>
 </div>
 
-<form style="padding-top: 20px">
+<!--<form style="padding-top: 20px">
     <div class="form-group">
         <label for="layerDesc">Описание:</label>
         <textarea class="form-control" id="layerDesc" rows="10" >Описание</textarea>
     </div>
-</form>
+</form>-->
 

@@ -51,7 +51,6 @@ function prepareLayersToDraw() {
                     currentCanvas = createCanvasToDrawOn("layer_" + i + "_canvas", originalImageCtx.canvas.width, originalImageCtx.canvas.height,
                         backgroundX, backgroundY);
                     currentContext = currentCanvas.getContext('2d');
-
                 }
             }
 
@@ -477,6 +476,7 @@ function prepareLayersToDraw() {
                         '            border-radius: 10px;\n' +
                         '            padding-left: 20px;\n' +
                         '            width: 400px;\n' +
+                        '            height: 250px;\n' +
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
                     currentLayerElement += (drawingsImages[i].title) + ':<br>'
