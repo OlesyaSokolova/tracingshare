@@ -15,9 +15,9 @@ function prepareLayersToDraw() {
                 drawingsImages = initDrawingsArray(currentSettings);
             }
         //create context and thumbnail for background
-        var backroundId = "layer_" + (drawingsImages.length + 1) + "_canvas";
+        var backroundId = "layer_" + "b" + "_canvas";
         var originalImageCtx = drawBackground(backroundId, originalImage);
-        var originalImageThumbnailId = "thumbnail_"+ (drawingsImages.length + 1);
+        var originalImageThumbnailId = "thumbnail_"+ "b";
         drawOriginalImageLayerThumbnail(originalImageThumbnailId, originalImage);
 
         //create thumbnail for new layer
@@ -351,6 +351,7 @@ function prepareLayersToDraw() {
                 context.lineWidth = newThickness;
             })
 
+
         thumbnailsClassContainer = 'thumbnails-layers'
 
         $('.' + thumbnailsClassContainer)
@@ -359,8 +360,8 @@ function prepareLayersToDraw() {
                 $(this).attr('value', $(this).val());
                 var newAlpha = parseFloat($(this).val());
                 currentColor.a = newAlpha*255;
-                var idInt = parseInt(($(this).attr('id')).split('_')[1]);
-                var layerId = "layer_" + idInt + "_canvas";
+                var id = ($(this).attr('id')).split('_')[1];
+                var layerId = "layer_" + id + "_canvas";
                 var tmp = mutableCanvasesAndContexts.find(x => x.id === layerId);
                 var contextToChange;
                 if(typeof tmp === 'undefined') {
@@ -395,6 +396,32 @@ function prepareLayersToDraw() {
                 }
             })
 
+        var createLayerButton = document.getElementById("clear-layer-button");
+        createLayerButton.addEventListener(
+            'click', function (event) {
+                var layersThumbnailsContainer = document.getElementById("layers");
+                    var divId = "thumbnail_div_" + i;
+                    var thumbnailId = "thumbnail_" + i;
+                    var alphaId = "alpha_" + i;
+                    currentLayerElement += '<div id=\'' + divId + '\' class = "bordered_div" style="border:1px solid black;\n' +
+                        '            border-radius: 10px;\n' +
+                        '            padding-left: 20px;\n' +
+                        '            width: 400px;\n' +
+                        '            height: 250px;\n' +
+                        '            text-align: left;\n' +
+                        '            margin-bottom: 10px">';
+                    currentLayerElement += (drawingsImages[i].title) + ':<br>'
+                        + '<canvas id=\'' + thumbnailId + '\'></canvas>'
+                        + '<br>'
+                        + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
+                        + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + alphaValue + '\'>'
+                    currentLayerElement += '</div>';
+                currentLayerElement += '</div>';
+                var layersDiv = document.getElementById("otherLayersThumbnails");
+                layersDiv.innerHTML = currentLayerElement
+
+            });
+
         var saveButton = document.getElementById("save-layer-button");
         saveButton.addEventListener(
             'click', function (event) {
@@ -416,20 +443,19 @@ function prepareLayersToDraw() {
                         //create new layer
                         var imageName = generateRandomImageTitle(prefix, currentSettings.drawings.length + 1);
                         layersNames.push(imageName)
-                        //todo: описание и название разные для разных слоев
-                        var layerDescription = document.getElementById('layerDesc').value;
-                        var layerTitle = document.getElementById('layerTitle').value;
+                      /*  var layerDescription = document.getElementById('layerDesc').value;
+                        var layerTitle = document.getElementById('layerTitle').value;*/
 
                         var newLayerInfo = {
                             image: imageName,
                             layerParams: {
-                                title: layerTitle,
+                                title: "Новый слой",
                                 alpha: tmp.context.globalAlpha,
                                 //color: colorToHEXString(currentColor),
                                 color: tmp.context.strokeStyle,
                                 //alpha: "1",
                                 //color: "#000000",
-                                description: layerDescription
+                                description: ""
                             }
                         }
                         currentSettings.drawings.push(newLayerInfo);
@@ -509,15 +535,11 @@ function prepareLayersToDraw() {
                 for (let i = 0; i < drawingsImages.length + 1; i++) {
                    document.getElementById('thumbnail_div_' + i)
                        .addEventListener('click', function (event) {
-                           //$(this).addClass('active');
                            var canvasId = "layer_" + i + "_canvas";
                            canvas = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
                            context = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
-                           //TODO: change brush style to current color
-                           //brushStyle = context.fillStyle;
                            this.style.background = "#d6d5d5";
                            if (previousThumbnail != null && !previousThumbnail.isSameNode(this)) {
-                               //$(previousThumbnail).removeClass('active');
                                previousThumbnail.style.background = "#ffffff";
                            }
                            previousThumbnail = this;

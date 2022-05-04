@@ -79,11 +79,11 @@ JS;
 
 
     <?php $layersCounter = 0;
-    if (strcmp($publication->settings ,'') != 0
+   if (strcmp($publication->settings ,'') != 0
             && sizeof($publication->getDrawings()) > 0) {
         $layersCounter = sizeof($publication->getDrawings());
             }
-    $canvasId = "layer_" . ($layersCounter + 1)  . "_canvas";
+    $canvasId = "layer_" . "b"  . "_canvas";
     ?>
     <div class="canvasDiv" data-state="static" style="border:1px solid black;
             border-radius: 10px;
@@ -106,6 +106,7 @@ JS;
 
 <!--    <div class="overflow-auto">
 -->    <div id="layers" class = "layers-class" style="width: fit-content; padding-left: 10px;">
+        <button type="button" class="btn btn-outline-primary" style="margin-bottom: 10px">Создать новый слой</button>
         <div class="thumbnails-layers" style="overflow-y: scroll; height: 1500px">
 
             <?php $idCounter = (sizeof($publication->getDrawings()));?>
@@ -138,21 +139,21 @@ JS;
                  <div id = "otherLayersThumbnails">
                 </div>
 
-            <?php $idCounter = (sizeof($publication->getDrawings()) + 1);?>
-            <div id="<?= "thumbnail_div_".$idCounter ?>" style="border:1px solid black;
+            <?php $id = "b";?>
+            <div id="<?= "thumbnail_div_".$id ?>" style="border:1px solid black;
             border-radius: 10px;
             padding-left: 20px;
             width: 400px;
             height: 250px;
             text-align: left;
             margin-bottom: 10px">
-                <?php $canvasId = "thumbnail_" . $idCounter;
+                <?php $canvasId = "thumbnail_" . $id;
                 echo '<label for="'. $canvasId. '">Фоновое изображение: </label>';
                 echo '<canvas id="'.$canvasId.'" > </canvas>';?>
                 <!--<canvas id="newLayerThumbnail">
                 </canvas>-->
                 <br>
-                <?php $alphaId = "alpha_" . $idCounter;
+                <?php $alphaId = "alpha_" . $id;
                 echo '<label for="'. $alphaId. '">Прозрачность: </label>';
                 echo '<input type=range name=\"alphaChannel\" class ="alpha-value" id="'.$alphaId.'" step=\'0.02\' min=\'0.02\' max=\'1\' value=\'1\'>' ?>
                 <!--                <input type=range name="alphaChannel" class ="new-layer-alpha-value" id="'.$alphaId.'" step='0.02' min='0.02' max='1' value='1'>
