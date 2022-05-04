@@ -28,7 +28,7 @@ JS;
     ViewAsset::register($this);
     $this->registerJs($script, yii\web\View::POS_READY);
 }
-print_r($publication->settings);?>
+//print_r($publication->settings);?>
 
 <h3><?=$this->title?>
 </h3>
@@ -88,7 +88,9 @@ print_r($publication->settings);?>
         <?php if (strcmp($publication->settings ,'') != 0
             && sizeof($publication->getDrawings()) > 0) {
             for($i=0; $i < sizeof($publication->getDrawings()); $i++) {
+                //var_dump($publication->getDrawings()[$i]);
                 $canvasId = "layer_" . $i . "_canvas";
+                //var_dump($i);
                 echo '<canvas id="'.$canvasId.'" ></canvas>';
                 }
             }

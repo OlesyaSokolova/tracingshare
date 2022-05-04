@@ -405,20 +405,33 @@ function prepareLayersToDraw() {
             'click', function (event) {
                 var layersUrls = [];
                 var layersNames = [];
-                console.log(currentSettings)
+                //console.log(currentSettings)
 
+                mutableCanvasesAndContexts.sort((a, b) => {
+                    let fa = a.id.toLowerCase(),
+                        fb = b.id.toLowerCase();
+
+                    if (fa < fb) {
+                        return -1;
+                    }
+                    if (fa > fb) {
+                        return 1;
+                    }
+                    return 0;
+                })
+                //console.log(mutableCanvasesAndContexts);
                 for(let i = 0; i < mutableCanvasesAndContexts.length; i++) {
                     var tmp = mutableCanvasesAndContexts[i];
-
                     var contextToSave = tmp.context;
+                    var canvasToSave = tmp.canvas;
 
                     changeImageColor(contextToSave, canvas.width, canvas.height)
 
-                    var canvasToSave = tmp.canvas;
                     var index = parseInt((canvasToSave.id).split('_')[1]);
-                    alert(index)
+                    //alert(index)
                     var imageDataUrl = canvasToSave.toDataURL("image/png")
 
+                    //layersUrls.push({"id": index, "data": imageDataUrl});
                     layersUrls.push(imageDataUrl);
 
                     if (i === currentSettings.drawings.length) {
