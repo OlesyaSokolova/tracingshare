@@ -27,7 +27,8 @@ JS;
 
     ViewAsset::register($this);
     $this->registerJs($script, yii\web\View::POS_READY);
-} ?>
+}
+print_r($publication->settings);?>
 
 <h3><?=$this->title?>
 </h3>
@@ -40,15 +41,7 @@ JS;
     <?php endif; ?>
 </p>
 
-<form>
-    <div class="form-group">
-        <label for="title">Название слоя: </label>
-        <input type="text" style="size: auto" class="form-control" id="layerTitle" value="Новый слой">
-    </div>
-</form>
 
-<!--TODO: add btn to clear canvas
---><!--TODO: add button to create new layer in the editor -->
 <div class="d-flex justify-content-around">
     <div class="toolbar">
         <div class="list-group pmd-list pmd-card-list" style="width: fit-content; padding-right: 10px">
@@ -162,10 +155,4 @@ JS;
 -->    </div>
 </div>
 
-<form style="padding-top: 20px">
-    <div class="form-group">
-        <label for="layerDesc">Описание:</label>
-        <textarea class="form-control" id="layerDesc" rows="10" >Описание</textarea>
-    </div>
-</form>
 
