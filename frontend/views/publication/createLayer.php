@@ -85,7 +85,7 @@ JS;
             }
     $canvasId = "layer_" . "b"  . "_canvas";
     ?>
-    <div class="canvasDiv" data-state="static" style="border:1px solid black;
+    <div id="canvases" class="canvasDiv" data-state="static" style="border:1px solid black;
             border-radius: 10px;
             height: fit-content;
             width: max-content;">

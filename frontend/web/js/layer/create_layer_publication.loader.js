@@ -419,11 +419,35 @@ function prepareLayersToDraw() {
                         + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + alphaValue + '\'>'
                     currentLayerElement += '</div>';
                 currentLayerElement += '</div>';
-               //let htmlElement = document.createElement(currentLayerElement);
-                layersThumbnailsContainer.insertAdjacentHTML('beforebegin', currentLayerElement);
-                ///var layersDiv = document.getElementById("otherLayersThumbnails");
-                //layersDiv.innerHTML = currentLayerElement
+                layersThumbnailsContainer.insertAdjacentHTML('afterbegin', currentLayerElement);
 
+                //create empty canvas
+                var canvasesContainer = document.getElementById("canvases");
+                var createdLayerId = "layer_" + (layersCounter) + "_canvas";
+                var createdCanvas = '<canvas id=\'' + createdLayerId + '\'></canvas>'
+                canvasesContainer.insertAdjacentHTML('beforeend', createdCanvas);
+
+                //init empty canvas
+                var createdLayerCanvas = createCanvasToDrawOn(createdLayerId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+                    backgroundX, backgroundY);
+                var createdLayerContext = createdLayerCanvas.getContext("2d");
+                mutableCanvasesAndContexts.push({"id": createdLayerId, "canvas": createdLayerCanvas, "context": createdLayerContext });
+
+                document.getElementById(divId)
+                    .addEventListener('click', function (event) {
+                        var canvasId = createdLayerId;
+                        canvas = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
+                        context = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
+                        canvas.onmousedown = startEditing;
+                        canvas.onmouseup = stopEditing;
+                        canvas.onmouseout = stopEditing;
+                        canvas.onmousemove = edit;
+                        this.style.background = "#d6d5d5";
+                        if (previousThumbnail != null && !previousThumbnail.isSameNode(this)) {
+                            previousThumbnail.style.background = "#ffffff";
+                        }
+                        previousThumbnail = this;
+                    });
             });
 
         var saveButton = document.getElementById("save-layer-button");
