@@ -480,9 +480,9 @@ function prepareLayersToDraw() {
                                 title: "Новый слой",
                                 alpha: tmp.context.globalAlpha,
                                 //color: colorToHEXString(currentColor),
-                                color: tmp.context.strokeStyle,
+                                //color: tmp.context.strokeStyle,
                                 //alpha: "1",
-                                //color: "#000000",
+                                color: "#000000",
                                 description: ""
                             }
                         }
@@ -498,7 +498,7 @@ function prepareLayersToDraw() {
                     layersUrls: layersUrls,
                     newSettings: currentSettings,
                 };
-                //console.log(newData)
+                console.log(newData)
                 $.ajax({
                     type: "POST",
                     url: "/tracingshare/frontend/web/index.php/publication/save-layers?id=" + publicationId,

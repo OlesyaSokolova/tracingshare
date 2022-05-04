@@ -107,7 +107,7 @@ JS;
 <!--    <div class="overflow-auto">
 -->    <div id="layers" class = "layers-class" style="width: fit-content; padding-left: 10px;">
         <button type="button" id="create-layer-button" class="btn btn-outline-primary" style="margin-bottom: 10px">Создать новый слой</button>
-        <div id= "thumbnails-layers" class="thumbnails-layers" style="overflow-y: scroll; height: 1500px">
+        <div id= "thumbnails-layers" class="thumbnails-layers" style="overflow-y: scroll; height: 900px">
 
             <?php $idCounter = (sizeof($publication->getDrawings()));?>
             <div id="<?= "thumbnail_div_".$idCounter ?>"style="border:1px solid black;
