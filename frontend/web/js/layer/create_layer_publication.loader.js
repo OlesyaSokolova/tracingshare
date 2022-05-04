@@ -88,6 +88,7 @@ function prepareLayersToDraw() {
         };
 
         var brushStyle = colorToRGBAString(currentColor);
+        var brushThickness;
 
         var isDrawing = false;
         var isErasing = false;
@@ -349,7 +350,8 @@ function prepareLayersToDraw() {
             .on('input change', '.thickness-value', function () {
                 $(this).attr('value', $(this).val());
                 var newThickness = $(this).val();
-                context.lineWidth = newThickness;
+                brushThickness = newThickness
+                context.lineWidth = brushThickness;
             })
 
 
@@ -442,6 +444,7 @@ function prepareLayersToDraw() {
                         canvas.onmouseup = stopEditing;
                         canvas.onmouseout = stopEditing;
                         canvas.onmousemove = edit;
+                        context.lineWidth = brushThickness
                         this.style.background = "#d6d5d5";
                         if (previousThumbnail != null && !previousThumbnail.isSameNode(this)) {
                             previousThumbnail.style.background = "#ffffff";
@@ -566,6 +569,7 @@ function prepareLayersToDraw() {
                            var canvasId = "layer_" + i + "_canvas";
                            canvas = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
                            context = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
+                           context.lineWidth = brushThickness
                            this.style.background = "#d6d5d5";
                            if (previousThumbnail != null && !previousThumbnail.isSameNode(this)) {
                                previousThumbnail.style.background = "#ffffff";
