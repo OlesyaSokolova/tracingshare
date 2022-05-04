@@ -36,27 +36,28 @@ function prepareLayersToDraw() {
         for (let i = 0; i < drawingsImages.length; i++) {
             var currentImage = drawingsImages[i].image;
             var canvasId = "layer_" + i + "_canvas";
-            var currentCanvas;
-            var currentContext;
             if (isImageOk(currentImage)) {
-                currentCanvas = createCanvasToDrawOn(canvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+                var currentCanvasOk = createCanvasToDrawOn(canvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
                     backgroundX, backgroundY);
-                currentContext = currentCanvas.getContext('2d');
+                var currentContextOk = currentCanvasOk.getContext('2d');
+                drawLayer(drawingsImages[i], currentContextOk);
+                mutableCanvasesAndContexts.push({"id": canvasId, "canvas": currentCanvasOk, "context": currentContextOk });
                     /*currentContext = currentCanvas.getContext('2d');
                     drawLayer(drawingsImages[i], currentContext);
                     mutableCanvasesAndContexts.push({"id": canvasId, "canvas": currentCanvas, "context": currentContext });
 */
             } else {
                     currentImage.onload = function () {
-                    currentCanvas = createCanvasToDrawOn("layer_" + i + "_canvas", originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+                    var currentCanvas = createCanvasToDrawOn("layer_" + i + "_canvas", originalImageCtx.canvas.width, originalImageCtx.canvas.height,
                         backgroundX, backgroundY);
-                    currentContext = currentCanvas.getContext('2d');
+                    var currentContext = currentCanvas.getContext('2d');
+                        drawLayer(drawingsImages[i], currentContext);
+                        mutableCanvasesAndContexts.push({"id": "layer_" + i + "_canvas", "canvas": currentCanvas, "context": currentContext });
 
                 }
             }
 
-            drawLayer(drawingsImages[i], currentContext);
-            mutableCanvasesAndContexts.push({"id": canvasId, "canvas": currentCanvas, "context": currentContext });
+
             //currentContex = currentCanvas.getContext('2d');
             ///drawLayer(currentImage, currentContex);
         }
