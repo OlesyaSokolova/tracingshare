@@ -91,6 +91,7 @@ function prepareLayersToDraw() {
         };
 
         var brushStyle = colorToRGBAString(currentColor);
+        var thickness = context.lineWidth;
 
         var isDrawing = false;
         var isErasing = false;
@@ -352,7 +353,8 @@ function prepareLayersToDraw() {
             .on('input change', '.thickness-value', function () {
                 $(this).attr('value', $(this).val());
                 var newThickness = $(this).val();
-                context.lineWidth = newThickness;
+                thickness = newThickness;
+                context.lineWidth = thickness;
             })
 
         thumbnailsClassContainer = 'thumbnails-layers'
@@ -506,8 +508,7 @@ function prepareLayersToDraw() {
                            var canvasId = "layer_" + i + "_canvas";
                            canvas = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
                            context = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
-                           //TODO: change brush style to current color
-                           //brushStyle = context.fillStyle;
+                           context.lineWidth = thickness
                            this.style.background = "#d6d5d5";
                            if (previousThumbnail != null && !previousThumbnail.isSameNode(this)) {
                                //$(previousThumbnail).removeClass('active');
