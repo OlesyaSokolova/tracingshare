@@ -412,11 +412,11 @@ function prepareLayersToDraw() {
                         '            height: 250px;\n' +
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
-                    currentLayerElement += ("Новый слой") + ':<br>'
+                    currentLayerElement += ("Новый слой " + (layersCounter + 1)) + ':<br>'
                         + '<canvas id=\'' + thumbnailId + '\'></canvas>'
                         + '<br>'
                         + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
-                        + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + alphaValue + '\'>'
+                        + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + 1 + '\'>'
                     currentLayerElement += '</div>';
                 currentLayerElement += '</div>';
                 layersThumbnailsContainer.insertAdjacentHTML('afterbegin', currentLayerElement);
@@ -477,7 +477,7 @@ function prepareLayersToDraw() {
                         var newLayerInfo = {
                             image: imageName,
                             layerParams: {
-                                title: "Новый слой",
+                                title: "Новый слой" + (i + 1),
                                 alpha: tmp.context.globalAlpha,
                                 //color: colorToHEXString(currentColor),
                                 //color: tmp.context.strokeStyle,
@@ -504,7 +504,7 @@ function prepareLayersToDraw() {
                     url: "/tracingshare/frontend/web/index.php/publication/save-layers?id=" + publicationId,
                     data: {params: JSON.stringify(newData)},
                     success: function (data) {
-                        location.href = "http://localhost/tracingshare/frontend/web/index.php/publication/edit?id=" + publicationId
+                        location.href = "http://localhost/tracingshare/frontend/web/index.php/publication/view?id=" + publicationId
                     },
                     error: function (xhr, status, error) {
                         alert("Произошла ошибка при сохранении данных:" + xhr);
