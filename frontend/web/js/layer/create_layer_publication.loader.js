@@ -25,6 +25,7 @@ function prepareLayersToDraw() {
         var newLayerThumbnailId = "thumbnail_" + (drawingsImages.length);
         drawNewLayerThumbnail(newLayerThumbnailId, originalImage.width, originalImage.height);
 
+        var layersCounter = drawingsImages.length
         //create thumbnails for existing layers
         drawExistingLayersThumbnails(drawingsImages);
 
@@ -396,29 +397,32 @@ function prepareLayersToDraw() {
                 }
             })
 
-        var createLayerButton = document.getElementById("clear-layer-button");
+        var createLayerButton = document.getElementById("create-layer-button");
         createLayerButton.addEventListener(
             'click', function (event) {
-                var layersThumbnailsContainer = document.getElementById("layers");
-                    var divId = "thumbnail_div_" + i;
-                    var thumbnailId = "thumbnail_" + i;
-                    var alphaId = "alpha_" + i;
-                    currentLayerElement += '<div id=\'' + divId + '\' class = "bordered_div" style="border:1px solid black;\n' +
+                var layersThumbnailsContainer = document.getElementById("thumbnails-layers");
+                layersCounter++;
+                    var divId = "thumbnail_div_" + layersCounter;
+                    var thumbnailId = "thumbnail_" + layersCounter;
+                    var alphaId = "alpha_" + layersCounter;
+                    var currentLayerElement = '<div id=\'' + divId + '\' class = "bordered_div" style="border:1px solid black;\n' +
                         '            border-radius: 10px;\n' +
                         '            padding-left: 20px;\n' +
                         '            width: 400px;\n' +
                         '            height: 250px;\n' +
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
-                    currentLayerElement += (drawingsImages[i].title) + ':<br>'
+                    currentLayerElement += ("Новый слой") + ':<br>'
                         + '<canvas id=\'' + thumbnailId + '\'></canvas>'
                         + '<br>'
                         + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
                         + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + alphaValue + '\'>'
                     currentLayerElement += '</div>';
                 currentLayerElement += '</div>';
-                var layersDiv = document.getElementById("otherLayersThumbnails");
-                layersDiv.innerHTML = currentLayerElement
+               //let htmlElement = document.createElement(currentLayerElement);
+                layersThumbnailsContainer.insertAdjacentHTML('beforebegin', currentLayerElement);
+                ///var layersDiv = document.getElementById("otherLayersThumbnails");
+                //layersDiv.innerHTML = currentLayerElement
 
             });
 
