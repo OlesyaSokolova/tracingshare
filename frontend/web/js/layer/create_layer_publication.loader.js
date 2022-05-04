@@ -25,9 +25,6 @@ function prepareLayersToDraw() {
         var newLayerThumbnailId = "thumbnail_" + (drawingsImages.length);
         drawNewLayerThumbnail(newLayerThumbnailId, originalImage.width, originalImage.height);
 
-        //create thumbnails for existing layers
-        drawExistingLayersThumbnails(drawingsImages);
-
         //create array of contexts and canvases for layers to draw on:
         var mutableCanvasesAndContexts = [];
         var backgroundElement = document.getElementById(backroundId);
@@ -61,8 +58,13 @@ function prepareLayersToDraw() {
             //currentContex = currentCanvas.getContext('2d');
             ///drawLayer(currentImage, currentContex);
         }
+            //create thumbnails for existing layers
+            window.onload = (event) => {
+                drawExistingLayersThumbnails(drawingsImages);
+            };
 
-        const newLayerCanvasId = "layer_" + (drawingsImages.length) + "_canvas";
+
+            const newLayerCanvasId = "layer_" + (drawingsImages.length) + "_canvas";
         var newLayerCanvas = createCanvasToDrawOn(newLayerCanvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
             backgroundX, backgroundY);
         var newLayerContext = newLayerCanvas.getContext("2d");
@@ -492,17 +494,7 @@ function prepareLayersToDraw() {
                 layersDiv.innerHTML = currentLayerElement
 
                 //initDeleteButtons(settings)
-                for (let i = 0; i < drawingsImages.length; i++) {
-                    var currentImage = drawingsImages[i].image;
-                    if (isImageOk(currentImage)) {
-                        drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
-                    }
-                    else {
-                        currentImage.onload = function () {
-                            drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
-                        }
-                    }
-                }
+
                 //initThumbnailsClickListeners();
                 //var descriptionDiv = document.getElementById('description');
                 //var layerTitle = document.getElementById('layer_title');
@@ -524,6 +516,18 @@ function prepareLayersToDraw() {
                            previousThumbnail = this;
                        });
                }
+
+                for (let i = 0; i < drawingsImages.length; i++) {
+                    var currentImage = drawingsImages[i].image;
+                    //if (isImageOk(currentImage)) {
+                        drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
+                    //}
+                    //else {
+                    /*    currentImage.onload = function () {
+                            drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
+                        }
+                    }*/
+                }
             }
         }
     }
