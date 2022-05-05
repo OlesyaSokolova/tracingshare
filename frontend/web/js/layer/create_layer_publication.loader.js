@@ -457,7 +457,6 @@ function prepareLayersToDraw() {
             var deleteLayerButton = document.getElementById("delete-layer-button");
             deleteLayerButton.addEventListener(
                 'click', function (event) {
-                    var layersThumbnailsContainer = document.getElementById("thumbnails-layers");
                     var index = parseInt((canvas.id).split('_')[1]);
                     //alert(index);
                     //remove thumbnail
@@ -477,6 +476,7 @@ function prepareLayersToDraw() {
                         // delete currentSettings.drawings[index]
                         currentSettings.drawings.splice(index, 1)
                     }
+
                     layersCounter--;
                 });
 
