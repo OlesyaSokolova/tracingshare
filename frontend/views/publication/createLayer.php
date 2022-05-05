@@ -28,7 +28,7 @@ JS;
     ViewAsset::register($this);
     $this->registerJs($script, yii\web\View::POS_READY);
 }
-//var_dump($publication->getSettingsArray());?>
+?>
 
 <h3><?=$this->title?>
 </h3>
@@ -38,6 +38,11 @@ JS;
     if (Yii::$app->user->can('updateOwnPost',
             ['publication' => $publication]) || isset($userRoles['admin'])):?>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="save-layer-button">Сохранить</button>
+
+        <?= Html::a(Yii::t('app', 'Выйти из редактора'),
+            ['/publication/view', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'exit-button',]) ?>
     <?php endif; ?>
 </p>
 

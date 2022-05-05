@@ -53,7 +53,7 @@ JS;
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'edit-button',]) ?>
 
-        <?= Html::a(Yii::t('app', 'Рисовать ' . '<br>' . 'на слоях'),
+        <?= Html::a(Yii::t('app', 'Создать ' . '<br>' . 'новый слой'),
             ['/publication/create-layer', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'create-layer-button',]) ?>
