@@ -462,10 +462,13 @@ function prepareLayersToDraw() {
                     //alert(index);
                     //remove thumbnail
                     var divId = "thumbnail_div_" + index;
-                    const element = document.getElementById(divId);
-                    element.remove();
-                    //remove canvas
-                    var canvasId = "layer_" + i + "_canvas";
+                    document.getElementById(divId).remove();
+
+                    //remove canvas from markup
+                    var canvasId = "layer_" + index + "_canvas";
+                    document.getElementById(canvasId).remove();
+
+                    //remove canvas and context from mutableCanvasesAndContexts
                     var canvasToDelete = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
                     var contextToDelete = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
                     //mutableCanvasesAndContexts.//delete({"id": createdLayerId, "canvas": createdLayerCanvas, "context": createdLayerContext });
@@ -592,7 +595,14 @@ function prepareLayersToDraw() {
                 for (let i = 0; i < drawingsImages.length + 1; i++) {
                    document.getElementById('thumbnail_div_' + i)
                        .addEventListener('click', function (event) {
-                           var canvasId = "layer_" + i + "_canvas";
+                           var canvasId = "layer_" +
+                               "" +
+                               "" +
+                               "" +
+                               "" +
+                               "" +
+                               "" +
+                               "" + i + "_canvas";
                            canvas = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
                            context = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
                            context.lineWidth = thickness
