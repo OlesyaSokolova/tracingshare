@@ -466,13 +466,6 @@ function prepareLayersToDraw() {
                     let ai = parseInt((a.id).split('_')[1])
                         bi = parseInt((b.id).split('_')[1]);
                         return ai - bi;
-                    /*if (fa < fb) {
-                        return -1;
-                    }
-                    if (fa > fb) {
-                        return 1;
-                    }
-                    return 0;*/
                 })
                 //console.log(mutableCanvasesAndContexts);
                 for(let i = 0; i < mutableCanvasesAndContexts.length; i++) {

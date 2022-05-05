@@ -7,7 +7,7 @@ use yii\helpers\Html;
 
 if(!empty($publication)) {
 
-    $this->title = "Рисование: ".$publication->name;//TODO: layer name
+    $this->title = "Рисование: ".$publication->name;
     $originalImageSrc = "\"" . Publication::getStorageHttpPath() .Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
     $baseName = explode('.', $publication->image)[0];
     $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . $baseName . "_" . "\"";
@@ -45,6 +45,8 @@ JS;
 <div class="d-flex justify-content-around">
     <div class="toolbar">
         <div class="list-group pmd-list pmd-card-list" style="width: fit-content; padding-right: 10px">
+            <button type="button" class="btn btn-outline-danger btn-rounded" id="delete-layer-button" style="margin-bottom: 10px">Удалить слой</button>
+
             <button type="button" class="btn btn-outline-primary btn-rounded" id="clear-layer-button" style="margin-bottom: 10px">Очистить слой</button>
 
             <button type="button" id="brush-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
@@ -66,8 +68,7 @@ JS;
             <input type="color" id="brushColor" class ="color-value" value="#000000" name="drawingColor">
 
             <label for="thickness" id="change-thickness-btn">Толщина кисти/ластика: </label>
-            <input type=range id="thickness" style="width: 300px" class="thickness-value" step='1' min='1' max='10' value='5' >
-
+            <input type=range id="thickness" style="width: 300px; margin-bottom: 10px" class="thickness-value" step='1' min='1' max='10' value='5' >
         </div>
     </div>
 
