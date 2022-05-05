@@ -3,40 +3,80 @@ function prepareLayersToDraw() {
     var currentSettings = {
         drawings: Array()
     }
-    if (typeof settings != "undefined"
-        && settings !== ''
-        && settings !== "") {
 
-        currentSettings = JSON.parse(JSON.stringify(settings));
-    }
-
-//1. Preparations
-    //1.1. set original image as background and create thumbnails
         originalImage = new Image();
         originalImage.src = originalImageSrc;
+        var drawingsImages = [];
         originalImage.onload = function () {
-        var originalImageCtx = drawBackground(originalImage);
+            if (typeof settings != "undefined"
+                && settings !== ''
+                && settings !== "") {
+                currentSettings = JSON.parse(JSON.stringify(settings));
+                drawingsImages = initDrawingsArray(currentSettings);
+            }
+        //create context and thumbnail for background
+        var backroundId = "layer_" + (drawingsImages.length + 1) + "_canvas";
+        var originalImageCtx = drawBackground(backroundId, originalImage);
+        var originalImageThumbnailId = "thumbnail_"+ (drawingsImages.length + 1);
+        drawOriginalImageLayerThumbnail(originalImageThumbnailId, originalImage);
 
-        drawOriginalImageLayerThumbnail(originalImage)
-
+        //create thumbnail for new layer
         newLayerThumbnail = new Image();
-        drawNewLayerThumbnail(originalImage.width, originalImage.height)
+        var newLayerThumbnailId = "thumbnail_" + (drawingsImages.length);
+        drawNewLayerThumbnail(newLayerThumbnailId, originalImage.width, originalImage.height);
 
-        //1.2. create canvas for new layer (to draw)
-        var backgroundElement = document.getElementById("background");
+        //create array of contexts and canvases for layers to draw on:
+        var mutableCanvasesAndContexts = [];
+        var backgroundElement = document.getElementById(backroundId);
         const backgroundX = backgroundElement.offsetLeft, backgroundY = backgroundElement.offsetTop;
-        var canvas = createCanvasToDrawOn(originalImageCtx.canvas.width, originalImageCtx.canvas.height,
-                                          backgroundX, backgroundY);
 
-        //1.3. set event listeners
+        for (let i = 0; i < drawingsImages.length; i++) {
+            var currentImage = drawingsImages[i].image;
+            var canvasId = "layer_" + i + "_canvas";
+            if (isImageOk(currentImage)) {
+                var currentCanvasOk = createCanvasToDrawOn(canvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+                    backgroundX, backgroundY);
+                var currentContextOk = currentCanvasOk.getContext('2d');
+                drawLayer(drawingsImages[i], currentContextOk);
+                mutableCanvasesAndContexts.push({"id": canvasId, "canvas": currentCanvasOk, "context": currentContextOk });
+                    /*currentContext = currentCanvas.getContext('2d');
+                    drawLayer(drawingsImages[i], currentContext);
+                    mutableCanvasesAndContexts.push({"id": canvasId, "canvas": currentCanvas, "context": currentContext });
+*/
+            } else {
+                    currentImage.onload = function () {
+                    var currentCanvas = createCanvasToDrawOn("layer_" + i + "_canvas", originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+                        backgroundX, backgroundY);
+                    var currentContext = currentCanvas.getContext('2d');
+                        drawLayer(drawingsImages[i], currentContext);
+                        mutableCanvasesAndContexts.push({"id": "layer_" + i + "_canvas", "canvas": currentCanvas, "context": currentContext });
+                }
+            }
+
+
+            //currentContex = currentCanvas.getContext('2d');
+            ///drawLayer(currentImage, currentContex);
+        }
+            //create thumbnails for existing layers
+            window.onload = (event) => {
+                drawExistingLayersThumbnails(drawingsImages);
+            };
+
+
+        const newLayerCanvasId = "layer_" + (drawingsImages.length) + "_canvas";
+        var newLayerCanvas = createCanvasToDrawOn(newLayerCanvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+            backgroundX, backgroundY);
+        var newLayerContext = newLayerCanvas.getContext("2d");
+        mutableCanvasesAndContexts.push({"id": newLayerCanvasId, "canvas": newLayerCanvas, "context": newLayerContext });
+
+        var canvas = mutableCanvasesAndContexts.find(x => x.id === newLayerCanvasId).canvas;
+        var context = mutableCanvasesAndContexts.find(x => x.id === newLayerCanvasId).context;
         canvas.onmousedown = startEditing;
         canvas.onmouseup = stopEditing;
         canvas.onmouseout = stopEditing;
         canvas.onmousemove = edit;
 
         //1.4. init vars and consts
-        var context = canvas.getContext("2d");
-
         const eraserStyle = "rgba(255,255,255,255)";
         const eraserGlobalCompositeOperation = "destination-out";
 
@@ -50,6 +90,7 @@ function prepareLayersToDraw() {
         };
 
         var brushStyle = colorToRGBAString(currentColor);
+        var thickness = context.lineWidth;
 
         var isDrawing = false;
         var isErasing = false;
@@ -61,6 +102,7 @@ function prepareLayersToDraw() {
 
         var counter = 0;
         var previousTool;
+        var previousThumbnail = document.getElementById("thumbnail_div_" + (drawingsImages.length));
 
         var drawingLayerData;
         var pixelStack = [];
@@ -261,6 +303,7 @@ function prepareLayersToDraw() {
             }
             //update image data
             if(drawingLayerData){
+                //context.globalAlpha = (currentColor.a)/255;
                 context.putImageData(drawingLayerData, 0, 0);
                 drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
             }
@@ -309,72 +352,121 @@ function prepareLayersToDraw() {
             .on('input change', '.thickness-value', function () {
                 $(this).attr('value', $(this).val());
                 var newThickness = $(this).val();
-                context.lineWidth = newThickness;
+                thickness = newThickness;
+                context.lineWidth = thickness;
             })
 
         thumbnailsClassContainer = 'thumbnails-layers'
 
         $('.' + thumbnailsClassContainer)
-            .on('input change', '.orgnl-img-alpha-value', function () {
-                $(this).attr('value', $(this).val());
-                var newAlpha = parseFloat($(this).val());
-                //var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
-                //drawingsImages[drawingImageId].alpha = newAlpha;
-                //updateAllLayers(drawingsImages)
-                originalImageCtx = redrawBackground(originalImage, newAlpha)
-            })
-            .on('input change', '.new-layer-alpha-value', function () {
-                $(this).attr('value', $(this).val());
-                var newAlpha = parseFloat($(this).val());
-                //var drawingImageId = parseInt(($(this).attr('id')).split('_')[1]);
-                //drawingsImages[drawingImageId].alpha = newAlpha;
-                //updateAllLayers(drawingsImages)
-                //context = redrawLayer(context, newAlpha)
-                const image = context.getImageData(0, 0, canvas.width, canvas.height);
-                const {data} = image;
-                const {length} = data;
 
-                for (let i = 0; i < length; i += 4) { // red, green, blue, and alpha
-                    if(data[i + 3] > 0) {
-                        data[i + 3] = newAlpha*255;
-                    }
+            .on('input change', '.alpha-value', function () {
+                $(this).attr('value', $(this).val());
+                var newAlpha = parseFloat($(this).val());
+                currentColor.a = newAlpha*255;
+                var idInt = parseInt(($(this).attr('id')).split('_')[1]);
+                var layerId = "layer_" + idInt + "_canvas";
+                var tmp = mutableCanvasesAndContexts.find(x => x.id === layerId);
+                var contextToChange;
+                if(typeof tmp === 'undefined') {
+                    contextToChange = originalImageCtx
+
+                    brushStyle = colorToRGBAString(currentColor);
+                    contextToChange.strokeStyle = brushStyle;
+
+                    contextToChange.globalAlpha = newAlpha;
+
+                    contextToChange.clearRect(0, 0, canvas.width, canvas.height);
+                    contextToChange.globalCompositeOperation = "source-in";
+                    contextToChange.fillRect(0, 0, canvas.width, canvas.height);
+                    contextToChange.globalCompositeOperation = "source-over";
+                    contextToChange.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
                 }
-                context.putImageData(image, 0, 0);
-                //drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
-                //context.putImageData(drawingLayerData, 0, 0);
-                //drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
+                else {
+                    contextToChange = tmp.context;
+                    brushStyle = colorToRGBAString(currentColor);
+                    contextToChange.strokeStyle = brushStyle;
+                    const image = contextToChange.getImageData(0, 0, canvas.width, canvas.height);
+                    const {data} = image;
+                    const {length} = data;
+
+                    for (let i = 0; i < length; i += 4) { // red, green, blue, and alpha
+                        if(data[i + 3] > 0) {
+                            data[i + 3] = newAlpha*255;
+                        }
+                    }
+                    contextToChange.globalAlpha = newAlpha
+                    contextToChange.putImageData(image, 0, 0);
+                }
             })
 
         var saveButton = document.getElementById("save-layer-button");
         saveButton.addEventListener(
             'click', function (event) {
-                changeImageColor(context, canvas.width, canvas.height)
-                var imageDataUrl = canvas.toDataURL("image/png")
-                var imageName = generateRandomImageTitle(prefix, currentSettings.drawings.length+1);
-                layerDescription = document.getElementById('layerDesc').value;
-                layerTitle = document.getElementById('layerTitle').value;
+                var layersUrls = [];
+                var layersNames = [];
+                //console.log(currentSettings)
 
-                var newLayerInfo = {
-                    image: imageName,
-                    layerParams: {
-                        title: layerTitle,
-                        alpha: (currentColor.a)/255,
-                        color: colorToHEXString(currentColor),
-                        //alpha: "1",
-                        //color: "#000000",
-                        description: layerDescription
+                mutableCanvasesAndContexts.sort((a, b) => {
+                    let fa = a.id.toLowerCase(),
+                        fb = b.id.toLowerCase();
+
+                    if (fa < fb) {
+                        return -1;
+                    }
+                    if (fa > fb) {
+                        return 1;
+                    }
+                    return 0;
+                })
+                //console.log(mutableCanvasesAndContexts);
+                for(let i = 0; i < mutableCanvasesAndContexts.length; i++) {
+                    var tmp = mutableCanvasesAndContexts[i];
+                    var contextToSave = tmp.context;
+                    var canvasToSave = tmp.canvas;
+
+                    changeImageColor(contextToSave, canvas.width, canvas.height)
+
+                    var index = parseInt((canvasToSave.id).split('_')[1]);
+                    //alert(index)
+                    var imageDataUrl = canvasToSave.toDataURL("image/png")
+
+                    //layersUrls.push({"id": index, "data": imageDataUrl});
+                    layersUrls.push(imageDataUrl);
+
+                    if (i === currentSettings.drawings.length) {
+                        //create new layer
+                        var imageName = generateRandomImageTitle(prefix, currentSettings.drawings.length + 1);
+                        layersNames.push(imageName)
+
+                        var newLayerInfo = {
+                            image: imageName,
+                            layerParams: {
+                                title: "Новый слой",
+                                alpha: tmp.context.globalAlpha,
+                                //color: colorToHEXString(currentColor),
+                                color: tmp.context.strokeStyle,
+                                //alpha: "1",
+                                //color: "#000000",
+                                description: ""
+                            }
+                        }
+                        currentSettings.drawings.push(newLayerInfo);
+                    }
+                    else {
+                        layersNames.push(currentSettings.drawings[i].image)
                     }
                 }
-                currentSettings.drawings.push(newLayerInfo);
                 //settingsJSON = JSON.stringify(currentSettings)
                 var newData = {
-                    newImageName: imageName,
-                    newImageUrl: imageDataUrl,
+                    layersFilesNames: layersNames,
+                    layersUrls: layersUrls,
                     newSettings: currentSettings,
                 };
+                console.log(newData)
                 $.ajax({
                     type: "POST",
-                    url: "/tracingshare/frontend/web/index.php/publication/save-layer?id=" + publicationId,
+                    url: "/tracingshare/frontend/web/index.php/publication/save-layers?id=" + publicationId,
                     data: {params: JSON.stringify(newData)},
                     success: function (data) {
                         location.href = "http://localhost/tracingshare/frontend/web/index.php/publication/edit?id=" + publicationId
@@ -385,6 +477,63 @@ function prepareLayersToDraw() {
                 });
             }
         )
+        function drawExistingLayersThumbnails(drawingsImages) {
+
+            if (Array.isArray(drawingsImages)) {
+                var currentLayerElement = '<div id="layers" style="width: 200px">';
+                for (let i = 0; i < drawingsImages.length; i++) {
+                    if (typeof drawingsImages[i].alpha != 'undefined') {
+                        alphaValue = drawingsImages[i].alpha;
+                        //colorValue = drawingsImages.color;
+                    } else {
+                        alphaValue = 1;
+                    }
+                    var divId = "thumbnail_div_" + i;
+                    var thumbnailId = "thumbnail_" + i;
+                    var alphaId = "alpha_" + i;
+                    currentLayerElement += '<div id=\'' + divId + '\' class = "bordered_div" style="border:1px solid black;\n' +
+                        '            border-radius: 10px;\n' +
+                        '            padding-left: 20px;\n' +
+                        '            width: 400px;\n' +
+                        '            text-align: left;\n' +
+                        '            margin-bottom: 10px">';
+                    currentLayerElement += (drawingsImages[i].title) + ':<br>'
+                        + '<canvas id=\'' + thumbnailId + '\'></canvas>'
+                        + '<br>'
+                        + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
+                        + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + alphaValue + '\'>'
+                    currentLayerElement += '</div>';
+                }
+                currentLayerElement += '</div>';
+                var layersDiv = document.getElementById("otherLayersThumbnails");
+                layersDiv.innerHTML = currentLayerElement
+
+                //initDeleteButtons(settings)
+
+                //initThumbnailsClickListeners();
+                //var descriptionDiv = document.getElementById('description');
+                //var layerTitle = document.getElementById('layer_title');
+                //+1 because of new layer
+                for (let i = 0; i < drawingsImages.length + 1; i++) {
+                   document.getElementById('thumbnail_div_' + i)
+                       .addEventListener('click', function (event) {
+                           var canvasId = "layer_" + i + "_canvas";
+                           canvas = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
+                           context = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
+                           context.lineWidth = thickness
+                           this.style.background = "#d6d5d5";
+                           if (previousThumbnail != null && !previousThumbnail.isSameNode(this)) {
+                               previousThumbnail.style.background = "#ffffff";
+                           }
+                           previousThumbnail = this;
+                       });
+               }
+
+                for (let i = 0; i < drawingsImages.length; i++) {
+                    drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
+                }
+            }
+        }
     }
 }
 

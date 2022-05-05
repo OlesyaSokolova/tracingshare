@@ -1,5 +1,5 @@
-function drawBackground(originalImage) {
-    var canvas = document.getElementById('background')
+function drawBackground(elementId, originalImage) {
+    var canvas = document.getElementById(elementId)
     var ratio = originalImage.width/originalImage.height
     var constWidth = 1000
     var correspondingHeight = constWidth/ratio
@@ -12,7 +12,8 @@ function drawBackground(originalImage) {
     return originalImageCtx
 }
 
-function redrawBackground(originalImage, newAlpha) {
+//todo: эта функция действительно используется??
+/*function redrawBackground(originalImage, newAlpha) {
     var canvas = document.getElementById('background')
     var ratio = originalImage.width/originalImage.height
     var constWidth = 1000
@@ -31,6 +32,29 @@ function redrawBackground(originalImage, newAlpha) {
     originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
 
     return originalImageCtx
+}*/
+
+function drawLayer(imageWithSettings, contextToDrawOn) {
+    if (imageWithSettings.image.complete && imageWithSettings.image.naturalHeight !== 0) {
+
+
+        //2. set size of contextToDrawOn for the canvas
+        var width = contextToDrawOn.canvas.width
+        var height = contextToDrawOn.canvas.height
+
+        //3. set alpha channel for current image
+        contextToDrawOn.globalAlpha = imageWithSettings.alpha;
+
+        //4. fill the context with color of current image
+        contextToDrawOn.clearRect(0, 0, width, height);
+        contextToDrawOn.drawImage(imageWithSettings.image, 0, 0, width, height)
+        contextToDrawOn.fillStyle = imageWithSettings.color;
+        contextToDrawOn.globalCompositeOperation = "source-in";
+        contextToDrawOn.fillRect(0, 0, width, height);
+        contextToDrawOn.globalCompositeOperation = "source-over";
+
+        //contextToDrawOn.drawImage(imageWithSettings.image, 0, 0, width,  height);
+    }
 }
 
 function redrawLayer(context, newAlpha) {
@@ -62,9 +86,9 @@ function redrawLayer(context, newAlpha) {
     return context;
 }
 
-function drawOriginalImageLayerThumbnail(originalImage) {
+function drawOriginalImageLayerThumbnail(elementId, originalImage) {
 
-    var canvas = document.getElementById('originalImageThumbnail')
+    var canvas = document.getElementById(elementId)
     var ratio = originalImage.width/originalImage.height
     var constWidth = 200
     var correspondingHeight = constWidth/ratio
@@ -77,9 +101,10 @@ function drawOriginalImageLayerThumbnail(originalImage) {
     return originalImageCtx
 }
 
-function createCanvasToDrawOn(width, height, x, y) {
+function createCanvasToDrawOn(canvasId, width, height, x, y) {
 
-    var canvas = document.getElementById("layerToDrawOn");
+    //var canvas = document.getElementById("layerToDrawOn");
+    var canvas = document.getElementById(canvasId);
     canvas.width = width;
     canvas.height = height
 
@@ -90,9 +115,8 @@ function createCanvasToDrawOn(width, height, x, y) {
     return canvas;
 }
 
-function drawNewLayerThumbnail(width, height) {
-
-    var canvas = document.getElementById('newLayerThumbnail')
+function drawNewLayerThumbnail(elementId, width, height) {
+    var canvas = document.getElementById(elementId)
     var ratio = width/height
     var constWidth = 200
     var correspondingHeight = constWidth/ratio
@@ -103,6 +127,29 @@ function drawNewLayerThumbnail(width, height) {
     originalImageCtx.drawImage(new Image(), 0, 0,canvas.width,  canvas.height);
 
     return originalImageCtx
+}
+
+function drawExistingLayerThumbnail(elementId, layerImage, color, width, height) {
+
+    var canvas = document.getElementById(elementId)
+    //add element as child to id = otherLayersThumbnails
+    var ratio = width / height
+    var constWidth = 200
+    var correspondingHeight = constWidth / ratio
+    canvas.width = constWidth
+    canvas.height = correspondingHeight
+    var newLayerCtx = canvas.getContext('2d');
+
+    newLayerCtx.clearRect(0, 0, canvas.width, canvas.height);
+    newLayerCtx.drawImage(layerImage, 0, 0, canvas.width, canvas.height)
+    newLayerCtx.fillStyle = color;
+    newLayerCtx.globalCompositeOperation = "source-in";
+    newLayerCtx.fillRect(0, 0, canvas.width, canvas.height);
+    newLayerCtx.globalCompositeOperation = "source-over";
+
+    //newLayerCtx.drawImage(layerImage, 0, 0, canvas.width,  canvas.height);
+
+    return newLayerCtx
 }
 
 //https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript

@@ -11,21 +11,24 @@ if(!empty($publication)) {
     $originalImageSrc = "\"" . Publication::getStorageHttpPath() .Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
     $baseName = explode('.', $publication->image)[0];
     $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . $baseName . "_" . "\"";
-
+    $drawingPathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
+    $currentSettings = "\"" . $publication->settings . "\"";
     $script = <<< JS
     
     publicationId = $publication->id
     originalImageSrc = $originalImageSrc
     prefix = $drawingPrefix
+    drawingPathPrefix =  $drawingPathPrefix
     settings = $publication->settings
-   
+    
     prepareLayersToDraw()
 
 JS;
 
     ViewAsset::register($this);
     $this->registerJs($script, yii\web\View::POS_READY);
-} ?>
+}
+//print_r($publication->settings);?>
 
 <h3><?=$this->title?>
 </h3>
@@ -38,15 +41,7 @@ JS;
     <?php endif; ?>
 </p>
 
-<form>
-    <div class="form-group">
-        <label for="title">Название слоя: </label>
-        <input type="text" style="size: auto" class="form-control" id="layerTitle" value="Новый слой">
-    </div>
-</form>
 
-<!--TODO: add btn to clear canvas
---><!--TODO: add button to create new layer in the editor -->
 <div class="d-flex justify-content-around">
     <div class="toolbar">
         <div class="list-group pmd-list pmd-card-list" style="width: fit-content; padding-right: 10px">
@@ -77,62 +72,89 @@ JS;
     </div>
 
 
+    <?php $layersCounter = 0;
+    if (strcmp($publication->settings ,'') != 0
+            && sizeof($publication->getDrawings()) > 0) {
+        $layersCounter = sizeof($publication->getDrawings());
+            }
+    $canvasId = "layer_" . ($layersCounter + 1)  . "_canvas";
+    ?>
     <div class="canvasDiv" data-state="static" style="border:1px solid black;
             border-radius: 10px;
+            height: fit-content;
             width: max-content;">
-        <canvas id="background">
+        <canvas id="<?= $canvasId ?>">
         </canvas>
-        <canvas id="layerToDrawOn">
+        <?php if (strcmp($publication->settings ,'') != 0
+            && sizeof($publication->getDrawings()) > 0) {
+            for($i=0; $i < sizeof($publication->getDrawings()); $i++) {
+                //var_dump($publication->getDrawings()[$i]);
+                $canvasId = "layer_" . $i . "_canvas";
+                //var_dump($i);
+                echo '<canvas id="'.$canvasId.'" ></canvas>';
+                }
+            }
+        $canvasId = "layer_" . $layersCounter  . "_canvas";
+        ?>
+        <canvas id="<?= $canvasId ?>">
         </canvas>
     </div>
 
-    <div id="layers" class = "layers-class" style="width: fit-content; padding-left: 10px">
-        <div class="thumbnails-layers">
+<!--    <div class="overflow-auto">
+-->    <div id="layers" class = "layers-class" style="width: fit-content; padding-left: 10px;">
+        <div class="thumbnails-layers" style="overflow-y: scroll; height: 500px">
 
-            <div style="border:1px solid black;
+            <?php $idCounter = (sizeof($publication->getDrawings()));?>
+            <div id="<?= "thumbnail_div_".$idCounter ?>"style="border:1px solid black;
             border-radius: 10px;
             padding-left: 20px;
             width: 400px;
             text-align: left;
-            margin-bottom: 10px">
-                <label for="newLayerThumbnail">Новый слой: </label>
-                <canvas id="newLayerThumbnail">
-                </canvas>
+            margin-bottom: 10px;
+            background: #d6d5d5">
+                <?php $canvasId = "thumbnail_" . $idCounter;
+                echo '<label for="'. $canvasId. '">Новый слой: </label>';
+                echo '<canvas id="'.$canvasId.'" > </canvas>';?>
+                <!--<canvas id="newLayerThumbnail">
+                </canvas>-->
                 <br>
-                <label for="newLayerThumbnailAlpha">Прозрачность: </label>
-                <input type=range name="alphaChannel" class ="new-layer-alpha-value" id="newLayerThumbnailAlpha" step='0.02' min='0.02' max='1' value='1'>
-            </div>
+                <?php $alphaId = "alpha_" . $idCounter;
+                echo '<label for="'. $alphaId. '">Прозрачность: </label>';
+                echo '<input type=range name=\"alphaChannel\" class ="alpha-value" id="'.$alphaId.'" step=\'0.02\' min=\'0.02\' max=\'1\' value=\'1\'>' ?>
+<!--                <input type=range name="alphaChannel" class ="new-layer-alpha-value" id="'.$alphaId.'" step='0.02' min='0.02' max='1' value='1'>
+-->         </div>
 
-            <div style="border:1px solid black;
+          <!--  <div style="border:1px solid black;
                 border-radius: 10px;
                 padding-left: 20px;
                 width: 400px;
                 text-align: left;
-                margin-bottom: 10px" id = "otherLayersThumbnails">
-            </div>
+                margin-bottom: 10px"-->
+                 <div id = "otherLayersThumbnails">
+                </div>
 
-            <div style="border:1px solid black;
+            <?php $idCounter = (sizeof($publication->getDrawings()) + 1);?>
+            <div id="<?= "thumbnail_div_".$idCounter ?>" style="border:1px solid black;
             border-radius: 10px;
             padding-left: 20px;
             width: 400px;
             text-align: left;
             margin-bottom: 10px">
-                <label for="originalImageThumbnail">Оригинальное изображение: </label>
-                <canvas id="originalImageThumbnail">
-                </canvas>
+                <?php $canvasId = "thumbnail_" . $idCounter;
+                echo '<label for="'. $canvasId. '">Фоновое изображение: </label>';
+                echo '<canvas id="'.$canvasId.'" > </canvas>';?>
+                <!--<canvas id="newLayerThumbnail">
+                </canvas>-->
                 <br>
-                <label for="originalImageThumbnailAlpha">Прозрачность: </label>
-                <input type=range name="alphaChannel" class ="orgnl-img-alpha-value" id="originalImageThumbnailAlpha" step='0.02' min='0' max='1' value='1'>
+                <?php $alphaId = "alpha_" . $idCounter;
+                echo '<label for="'. $alphaId. '">Прозрачность: </label>';
+                echo '<input type=range name=\"alphaChannel\" class ="alpha-value" id="'.$alphaId.'" step=\'0.02\' min=\'0.02\' max=\'1\' value=\'1\'>' ?>
+                <!--                <input type=range name="alphaChannel" class ="new-layer-alpha-value" id="'.$alphaId.'" step='0.02' min='0.02' max='1' value='1'>
+                -->
             </div>
-
         </div>
-    </div>
+<!--    </div>
+-->    </div>
 </div>
 
-<form style="padding-top: 20px">
-    <div class="form-group">
-        <label for="layerDesc">Описание:</label>
-        <textarea class="form-control" id="layerDesc" rows="10" >Описание</textarea>
-    </div>
-</form>
 
