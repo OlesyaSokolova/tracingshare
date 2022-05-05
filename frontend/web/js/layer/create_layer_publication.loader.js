@@ -469,19 +469,15 @@ function prepareLayersToDraw() {
                     document.getElementById(canvasId).remove();
 
                     //remove canvas and context from mutableCanvasesAndContexts
-                    var canvasToDelete = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
-                    var contextToDelete = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
-                    //mutableCanvasesAndContexts.//delete({"id": createdLayerId, "canvas": createdLayerCanvas, "context": createdLayerContext });
+                    var removeIndex = mutableCanvasesAndContexts.map(x => x.id).indexOf(canvasId);
+                    ~removeIndex && mutableCanvasesAndContexts.splice(removeIndex, 1);
 
                     //remove layer from settings
                     if(typeof currentSettings.drawings[index] != 'undefined') {
                         // delete currentSettings.drawings[index]
+                        currentSettings.drawings.splice(index, 1)
                     }
-                    //if(typeof drawingsImages[index] != 'undefined') {
-                        //drawingsImages.splice(i, 1);
-                    //}
-
-                   // layersCounter--;
+                    layersCounter--;
                 });
 
         var saveButton = document.getElementById("save-layer-button");
