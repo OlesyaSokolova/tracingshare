@@ -82,14 +82,16 @@ class PublicationController extends Controller
 
             $previousDrawingsJsonArray = json_decode($publication->drawings, true);
             $publication->drawings = $newDrawings;
-            for($i = 0; $i < sizeof($previousDrawingsJsonArray['drawings']); $i++) {
-                $fileName = $previousDrawingsJsonArray['drawings'][$i]['image'];
-                if(strpos($newDrawings, $fileName) == false){
-                    $filePath = Publication::basePath() . '/'
-                        . Publication::PREFIX_PATH_DRAWINGS . '/'
-                        . $fileName;
-                    if (file_exists($filePath)) {
-                        unlink($filePath);
+            if(!is_null($previousDrawingsJsonArray)) {
+                for ($i = 0; $i < sizeof($previousDrawingsJsonArray['drawings']); $i++) {
+                    $fileName = $previousDrawingsJsonArray['drawings'][$i]['image'];
+                    if (strpos($newDrawings, $fileName) == false) {
+                        $filePath = Publication::basePath() . '/'
+                            . Publication::PREFIX_PATH_DRAWINGS . '/'
+                            . $fileName;
+                        if (file_exists($filePath)) {
+                            unlink($filePath);
+                        }
                     }
                 }
             }
@@ -106,7 +108,7 @@ class PublicationController extends Controller
     public function actionSaveLayers($id)
     {
         $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
-
+        var_dump($data);
         $publication = Publication::findOne($id);
 
         if (strcmp(json_encode($data['newDrawings']), "") != 2) {
@@ -120,7 +122,6 @@ class PublicationController extends Controller
                 $imageBase64 = $layersUrls[$i];
                 $img0 = str_replace('data:image/png;base64,', '', $imageBase64);
                 $img0 = str_replace(' ', '+', $img0);
-                var_dump($img0);
                 $imageToSave = base64_decode($img0);
                 $filePath = Publication::basePath() . '/'
                     . Publication::PREFIX_PATH_DRAWINGS . '/'
@@ -132,17 +133,20 @@ class PublicationController extends Controller
             }
         }
 
-        for($i = 0; $i < sizeof($previousDrawingsJsonArray['drawings']); $i++) {
-            $fileName = $previousDrawingsJsonArray['drawings'][$i]['image'];
-            if(strpos($newDrawings, $fileName) == false){
-                $filePath = Publication::basePath() . '/'
-                    . Publication::PREFIX_PATH_DRAWINGS . '/'
-                    . $fileName;
-                if (file_exists($filePath)) {
-                    unlink($filePath);
+        if(!is_null($previousDrawingsJsonArray)) {
+            for($i = 0; $i < sizeof($previousDrawingsJsonArray['drawings']); $i++) {
+                $fileName = $previousDrawingsJsonArray['drawings'][$i]['image'];
+                if(strpos($newDrawings, $fileName) == false){
+                    $filePath = Publication::basePath() . '/'
+                        . Publication::PREFIX_PATH_DRAWINGS . '/'
+                        . $fileName;
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
                 }
             }
         }
+
 
         if($publication->update(true, ["drawings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");

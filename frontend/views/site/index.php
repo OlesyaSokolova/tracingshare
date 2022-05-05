@@ -7,8 +7,6 @@ use yii\bootstrap4\LinkPager;
 use yii\helpers\Url;
 
 $this->title = 'Все публикации';
-//echo \yii\web\UrlManager::$baseUrl;
-echo Yii::$app->request->scriptUrl;
 ?>
 
 <style>

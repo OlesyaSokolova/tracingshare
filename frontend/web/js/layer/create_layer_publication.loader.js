@@ -541,7 +541,7 @@ function prepareLayersToDraw() {
                         location.href = window.location.origin + baseUrl + "/publication/edit?id=" + publicationId
                     },
                     error: function (xhr, status, error) {
-                        alert("Произошла ошибка при сохранении данных:" + xhr);
+                        alert("Здесь Произошла ошибка при сохранении данных:" + xhr );
                     }
                 });
             }

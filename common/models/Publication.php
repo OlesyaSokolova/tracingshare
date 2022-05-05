@@ -222,8 +222,8 @@ class Publication extends ActiveRecord
     }
 
     public static function getStorageHttpPath() {
-        //TODO: FIX THIS MAGIC CONSTANT (urlManager get absolute url
-        $projectFolder = 'tracingshare';
+        //$projectFolder = 'tracingshare';
+        $projectFolder = preg_split("#/#", Yii::$app->request->baseUrl)[1];
         if(isset($_SERVER['HTTPS'])){
             $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
         }
