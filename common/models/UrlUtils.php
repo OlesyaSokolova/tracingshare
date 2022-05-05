@@ -6,7 +6,7 @@ use Yii;
 
 class UrlUtils
 {
-    private static function getFirstPartOfUrl() {
+    public static function getFirstPartOfUrl() {
         $projectFolder = basename(Yii::getAlias('@root'));
         if(isset($_SERVER['HTTPS'])){
             $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
