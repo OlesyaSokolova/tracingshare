@@ -46,8 +46,7 @@ JS;
     <?php endif; ?>
 </p>
 
-
-<div class="d-flex justify-content-around">
+<div class="d-flex justify-content-around" style="width: fit-content ">
     <div class="toolbar">
         <div class="list-group pmd-list pmd-card-list" style="width: fit-content; padding-right: 10px">
             <button type="button" class="btn btn-outline-danger btn-rounded" id="delete-layer-button" style="margin-bottom: 10px">Удалить слой</button>
