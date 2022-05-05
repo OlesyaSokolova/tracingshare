@@ -40,10 +40,7 @@ function prepareLayersToDraw() {
                 var currentContextOk = currentCanvasOk.getContext('2d');
                 drawLayer(drawingsImages[i], currentContextOk);
                 mutableCanvasesAndContexts.push({"id": canvasId, "canvas": currentCanvasOk, "context": currentContextOk });
-                    /*currentContext = currentCanvas.getContext('2d');
-                    drawLayer(drawingsImages[i], currentContext);
-                    mutableCanvasesAndContexts.push({"id": canvasId, "canvas": currentCanvas, "context": currentContext });
-*/
+
             } else {
                     currentImage.onload = function () {
                     var currentCanvas = createCanvasToDrawOn("layer_" + i + "_canvas", originalImageCtx.canvas.width, originalImageCtx.canvas.height,
@@ -53,16 +50,11 @@ function prepareLayersToDraw() {
                         mutableCanvasesAndContexts.push({"id": "layer_" + i + "_canvas", "canvas": currentCanvas, "context": currentContext });
                 }
             }
-
-
-            //currentContex = currentCanvas.getContext('2d');
-            ///drawLayer(currentImage, currentContex);
         }
-            //create thumbnails for existing layers
-            window.onload = (event) => {
-                drawExistingLayersThumbnails(drawingsImages);
-            };
-
+        //create thumbnails for existing layers
+        window.onload = (event) => {
+            drawExistingLayersThumbnails(drawingsImages);
+        };
 
         const newLayerCanvasId = "layer_" + (drawingsImages.length) + "_canvas";
         var newLayerCanvas = createCanvasToDrawOn(newLayerCanvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,

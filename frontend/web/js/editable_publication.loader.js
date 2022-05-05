@@ -73,19 +73,27 @@ function prepareEditablePublication() {
         mainDescription = document.getElementById('mainDesc').value;
         name = document.getElementById('name').value;
         var newData = {
-            id: parseInt(publicationId),
+            //id: parseInt(publicationId),
             newName: name,
             newDescription: mainDescription,
             newDrawings: drawings,
         };
+
+        const pathParts = window.location.pathname.split ('/');
+        const baseUrl = "/" + pathParts[1]
+            + "/" + pathParts[2]
+            + "/" + pathParts[3]
+            + "/" + pathParts[4]
+
+
         $.ajax({
             type: "POST",
-            url: "/tracingshare/frontend/web/index.php/publication/save",
+            url: baseUrl + "/publication/save?id=" + publicationId,
             data: {params: JSON.stringify(newData)},
             success: function (data) {
                 //alert(data)
                 if(redirectToView) {
-                    location.href = "http://localhost/tracingshare/frontend/web/index.php/publication/view?id=" + publicationId
+                    location.href = window.location.origin + baseUrl + "/publication/view?id=" + publicationId
                 }
                 else {
                     //document.location.reload();

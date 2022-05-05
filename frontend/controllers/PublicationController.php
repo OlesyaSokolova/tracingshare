@@ -64,11 +64,11 @@ class PublicationController extends Controller
         return $this->goBack();
     }
 
-    public function actionSave()
+    public function actionSave($id)
     {
         $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
 
-        $id = $data["id"];
+        //$id = $data["id"];
 
         $newName = $data["newName"];
         $newDescription = $data["newDescription"];
