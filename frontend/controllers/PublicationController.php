@@ -79,8 +79,22 @@ class PublicationController extends Controller
 
         if (strcmp(json_encode($data["newSettings"]), "") != 2) {
             $newSettings = json_encode($data["newSettings"], JSON_UNESCAPED_UNICODE);
+
+            $previousSettingsJsonArray = json_decode($publication->settings, true);
             $publication->settings = $newSettings;
+            for($i = 0; $i < sizeof($previousSettingsJsonArray['drawings']); $i++) {
+                $fileName = $previousSettingsJsonArray['drawings'][$i]['image'];
+                if(strpos($newSettings, $fileName) == false){
+                    $filePath = Publication::basePath() . '/'
+                        . Publication::PREFIX_PATH_DRAWINGS . '/'
+                        . $fileName;
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+                }
+            }
         }
+
         if($publication->update(true, ["name", "description", "settings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
@@ -97,7 +111,7 @@ class PublicationController extends Controller
 
         if (strcmp(json_encode($data['newSettings']), "") != 2) {
             $newSettings = json_encode($data['newSettings'], JSON_UNESCAPED_UNICODE);
-            $previousSettings = $publication->settings;
+            $previousSettingsJsonArray = json_decode($publication->settings, true);
             $publication->settings = $newSettings;
 
             $layersUrls = $data['layersUrls'];
@@ -117,10 +131,10 @@ class PublicationController extends Controller
                 file_put_contents($filePath, $imageToSave);
             }
         }
-        //$previousSetingsToArray = ...
-        for($i = 0; $i < sizeof($previousSettings.drawings); $i++) {
-            $fileName = $previousSettings.drawings[i].image;
-            if(!$newSettings.contains($fileName)) {
+
+        for($i = 0; $i < sizeof($previousSettingsJsonArray['drawings']); $i++) {
+            $fileName = $previousSettingsJsonArray['drawings'][$i]['image'];
+            if(strpos($newSettings, $fileName) == false){
                 $filePath = Publication::basePath() . '/'
                     . Publication::PREFIX_PATH_DRAWINGS . '/'
                     . $fileName;

@@ -28,7 +28,7 @@ JS;
     ViewAsset::register($this);
     $this->registerJs($script, yii\web\View::POS_READY);
 }
-//print_r($publication->settings);?>
+//var_dump($publication->getSettingsArray());?>
 
 <h3><?=$this->title?>
 </h3>
