@@ -123,7 +123,6 @@ function prepareLayersToDraw() {
         var clearButton = document.getElementById("clear-layer-button");
         clearButton.addEventListener(
             'click', function (event) {
-                breakCycle = false;
                 context.clearRect(0, 0, canvas.width, canvas.height);
             });
 
@@ -454,6 +453,33 @@ function prepareLayersToDraw() {
                         previousThumbnail = this;
                     });
             });
+
+            var deleteLayerButton = document.getElementById("delete-layer-button");
+            deleteLayerButton.addEventListener(
+                'click', function (event) {
+                    var layersThumbnailsContainer = document.getElementById("thumbnails-layers");
+                    var index = parseInt((canvas.id).split('_')[1]);
+                    //alert(index);
+                    //remove thumbnail
+                    var divId = "thumbnail_div_" + index;
+                    const element = document.getElementById(divId);
+                    element.remove();
+                    //remove canvas
+                    var canvasId = "layer_" + i + "_canvas";
+                    var canvasToDelete = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
+                    var contextToDelete = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
+                    //mutableCanvasesAndContexts.//delete({"id": createdLayerId, "canvas": createdLayerCanvas, "context": createdLayerContext });
+
+                    //remove layer from settings
+                    if(typeof currentSettings.drawings[index] != 'undefined') {
+                        // delete currentSettings.drawings[index]
+                    }
+                    //if(typeof drawingsImages[index] != 'undefined') {
+                        //drawingsImages.splice(i, 1);
+                    //}
+
+                   // layersCounter--;
+                });
 
         var saveButton = document.getElementById("save-layer-button");
         saveButton.addEventListener(
