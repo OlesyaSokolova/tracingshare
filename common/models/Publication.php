@@ -157,7 +157,7 @@ class Publication extends ActiveRecord
         $path = \Yii::getAlias('@storage');
 
         // Создаем директорию, если не существует
-        FileHelper::createDirectory($path);
+        //FileHelper::createDirectory($path);
 
         return $path;
     }

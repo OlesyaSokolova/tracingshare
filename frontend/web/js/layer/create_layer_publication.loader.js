@@ -123,7 +123,6 @@ function prepareLayersToDraw() {
         var clearButton = document.getElementById("clear-layer-button");
         clearButton.addEventListener(
             'click', function (event) {
-                breakCycle = false;
                 context.clearRect(0, 0, canvas.width, canvas.height);
             });
 
@@ -455,6 +454,32 @@ function prepareLayersToDraw() {
                     });
             });
 
+            var deleteLayerButton = document.getElementById("delete-layer-button");
+            deleteLayerButton.addEventListener(
+                'click', function (event) {
+                    var index = parseInt((canvas.id).split('_')[1]);
+                    //alert(index);
+                    //remove thumbnail
+                    var divId = "thumbnail_div_" + index;
+                    document.getElementById(divId).remove();
+
+                    //remove canvas from markup
+                    var canvasId = "layer_" + index + "_canvas";
+                    document.getElementById(canvasId).remove();
+
+                    //remove canvas and context from mutableCanvasesAndContexts
+                    var removeIndex = mutableCanvasesAndContexts.map(x => x.id).indexOf(canvasId);
+                    ~removeIndex && mutableCanvasesAndContexts.splice(removeIndex, 1);
+
+                    //remove layer from settings
+                    if(typeof currentSettings.drawings[index] != 'undefined') {
+                        // delete currentSettings.drawings[index]
+                        currentSettings.drawings.splice(index, 1)
+                    }
+
+                    layersCounter--;
+                });
+
         var saveButton = document.getElementById("save-layer-button");
         saveButton.addEventListener(
             'click', function (event) {
@@ -466,13 +491,6 @@ function prepareLayersToDraw() {
                     let ai = parseInt((a.id).split('_')[1])
                         bi = parseInt((b.id).split('_')[1]);
                         return ai - bi;
-                    /*if (fa < fb) {
-                        return -1;
-                    }
-                    if (fa > fb) {
-                        return 1;
-                    }
-                    return 0;*/
                 })
                 //console.log(mutableCanvasesAndContexts);
                 for(let i = 0; i < mutableCanvasesAndContexts.length; i++) {
@@ -573,7 +591,14 @@ function prepareLayersToDraw() {
                 for (let i = 0; i < drawingsImages.length + 1; i++) {
                    document.getElementById('thumbnail_div_' + i)
                        .addEventListener('click', function (event) {
-                           var canvasId = "layer_" + i + "_canvas";
+                           var canvasId = "layer_" +
+                               "" +
+                               "" +
+                               "" +
+                               "" +
+                               "" +
+                               "" +
+                               "" + i + "_canvas";
                            canvas = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
                            context = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
                            context.lineWidth = thickness
