@@ -1,7 +1,7 @@
 function drawBackground(elementId, originalImage) {
     var canvas = document.getElementById(elementId)
     var ratio = originalImage.width/originalImage.height
-    var constWidth = 1000
+    var constWidth = 1500
     var correspondingHeight = constWidth/ratio
     canvas.width = constWidth
     canvas.height = correspondingHeight
@@ -90,7 +90,7 @@ function drawOriginalImageLayerThumbnail(elementId, originalImage) {
 
     var canvas = document.getElementById(elementId)
     var ratio = originalImage.width/originalImage.height
-    var constWidth = 200
+    var constWidth = 150
     var correspondingHeight = constWidth/ratio
     canvas.width = constWidth
     canvas.height = correspondingHeight
@@ -118,7 +118,7 @@ function createCanvasToDrawOn(canvasId, width, height, x, y) {
 function drawNewLayerThumbnail(elementId, width, height) {
     var canvas = document.getElementById(elementId)
     var ratio = width/height
-    var constWidth = 200
+    var constWidth = 150
     var correspondingHeight = constWidth/ratio
     canvas.width = constWidth
     canvas.height = correspondingHeight
@@ -134,7 +134,7 @@ function drawExistingLayerThumbnail(elementId, layerImage, color, width, height)
     var canvas = document.getElementById(elementId)
     //add element as child to id = otherLayersThumbnails
     var ratio = width / height
-    var constWidth = 200
+    var constWidth = 150
     var correspondingHeight = constWidth / ratio
     canvas.width = constWidth
     canvas.height = correspondingHeight

@@ -59,7 +59,7 @@ class PublicationController extends Controller
     public function actionDelete($id)
     {
         $publication = Publication::findOne($id);
-        //$publication->deleteFilesFromStorage();
+        $publication->deleteFilesFromStorage();
         $publication->delete();
         return $this->goBack();
     }
