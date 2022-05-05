@@ -1,6 +1,6 @@
-function updateAllQueryParameters(jsonSettings) {
+function updateAllQueryParameters(jsonDrawings) {
     const keysToUpdateValue = ["alpha", "color"];
-    var drawings = jsonSettings.drawings;
+    var drawings = jsonDrawings.drawings;
     var uri = window.location.href
     for (let i = 0; i < drawings.length; i++) {
         var layerParams = drawings[i].layerParams
@@ -22,21 +22,21 @@ function updateAllQueryParameters(jsonSettings) {
         window.history.replaceState(null, '', uri);
     }
 }
-function updateOneQueryParameter(jsonSettings, layerId, key, value) {
+function updateOneQueryParameter(jsonDrawings, layerId, key, value) {
 
-    jsonSettings.drawings[layerId].layerParams[key] = value.toString()
-    updateAllQueryParameters(jsonSettings)
+    jsonDrawings.drawings[layerId].layerParams[key] = value.toString()
+    updateAllQueryParameters(jsonDrawings)
 }
 
-function updateSettingsFromQuery(settings) {
+function updateSettingsFromQuery(drawings) {
     let params = (new URL(document.location.href)).searchParams;
     const keysToUpdateValue = ["alpha", "color"];
-    for (let i = 0; i < settings.drawings.length; i++) {
+    for (let i = 0; i < drawings.drawings.length; i++) {
         for(let j = 0; j < keysToUpdateValue.length; j++) {
             var specialKey = "drawings_" + i + "_layerParams_" + keysToUpdateValue[j];
             var value = params.get(specialKey)
             if(value != null) {
-                settings.drawings[i].layerParams[keysToUpdateValue[j]] = decodeURIComponent(value)
+                drawings.drawings[i].layerParams[keysToUpdateValue[j]] = decodeURIComponent(value)
             }
         }
     }

@@ -15,7 +15,7 @@ if(!empty($publication)) {
     publicationId = $publication->id
     originalImageSrc = $originalImageSrc
     drawingPathPrefix =  $drawingPathPrefix
-    settings = $publication->settings
+    drawings = $publication->drawings
    
     prepareEditablePublication()
 
@@ -41,7 +41,7 @@ JS;
 
     <?php endif; ?>
 <?php
-if (strcmp($publication->settings ,'') != 0
+if (strcmp($publication->drawings ,'') != 0
     && sizeof($publication->getDrawings()) > 0
 ): ?>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить <br> последние сохраненные настройки слоев</button>
@@ -82,7 +82,7 @@ if (strcmp($publication->settings ,'') != 0
                     ['class' => 'btn btn-outline-primary btn-rounded', 'style' => 'margin-bottom: 10px',
                         'name' => 'create-layer-button'],) ?>
                 <?php
-                if (strcmp($publication->settings ,'') != 0
+                if (strcmp($publication->drawings ,'') != 0
                     && sizeof($publication->getDrawings()) > 0
                 ): ?>
                     <div id="editForm" style="overflow-y: scroll; height: 700px">

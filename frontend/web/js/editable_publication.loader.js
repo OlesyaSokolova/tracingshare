@@ -1,10 +1,10 @@
 function prepareEditablePublication() {
-    if(typeof settings != "undefined"
-        && settings !== ''
-        && settings !== ""
-        && settings.drawings.length > 0) {
+    if(typeof drawings != "undefined"
+        && drawings !== ''
+        && drawings !== ""
+        && drawings.drawings.length > 0) {
 
-        defaultSettings = JSON.parse(JSON.stringify(settings));
+        defaultDrawings = JSON.parse(JSON.stringify(drawings));
 
         originalImage = new Image();
         originalImage.src = originalImageSrc;
@@ -12,9 +12,9 @@ function prepareEditablePublication() {
 
         originalImage.onload = function () {
             var originalImageCtx = drawOriginalImage(originalImage)
-            drawingsImages = initDrawingsArray(jsonSettings = settings)
+            drawingsImages = initDrawingsArray(jsonDrawings = drawings)
             addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = originalImageCtx)
-            initLayersSettingsForEdit(jsonSettings = settings)
+            initLayersSettingsForEdit(jsonDrawings = drawings)
 
             classNameContainer = 'layers-class'
 
@@ -37,7 +37,7 @@ function prepareEditablePublication() {
 
             var resetButton = document.getElementById("reset-button");
             resetButton.addEventListener('click', function (event) {
-                reloadSettingsForEdit(defaultSettings)
+                reloadSettingsForEdit(defaultDrawings)
             })
         }
     }
@@ -54,21 +54,21 @@ function prepareEditablePublication() {
     var saveButton = document.getElementById("save-button");
     saveButton.addEventListener('click', function (event) {
         var redirectToView = true
-        saveData(settings, redirectToView)
+        saveData(drawings, redirectToView)
     });
 
-    function saveData(settings, redirectToView) {
-        if(typeof settings != 'undefined' && settings !== '' && settings !== "") {
-            for (let i = 0; i < settings.drawings.length; i++) {
-                settings.drawings[i].layerParams.title = document.getElementById("title_" + i).value;
-                settings.drawings[i].layerParams.alpha = document.getElementById('alpha_' + i).value;
-                settings.drawings[i].layerParams.color = document.getElementById('color_' + i).value;
-                settings.drawings[i].layerParams.description = document.getElementById('desc_' + i).value;
+    function saveData(drawings, redirectToView) {
+        if(typeof drawings != 'undefined' && drawings !== '' && drawings !== "") {
+            for (let i = 0; i < drawings.drawings.length; i++) {
+                drawings.drawings[i].layerParams.title = document.getElementById("title_" + i).value;
+                drawings.drawings[i].layerParams.alpha = document.getElementById('alpha_' + i).value;
+                drawings.drawings[i].layerParams.color = document.getElementById('color_' + i).value;
+                drawings.drawings[i].layerParams.description = document.getElementById('desc_' + i).value;
             }
         }
         else
         {
-            settings = ''
+            drawings = ''
         }
         mainDescription = document.getElementById('mainDesc').value;
         name = document.getElementById('name').value;
@@ -76,7 +76,7 @@ function prepareEditablePublication() {
             id: parseInt(publicationId),
             newName: name,
             newDescription: mainDescription,
-            newSettings: settings,
+            newDrawings: drawings,
         };
         $.ajax({
             type: "POST",
@@ -89,7 +89,7 @@ function prepareEditablePublication() {
                 }
                 else {
                     //document.location.reload();
-                    updateAllLayers(initDrawingsArray(settings));
+                    updateAllLayers(initDrawingsArray(drawings));
                 }
             },
             error: function (xhr, status, error) {
@@ -98,8 +98,8 @@ function prepareEditablePublication() {
         });
     }
 
-    function initDeleteButtons(settings) {
-        var layersNumber = settings.drawings.length;
+    function initDeleteButtons(jsonDrawings) {
+        var layersNumber = jsonDrawings.drawings.length;
 
         for (let i = 0; i < layersNumber; i++) {
             var delBtnId = "del_btn_" + i;
@@ -109,26 +109,26 @@ function prepareEditablePublication() {
             deleteLayerButton.addEventListener('click', function (event) {
                 var userAnswer = confirm("Вы действительно хотите удалить слой \" " + layerTitle +"\"?");
                 if (userAnswer === true) {
-                    settings.drawings.splice(i, 1);
+                    jsonDrawings.drawings.splice(i, 1);
                     drawingsImages.splice(i, 1);
                     var redirectToView = false;
-                    initLayersSettingsForEdit(settings)
-                    saveData(settings, redirectToView)
+                    initLayersSettingsForEdit(jsonDrawings)
+                    saveData(jsonDrawings, redirectToView)
                 }
             })
         }
     }
 
-    function initLayersSettingsForEdit(jsonSettings) {
+    function initLayersSettingsForEdit(jsonDrawings) {
 
-        var drawings = jsonSettings.drawings
-        if (Array.isArray(drawings)) {
+        var jsonArrayDrawings = jsonDrawings.drawings
+        if (Array.isArray(jsonArrayDrawings)) {
 
             var layerInfo = '<form>';
-            for (let i = 0; i < drawings.length; i++) {
-                if (typeof drawings[i].layerParams.alpha != 'undefined') {
-                    alphaValue = drawings[i].layerParams.alpha;
-                    colorValue = drawings[i].layerParams.color;
+            for (let i = 0; i < jsonArrayDrawings.length; i++) {
+                if (typeof jsonArrayDrawings[i].layerParams.alpha != 'undefined') {
+                    alphaValue = jsonArrayDrawings[i].layerParams.alpha;
+                    colorValue = jsonArrayDrawings[i].layerParams.color;
                 } else {
                     alphaValue = 1;
                 }
@@ -152,7 +152,7 @@ function prepareEditablePublication() {
                     'class="btn btn-outline-danger btn-sm" ' +
                     'style="float: right; margin-bottom: 10px"' +
                     '>Удалить слой</button>'
-                    + '<input type="text" id=\'' + titleId + '\' class="form-control" value=\'' + (drawings[i].layerParams.title) + '\'/>'
+                    + '<input type="text" id=\'' + titleId + '\' class="form-control" value=\'' + (jsonArrayDrawings[i].layerParams.title) + '\'/>'
                     + '<br>'
 
                     + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
@@ -164,7 +164,7 @@ function prepareEditablePublication() {
 
                     + '<label for=\'' + descId + '\'>Описание: </label>'
                     + '<textarea id=\'' + descId + '\' style="width: 500px" class="form-control">'
-                    + drawings[i].layerParams.description
+                    + jsonArrayDrawings[i].layerParams.description
                     +'</textarea>'
                 layerInfo += '<br>'
 
@@ -174,13 +174,13 @@ function prepareEditablePublication() {
             layerInfo += '</form>';
             var layersEditForm = document.getElementById("editForm");
             layersEditForm.innerHTML = layerInfo
-            initDeleteButtons(settings)
+            initDeleteButtons(jsonDrawings)
         }
     }
 
-    function reloadSettingsForEdit(defaultSettings) {
-        initLayersSettingsForEdit(defaultSettings)
-        updateAllLayers(initDrawingsArray(defaultSettings))
+    function reloadSettingsForEdit(defaultDrawings) {
+        initLayersSettingsForEdit(defaultDrawings)
+        updateAllLayers(initDrawingsArray(defaultDrawings))
     }
 }
 

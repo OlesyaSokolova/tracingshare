@@ -13,7 +13,8 @@ use common\models\User;
 * @property string name
 * @property string description //description of publication
 * @property string image //link to an original image
-* @property string settings //TEXT - json as string with drawings (and later maybe textures will be added)
+* @property string drawings //TEXT - json as string with drawings
+* @property string textures //TEXT - json as string with textures
  *
 * @property string author_id //id of author from table "author"
 */
@@ -42,7 +43,7 @@ class Publication extends ActiveRecord
     {
         return [
             [['name'], 'required', 'message' => 'Это поле не может быть пустым'],
-            [['settings'], 'default', 'value'=> ''],
+            [['drawings'], 'default', 'value'=> ''],
             ['name', 'string', 'max' => 100, 'message' => 'Максимальная длина: 32 символа'],
             ['description', 'string', 'max' => 32000, 'message' => 'Максимальная длина: 32000 символов'],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'message' => 'Ошибка при сохранении файла'],
@@ -134,16 +135,16 @@ class Publication extends ActiveRecord
 
     public function getDrawings() {
 
-        $settingsArray = $this->getSettingsArray();
+        $drawingsArray = $this->getDrawingsArray();
         $drawings = [];
-        if(isset($settingsArray['drawings'])) {
-            $drawings  = $settingsArray['drawings'];
+        if(isset($drawingsArray['drawings'])) {
+            $drawings  = $drawingsArray['drawings'];
         }
         return $drawings;
     }
-    public function getSettingsArray()
+    public function getDrawingsArray()
     {
-        return json_decode($this->settings, true);
+        return json_decode($this->drawings, true);
     }
 
     /**
@@ -172,14 +173,14 @@ class Publication extends ActiveRecord
         else return "";
     }
 
-    public function updateSettings()
+    public function updateDrawings()
     {
-        $settingsArray = array();
-        if (strcmp($this->settings ,'') != 0) {
-            $settingsArray = $this->getSettingsArray();
+        $drawingsArray = array();
+        if (strcmp($this->drawings ,'') != 0) {
+            $drawingsArray = $this->getDrawingsArray();
         }
-        if(!array_key_exists('drawings', $settingsArray)) {
-            $settingsArray['drawings'] = array();
+        if(!array_key_exists('drawings', $drawingsArray)) {
+            $drawingsArray['drawings'] = array();
         }
 
         foreach ($this->drawingsFiles as $file) {
@@ -193,9 +194,9 @@ class Publication extends ActiveRecord
                     "color" => self::DEFAULT_COLOR,
                     "description" => self::DEFAULT_DESCRIPTION,
                 ));
-            array_push($settingsArray['drawings'], $newLayerInfo);
+            array_push($drawingsArray['drawings'], $newLayerInfo);
         }
-       return json_encode($settingsArray);
+       return json_encode($drawingsArray);
     }
 
     public function deleteFilesFromStorage() {

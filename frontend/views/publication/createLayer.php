@@ -12,14 +12,14 @@ if(!empty($publication)) {
     $baseName = explode('.', $publication->image)[0];
     $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . $baseName . "_" . "\"";
     $drawingPathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
-    $currentSettings = "\"" . $publication->settings . "\"";
+    $currentDrawings = "\"" . $publication->drawings . "\"";
     $script = <<< JS
     
     publicationId = $publication->id
     originalImageSrc = $originalImageSrc
     prefix = $drawingPrefix
     drawingPathPrefix =  $drawingPathPrefix
-    settings = $publication->settings
+    drawings = $publication->drawings
     
     prepareLayersToDraw()
 
@@ -79,7 +79,7 @@ JS;
 
 
     <?php $layersCounter = 0;
-   if (strcmp($publication->settings ,'') != 0
+   if (strcmp($publication->drawings ,'') != 0
             && sizeof($publication->getDrawings()) > 0) {
         $layersCounter = sizeof($publication->getDrawings());
             }
@@ -91,7 +91,7 @@ JS;
             width: max-content;">
         <canvas id="<?= $canvasId ?>">
         </canvas>
-        <?php if (strcmp($publication->settings ,'') != 0
+        <?php if (strcmp($publication->drawings ,'') != 0
             && sizeof($publication->getDrawings()) > 0) {
             for($i=0; $i < sizeof($publication->getDrawings()); $i++) {
                 //var_dump($publication->getDrawings()[$i]);

@@ -31,13 +31,13 @@ function drawImage(imageWithSettings, contextToDrawOn) {
     }
 }
 
-function initDrawingsArray(jsonSettings) {
+function initDrawingsArray(jsonDrawings) {
     var drawingsImages = []
-    if(typeof jsonSettings != "undefined"
-        && jsonSettings !== ''
-        && jsonSettings !== ""
-        && jsonSettings.drawings.length > 0) {
-        var drawingsJson = jsonSettings.drawings;
+    if(typeof jsonDrawings != "undefined"
+        && jsonDrawings !== ''
+        && jsonDrawings !== ""
+        && jsonDrawings.drawings.length > 0) {
+        var drawingsJson = jsonDrawings.drawings;
         for (let i = 0; i < drawingsJson.length; i++) {
             drawingImage = new Image();
             drawingImage.src = drawingPathPrefix + drawingsJson[i].image;

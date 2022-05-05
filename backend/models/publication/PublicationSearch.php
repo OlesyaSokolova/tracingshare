@@ -18,7 +18,7 @@ class PublicationSearch extends Publication
     {
         return [
             [['id'], 'integer'],
-            [['name', 'description', 'image', 'settings'], 'safe'],
+            [['name', 'description', 'image', 'drawings'], 'safe'],
         ];
     }
 
@@ -66,7 +66,7 @@ class PublicationSearch extends Publication
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'image', $this->image])
-            ->andFilterWhere(['like', 'settings', $this->settings]);
+            ->andFilterWhere(['like', 'drawings', $this->drawings]);
 
 
         return $dataProvider;

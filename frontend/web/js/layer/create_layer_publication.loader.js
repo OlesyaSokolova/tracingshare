@@ -1,6 +1,6 @@
 function prepareLayersToDraw() {
 
-    var currentSettings = {
+    var currentDrawings = {
         drawings: Array()
     }
 
@@ -8,11 +8,11 @@ function prepareLayersToDraw() {
         originalImage.src = originalImageSrc;
         var drawingsImages = [];
         originalImage.onload = function () {
-            if (typeof settings != "undefined"
-                && settings !== ''
-                && settings !== "") {
-                currentSettings = JSON.parse(JSON.stringify(settings));
-                drawingsImages = initDrawingsArray(currentSettings);
+            if (typeof drawings != "undefined"
+                && drawings !== ''
+                && drawings !== "") {
+                currentDrawings = JSON.parse(JSON.stringify(drawings));
+                drawingsImages = initDrawingsArray(currentDrawings);
             }
         //create context and thumbnail for background
         var backroundId = "layer_" + "b" + "_canvas";
@@ -472,9 +472,8 @@ function prepareLayersToDraw() {
                     ~removeIndex && mutableCanvasesAndContexts.splice(removeIndex, 1);
 
                     //remove layer from settings
-                    if(typeof currentSettings.drawings[index] != 'undefined') {
-                        // delete currentSettings.drawings[index]
-                        currentSettings.drawings.splice(index, 1)
+                    if(typeof currentDrawings.drawings[index] != 'undefined') {
+                        currentDrawings.drawings.splice(index, 1)
                     }
 
                     layersCounter--;
@@ -507,9 +506,9 @@ function prepareLayersToDraw() {
                     //layersUrls.push({"id": index, "data": imageDataUrl});
                     layersUrls.push(imageDataUrl);
 
-                    if (i >= currentSettings.drawings.length) {
+                    if (i >= currentDrawings.drawings.length) {
                         //create new layer
-                        var imageName = generateRandomImageTitle(prefix, currentSettings.drawings.length + 1);
+                        var imageName = generateRandomImageTitle(prefix, currentDrawings.drawings.length + 1);
                         layersNames.push(imageName)
 
                         var newLayerInfo = {
@@ -524,19 +523,17 @@ function prepareLayersToDraw() {
                                 description: ""
                             }
                         }
-                        currentSettings.drawings.push(newLayerInfo);
+                        currentDrawings.drawings.push(newLayerInfo);
                     }
                     else {
-                        layersNames.push(currentSettings.drawings[i].image)
+                        layersNames.push(currentDrawings.drawings[i].image)
                     }
                 }
-                //settingsJSON = JSON.stringify(currentSettings)
                 var newData = {
                     layersFilesNames: layersNames,
                     layersUrls: layersUrls,
-                    newSettings: currentSettings,
+                    newDrawings: currentDrawings,
                 };
-                console.log(newData)
                 $.ajax({
                     type: "POST",
                     url: "/tracingshare/frontend/web/index.php/publication/save-layers?id=" + publicationId,

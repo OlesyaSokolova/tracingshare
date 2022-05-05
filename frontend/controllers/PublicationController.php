@@ -77,14 +77,14 @@ class PublicationController extends Controller
         $publication->name = $newName;
         $publication->description = $newDescription;
 
-        if (strcmp(json_encode($data["newSettings"]), "") != 2) {
-            $newSettings = json_encode($data["newSettings"], JSON_UNESCAPED_UNICODE);
+        if (strcmp(json_encode($data["newDrawings"]), "") != 2) {
+            $newDrawings = json_encode($data["newDrawings"], JSON_UNESCAPED_UNICODE);
 
-            $previousSettingsJsonArray = json_decode($publication->settings, true);
-            $publication->settings = $newSettings;
-            for($i = 0; $i < sizeof($previousSettingsJsonArray['drawings']); $i++) {
-                $fileName = $previousSettingsJsonArray['drawings'][$i]['image'];
-                if(strpos($newSettings, $fileName) == false){
+            $previousDrawingsJsonArray = json_decode($publication->drawings, true);
+            $publication->drawings = $newDrawings;
+            for($i = 0; $i < sizeof($previousDrawingsJsonArray['drawings']); $i++) {
+                $fileName = $previousDrawingsJsonArray['drawings'][$i]['image'];
+                if(strpos($newDrawings, $fileName) == false){
                     $filePath = Publication::basePath() . '/'
                         . Publication::PREFIX_PATH_DRAWINGS . '/'
                         . $fileName;
@@ -95,7 +95,7 @@ class PublicationController extends Controller
             }
         }
 
-        if($publication->update(true, ["name", "description", "settings"])) {
+        if($publication->update(true, ["name", "description", "drawings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
         else {
@@ -109,10 +109,10 @@ class PublicationController extends Controller
 
         $publication = Publication::findOne($id);
 
-        if (strcmp(json_encode($data['newSettings']), "") != 2) {
-            $newSettings = json_encode($data['newSettings'], JSON_UNESCAPED_UNICODE);
-            $previousSettingsJsonArray = json_decode($publication->settings, true);
-            $publication->settings = $newSettings;
+        if (strcmp(json_encode($data['newDrawings']), "") != 2) {
+            $newDrawings = json_encode($data['newDrawings'], JSON_UNESCAPED_UNICODE);
+            $previousDrawingsJsonArray = json_decode($publication->drawings, true);
+            $publication->drawings = $newDrawings;
 
             $layersUrls = $data['layersUrls'];
             $fileNames = $data['layersFilesNames'];
@@ -132,9 +132,9 @@ class PublicationController extends Controller
             }
         }
 
-        for($i = 0; $i < sizeof($previousSettingsJsonArray['drawings']); $i++) {
-            $fileName = $previousSettingsJsonArray['drawings'][$i]['image'];
-            if(strpos($newSettings, $fileName) == false){
+        for($i = 0; $i < sizeof($previousDrawingsJsonArray['drawings']); $i++) {
+            $fileName = $previousDrawingsJsonArray['drawings'][$i]['image'];
+            if(strpos($newDrawings, $fileName) == false){
                 $filePath = Publication::basePath() . '/'
                     . Publication::PREFIX_PATH_DRAWINGS . '/'
                     . $fileName;
@@ -144,7 +144,7 @@ class PublicationController extends Controller
             }
         }
 
-        if($publication->update(true, ["settings"])) {
+        if($publication->update(true, ["drawings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
         else {
@@ -186,9 +186,9 @@ class PublicationController extends Controller
                 $model->drawingsFiles = UploadedFile::getInstances($model, 'drawingsFiles');
                 //if($model->save()) {
                     if ($model->uploadDrawings()) {
-                        $model->settings = $model->updateSettings();
-                        var_dump($model->settings);
-                        if($model->update(true, ["settings"])) {
+                        $model->drawings = $model->updateDrawings();
+                        var_dump($model->drawings);
+                        if($model->update(true, ["drawings"])) {
                             Yii::$app->session->setFlash('success', "Успешно сохранено.");
                             return $this->redirect(['publication/edit', 'id' => $model->id]);
                         }
