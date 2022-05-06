@@ -55,10 +55,10 @@ $this->title = 'Публикации'; ?>
                 },
             ],
             [
-                'attribute' => 'settings',
+                'attribute' => 'drawings',
                 'label' => 'Информация о слоях',
                 'value' => function ($data) {
-                       $tmp = $data['settings'];
+                       $tmp = $data['drawings'];
                         if($tmp != '') {
                             $obj = json_decode($tmp, true);
                             $counter = sizeof($obj['drawings']);

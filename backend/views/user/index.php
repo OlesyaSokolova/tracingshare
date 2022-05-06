@@ -41,6 +41,14 @@ $this->title = 'Пользователи';
                 'attribute' => 'patronymic',
             ],
             'email',
+            /*[
+                'label' => 'Дата регистарции',
+                'value' => date("Y-m-d H:i:s", $searchModel->created_at),
+            ],
+            [
+                'label' => 'Дата редактирования',
+                'value' => date("Y-m-d H:i:s", $searchModel->updated_at),
+            ],*/
             //'auth_key',
             //'password_hash',
             //'password_reset_token',

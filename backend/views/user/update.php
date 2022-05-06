@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
 
-$this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index']];
+/*$this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index']];*/
 $this->title = 'Редактировать пользователя';
 //$model->role = 'author';
 ?>
@@ -21,10 +21,10 @@ $this->title = 'Редактировать пользователя';
             <?= $form->field($model, 'last_name')->label("Фамилия:")->textInput() ?>
             <?= $form->field($model, 'patronymic')->label("Отчество:")->textInput() ?>
             <?= $form->field($model, 'password')->passwordInput()->label("Пароль:") ?>
-            <?= $form->field($model, 'role')->label('Роль:')->radioList([
+             <!--$form->field($model, 'role')->label('Роль:')->radioList([
                 'author' =>'Автор: может создавать и редактировать свои публикации.',
                 'admin' =>'Администратор: может создавать и редактировать все публикации, управлять пользователями.',
-            ]) ?>
+            ])-->
 
             <div class="form-group" style="text-align: center;">
                 <?= Html::submitButton('Сохранить', ['class' => 'btn btn-outline-primary btn-rounded', 'name' => 'update-button']) ?>

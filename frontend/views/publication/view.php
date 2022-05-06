@@ -15,7 +15,7 @@ if(!empty($publication)) {
     $script = <<< JS
     originalImageSrc = $originalImageSrc
     drawingPathPrefix =  $drawingPathPrefix
-    settings = $publication->settings   
+    drawings = $publication->drawings   
    
     prepareView()
 
@@ -30,7 +30,7 @@ JS;
 
 <p>
     <?php //endif;
-    if (strcmp($publication->settings ,'') != 0): ?>
+    if (strcmp($publication->drawings ,'') != 0): ?>
     <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить авторские настройки</button>
 </p>
     <?php endif;
@@ -53,7 +53,7 @@ JS;
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'edit-button',]) ?>
 
-        <?= Html::a(Yii::t('app', 'Рисовать ' . '<br>' . 'на слоях'),
+        <?= Html::a(Yii::t('app', 'Создать ' . '<br>' . 'новый слой'),
             ['/publication/create-layer', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'create-layer-button',]) ?>
@@ -73,7 +73,7 @@ JS;
     </div>
 
     <?php
-    if (strcmp($publication->settings ,'') != 0
+    if (strcmp($publication->drawings ,'') != 0
         && sizeof($publication->getDrawings()) > 0
         ): ?>
         <div style="padding-left: 20px; margin-right: 20px" id="layers" class = "layers-class">
@@ -103,7 +103,7 @@ JS;
 
 
 <?php
-if (strcmp($publication->settings ,'') != 0): ?>
+if (strcmp($publication->drawings ,'') != 0): ?>
 
     <p style="margin-top: 20px">
         <?= $publication->description ?>

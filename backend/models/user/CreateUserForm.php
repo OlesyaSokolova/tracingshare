@@ -43,7 +43,7 @@ class CreateUserForm extends Model
             [['first_name', 'last_name', 'patronymic'], 'required', 'message' => 'Это поле не может быть пустым'],
             [['first_name', 'last_name', 'patronymic'], 'string', 'min' => 2, 'max' => 32, 'message' => 'Максимальная длина: 32 символа'],
 
-            ['role', 'in', 'range' => [self::ROLE_AUTHOR, self::ROLE_ADMIN],]
+            /*['role', 'in', 'range' => [self::ROLE_AUTHOR, self::ROLE_ADMIN],]*/
         ];
     }
 
@@ -73,7 +73,7 @@ class CreateUserForm extends Model
             $this->user_id = $user->id;
             $auth = Yii::$app->authManager;
             //admin set the role
-            $authRole = $auth->getRole($this->role);
+            $authRole = $auth->getRole(self::ROLE_AUTHOR);
             $auth->assign($authRole, $user->getId());
             return true;
             //return $this->sendEmail($user);

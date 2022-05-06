@@ -12,7 +12,7 @@ if(!empty($publication)) {
     $script = <<< JS
     originalImageSrc = $originalImageSrc
     drawingPathPrefix =  $drawingPathPrefix
-    settings = $publication->settings   
+    drawings = $publication->drawings   
    
     prepareView()
 
@@ -26,7 +26,7 @@ JS;
 <h2><?=$this->title?></h2>
 
 <?php
-if (strcmp($publication->settings ,'') != 0): ?>
+if (strcmp($publication->drawings ,'') != 0): ?>
     <p>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить авторские настройки</button>
     </p>
@@ -66,8 +66,7 @@ if (Yii::$app->user->can('updateOwnPost',
     </div>
 
     <?php
-    //var_dump($publication->settings);
-    if (strcmp($publication->settings ,'') != 0): ?>
+    if (strcmp($publication->drawings ,'') != 0): ?>
         <div style="padding-left: 20px; margin-right: 20px" id="layers" class = "layers-class">
         </div>
 
@@ -95,7 +94,7 @@ if (Yii::$app->user->can('updateOwnPost',
 
 
 <?php
-if (strcmp($publication->settings ,'') != 0): ?>
+if (strcmp($publication->drawings ,'') != 0): ?>
 
     <p style="margin-top: 20px">
         <?= $publication->description ?>

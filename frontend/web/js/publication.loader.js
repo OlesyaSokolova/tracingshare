@@ -2,26 +2,26 @@ function prepareView() {
 
     //0.save settings for reset
     //defaultSettings = settings;
-    if(typeof settings != "undefined"
-        && settings !== ''
-        && settings !== ""
-        && settings.drawings.length > 0) {
-        defaultSettings = JSON.parse(JSON.stringify(settings));
+    if(typeof drawings != "undefined"
+        && drawings !== ''
+        && drawings !== ""
+        && drawings.drawings.length > 0) {
+        defaultDrawings = JSON.parse(JSON.stringify(drawings));
 
         //1. update settings from query (if exist)
-        updateSettingsFromQuery(settings);
+        updateSettingsFromQuery(drawings);
 
         //2. put (updated) settings to url
-        updateAllQueryParameters(settings)
+        updateAllQueryParameters(drawings)
 
         originalImage = new Image();
         originalImage.src = originalImageSrc;
         originalImage.onload = function () {
 
             var originalImageCtx = drawOriginalImage(originalImage)
-            var drawingsImages = initDrawingsArray(jsonSettings = settings)
+            var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
             addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = originalImageCtx)
-            initLayersSettings(jsonSettings = settings)
+            initLayersSettings(jsonDrawings = drawings)
 
             classNameContainer = 'layers-class'
 
@@ -32,7 +32,7 @@ function prepareView() {
                     var drawingImageId = parseInt($(this).attr('id'));
                     drawingsImages[drawingImageId].alpha = newAlpha;
                     updateAllLayers(drawingsImages)
-                    updateOneQueryParameter(jsonSettings = settings, layerId = drawingImageId, key = "alpha", newValue = newAlpha);
+                    updateOneQueryParameter(jsonDrawings = drawings, layerId = drawingImageId, key = "alpha", newValue = newAlpha);
                 })
                 .on('input change', '.color-value', function () {
                     $(this).attr('value', $(this).val());
@@ -40,27 +40,27 @@ function prepareView() {
                     var drawingImageId = parseInt($(this).attr('id'));
                     drawingsImages[drawingImageId].color = newColor;
                     updateAllLayers(drawingsImages)
-                    updateOneQueryParameter(jsonSettings = settings, layerId = drawingImageId, key = "color", newValue = newColor);
+                    updateOneQueryParameter(jsonDrawings = drawings, layerId = drawingImageId, key = "color", newValue = newColor);
                 });
 
-            if (settings.drawings.length !== 0) {
+            if (drawings.drawings.length !== 0) {
                 var descriptionDiv = document.getElementById('description');
                 var layerTitle = document.getElementById('layer_title');
-                descriptionDiv.innerText = settings.drawings[0].layerParams.description;
+                descriptionDiv.innerText = drawings.drawings[0].layerParams.description;
                 document.getElementById('layer_' + 0).style.background = "#d6d5d5";
-                layerTitle.innerText = settings.drawings[0].layerParams.title
+                layerTitle.innerText = drawings.drawings[0].layerParams.title
             }
 
             var resetButton = document.getElementById("reset-button");
             resetButton.addEventListener('click', function (event) {
-                reloadSettings(defaultSettings, drawingsImages)
+                reloadSettings(defaultDrawings, drawingsImages)
 
-                if (settings.drawings.length !== 0) {
+                if (drawings.drawings.length !== 0) {
                     var descriptionDiv = document.getElementById('description');
                     var layerTitle = document.getElementById('layer_title');
-                    descriptionDiv.innerText = settings.drawings[0].layerParams.description;
+                    descriptionDiv.innerText = drawings.drawings[0].layerParams.description;
                     document.getElementById('layer_' + 0).style.background = "#d6d5d5";
-                    layerTitle.innerText = settings.drawings[0].layerParams.title
+                    layerTitle.innerText = drawings.drawings[0].layerParams.title
                 }
             })
         }
@@ -75,14 +75,14 @@ function prepareView() {
     }
 }
 
-function reloadSettings(defaultSettings, drawingsImages) {
-    initLayersSettings(defaultSettings)
-    updateAllLayers(initDrawingsArray(defaultSettings))
-    updateAllQueryParameters(defaultSettings)
+function reloadSettings(defaultDrawings, drawingsImages) {
+    initLayersSettings(defaultDrawings)
+    updateAllLayers(initDrawingsArray(defaultDrawings))
+    updateAllQueryParameters(defaultDrawings)
 }
 
-function initLayersSettings(jsonSettings) {
-    var drawings = jsonSettings.drawings
+function initLayersSettings(jsonDrawings) {
+    var drawings = jsonDrawings.drawings
     if (Array.isArray(drawings)) {
         var inputAlpha = '<div id="drawings" style="width: 200px">';
         for (let i = 0; i < drawings.length; i++) {

@@ -40,7 +40,7 @@ h1 {
     padding: 0 0 65px;
 }
 
-.wrap > .container {
+.wrap > .container-fluid {
     padding: 30px 15px 30px
 }
 .footer {

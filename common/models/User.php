@@ -12,7 +12,9 @@ use yii\web\IdentityInterface;
  * User model
  *
  * @property integer $id
- * @property string $username
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $patronymic
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $verification_token
@@ -28,6 +30,7 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
+    const PAGE_SIZE = 20;
 
     public static function getStatuses()
     {

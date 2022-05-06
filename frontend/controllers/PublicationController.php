@@ -4,7 +4,6 @@ namespace frontend\controllers;
 
 use common\models\Publication;
 use Yii;
-use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\UploadedFile;
@@ -64,11 +63,11 @@ class PublicationController extends Controller
         return $this->goBack();
     }
 
-    public function actionSave()
+    public function actionSave($id)
     {
         $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
 
-        $id = $data["id"];
+        //$id = $data["id"];
 
         $newName = $data["newName"];
         $newDescription = $data["newDescription"];
@@ -77,25 +76,27 @@ class PublicationController extends Controller
         $publication->name = $newName;
         $publication->description = $newDescription;
 
-        if (strcmp(json_encode($data["newSettings"]), "") != 2) {
-            $newSettings = json_encode($data["newSettings"], JSON_UNESCAPED_UNICODE);
+        if (strcmp(json_encode($data["newDrawings"]), "") != 2) {
+            $newDrawings = json_encode($data["newDrawings"], JSON_UNESCAPED_UNICODE);
 
-            $previousSettingsJsonArray = json_decode($publication->settings, true);
-            $publication->settings = $newSettings;
-            for($i = 0; $i < sizeof($previousSettingsJsonArray['drawings']); $i++) {
-                $fileName = $previousSettingsJsonArray['drawings'][$i]['image'];
-                if(strpos($newSettings, $fileName) == false){
-                    $filePath = Publication::basePath() . '/'
-                        . Publication::PREFIX_PATH_DRAWINGS . '/'
-                        . $fileName;
-                    if (file_exists($filePath)) {
-                        unlink($filePath);
+            $previousDrawingsJsonArray = json_decode($publication->drawings, true);
+            $publication->drawings = $newDrawings;
+            if(!is_null($previousDrawingsJsonArray)) {
+                for ($i = 0; $i < sizeof($previousDrawingsJsonArray['drawings']); $i++) {
+                    $fileName = $previousDrawingsJsonArray['drawings'][$i]['image'];
+                    if (strpos($newDrawings, $fileName) == false) {
+                        $filePath = Publication::basePath() . '/'
+                            . Publication::PREFIX_PATH_DRAWINGS . '/'
+                            . $fileName;
+                        if (file_exists($filePath)) {
+                            unlink($filePath);
+                        }
                     }
                 }
             }
         }
 
-        if($publication->update(true, ["name", "description", "settings"])) {
+        if($publication->update(true, ["name", "description", "drawings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
         else {
@@ -106,13 +107,14 @@ class PublicationController extends Controller
     public function actionSaveLayers($id)
     {
         $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
-
+        //print_r($data);
         $publication = Publication::findOne($id);
 
-        if (strcmp(json_encode($data['newSettings']), "") != 2) {
-            $newSettings = json_encode($data['newSettings'], JSON_UNESCAPED_UNICODE);
-            $previousSettingsJsonArray = json_decode($publication->settings, true);
-            $publication->settings = $newSettings;
+        if (strcmp(json_encode($data['newDrawings']), "") != 2) {
+            $newDrawings = json_encode($data['newDrawings'], JSON_UNESCAPED_UNICODE);
+            $previousDrawings = $publication->drawings;
+            $previousDrawingsJsonArray = json_decode($previousDrawings, true);
+            $publication->drawings = $newDrawings;
 
             $layersUrls = $data['layersUrls'];
             $fileNames = $data['layersFilesNames'];
@@ -120,7 +122,6 @@ class PublicationController extends Controller
                 $imageBase64 = $layersUrls[$i];
                 $img0 = str_replace('data:image/png;base64,', '', $imageBase64);
                 $img0 = str_replace(' ', '+', $img0);
-                var_dump($img0);
                 $imageToSave = base64_decode($img0);
                 $filePath = Publication::basePath() . '/'
                     . Publication::PREFIX_PATH_DRAWINGS . '/'
@@ -132,23 +133,29 @@ class PublicationController extends Controller
             }
         }
 
-        for($i = 0; $i < sizeof($previousSettingsJsonArray['drawings']); $i++) {
-            $fileName = $previousSettingsJsonArray['drawings'][$i]['image'];
-            if(strpos($newSettings, $fileName) == false){
-                $filePath = Publication::basePath() . '/'
-                    . Publication::PREFIX_PATH_DRAWINGS . '/'
-                    . $fileName;
-                if (file_exists($filePath)) {
-                    unlink($filePath);
+        if(!is_null($previousDrawingsJsonArray)) {
+            for($i = 0; $i < sizeof($previousDrawingsJsonArray['drawings']); $i++) {
+                $fileName = $previousDrawingsJsonArray['drawings'][$i]['image'];
+                if(strpos($newDrawings, $fileName) == false){
+                    $filePath = Publication::basePath() . '/'
+                        . Publication::PREFIX_PATH_DRAWINGS . '/'
+                        . $fileName;
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
                 }
             }
         }
 
-        if($publication->update(true, ["settings"])) {
+
+        if($publication->update(true, ["drawings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
+        else if (strcmp($publication->drawings ,$previousDrawings) == 0) {
+            Yii::$app->session->setFlash('success', "Успешно сохранено. (Новых слоев нет)");
+        }
         else {
-            Yii::$app->session->setFlash('info', "Изменений нет.");
+            Yii::$app->session->setFlash('info', "Произошла ошибка про сохранении данных. ". print_r($publication->errors, true));
         }
     }
 
@@ -160,13 +167,19 @@ class PublicationController extends Controller
             if ($model->load(Yii::$app->request->post())) {
                 $model->author_id = Yii::$app->user->getId();
                     $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                    if(!is_null($model->imageFile)) {
                     $model->image = $model->imageFile->baseName . '.' . $model->imageFile->extension;
                     if($model->save()) {
                         if ($model->uploadOriginalImage()) {
-                        Yii::$app->session->setFlash('success', "Успешно сохранено.");
-                         return $this->redirect(['publication/view', 'id' => $model->id]);
+                            Yii::$app->session->setFlash('success', "Успешно сохранено.");
+                            return $this->redirect(['publication/view', 'id' => $model->id]);
+                        }
                     }
+
                     Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
+                }
+                else {
+                    Yii::$app->session->setFlash('error', "Файл отсутствует.");
                 }
             }
         }
@@ -182,20 +195,22 @@ class PublicationController extends Controller
 
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
-                //$model->author_id = Yii::$app->user->getId();
                 $model->drawingsFiles = UploadedFile::getInstances($model, 'drawingsFiles');
-                //if($model->save()) {
+                if(is_null($model->drawingsFiles)) {
                     if ($model->uploadDrawings()) {
-                        $model->settings = $model->updateSettings();
-                        var_dump($model->settings);
-                        if($model->update(true, ["settings"])) {
+                        $model->drawings = $model->updateDrawings();
+                        var_dump($model->drawings);
+                        if($model->update(true, ["drawings"])) {
                             Yii::$app->session->setFlash('success', "Успешно сохранено.");
                             return $this->redirect(['publication/edit', 'id' => $model->id]);
                         }
                         Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
                     }
-                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
-                //}
+                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка. ". print_r($model->errors, true));
+                }
+                else {
+                    Yii::$app->session->setFlash('error', "Файлы прорисовок отсутствуют.");
+                }
             }
         }
 

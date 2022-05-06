@@ -12,28 +12,6 @@ function drawBackground(elementId, originalImage) {
     return originalImageCtx
 }
 
-//todo: эта функция действительно используется??
-/*function redrawBackground(originalImage, newAlpha) {
-    var canvas = document.getElementById('background')
-    var ratio = originalImage.width/originalImage.height
-    var constWidth = 1000
-    var correspondingHeight = constWidth/ratio
-    canvas.width = constWidth
-    canvas.height = correspondingHeight
-
-    originalImageCtx = canvas.getContext('2d');
-    originalImageCtx.globalAlpha = newAlpha;
-
-    originalImageCtx.clearRect(0, 0, canvas.width, canvas.height);
-    originalImageCtx.globalCompositeOperation = "source-in";
-    originalImageCtx.fillRect(0, 0, canvas.width, canvas.height);
-    originalImageCtx.globalCompositeOperation = "source-over";
-
-    originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
-
-    return originalImageCtx
-}*/
-
 function drawLayer(imageWithSettings, contextToDrawOn) {
     if (imageWithSettings.image.complete && imageWithSettings.image.naturalHeight !== 0) {
 

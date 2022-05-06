@@ -19,11 +19,10 @@ $model->role = 'author';
             <?= $form->field($model, 'last_name')->label("Фамилия:") ?>
             <?= $form->field($model, 'patronymic')->label("Отчество:") ?>
             <?= $form->field($model, 'password')->passwordInput()->label("Пароль:") ?>
-            <?= $form->field($model, 'role')->label('Роль:')->radioList([
+            <!--$form->field($model, 'role')->label('Роль:')->radioList([
                 'author' =>'Автор: может создавать и редактировать свои публикации.',
                 'admin' =>'Администратор: может создавать и редактировать все публикации, управлять пользователями.',
-    ]) ?>
-
+    ]) -->
             <div class="form-group" style="text-align: center;">
                 <?= Html::submitButton('Сохранить', ['class' => 'btn btn-outline-primary btn-rounded', 'name' => 'create-button']) ?>
             </div>
