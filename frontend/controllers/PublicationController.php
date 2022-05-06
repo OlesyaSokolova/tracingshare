@@ -4,7 +4,6 @@ namespace frontend\controllers;
 
 use common\models\Publication;
 use Yii;
-use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\UploadedFile;

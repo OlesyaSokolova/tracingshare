@@ -44,8 +44,7 @@ JS;
             ['/publication/view', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'exit-button',]) ?>
-    <?php endif;
-    var_dump(UrlUtils::getFirstPartOfUrl()."/icons/brush.png");?>
+    <?php endif; ?>
 </p>
 
 <div class="d-flex justify-content-between">

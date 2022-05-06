@@ -40,6 +40,7 @@ AppAsset::register($this);
 
     $menuItems = [];
     $menuItems[] = ['label' => 'О проекте', 'url' => ['/site/about']];
+    $menuItems[] = ['label' => 'Авторы', 'url' => ['/author/list']];
 
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
 
