@@ -49,11 +49,11 @@ JS;
 
 <div class="d-flex">
     <div class="toolbar">
-        <div class="list-group pmd-list pmd-card-list" style="width: 100px; padding-right: 10px">
+        <div class="list-group pmd-list pmd-card-list" style="width: 120px; padding-right: 10px">
 <!--            <button type="button" class="btn btn-outline-danger btn-rounded" id="delete-layer-button" style="margin-bottom: 10px">Удалить слой</button>
 -->            <button type="button" id="delete-layer-button"
                        class="btn btn-outline-danger btn-rounded d-flex list-group-item-action"
-                       style="margin-bottom: 10px;"
+                       style="margin-bottom: 10px; padding-left: 30px"
                        data-toggle="tooltip" data-placement="left" title="Удалить слой">
                 <!--<span class="media-body">Удалить слой</span>-->
                 <img src="<?=UrlUtils::getFirstPartOfUrl()."/icons/delete.png" ?>" width="50"/>
@@ -62,14 +62,14 @@ JS;
 <!--            <button type="button" class="btn btn-outline-primary btn-rounded" id="clear-layer-button" style="margin-bottom: 10px">Очистить слой</button>
 -->            <button type="button" id="clear-layer-button"
                        class="btn btn-outline-primary btn-rounded d-flex list-group-item-action"
-                       style="margin-bottom: 10px"
+                       style="margin-bottom: 10px; padding-left: 30px"
                        data-toggle="tooltip" data-placement="left" title="Очистить слой">
                 <img src="<?=UrlUtils::getFirstPartOfUrl()."/icons/clear.png" ?>" width="50"/>
             </button>
 
             <button type="button" id="brush-btn"
                     class="btn btn-outline-primary btn-rounded d-flex list-group-item-action"
-                    style="margin-bottom: 10px"
+                    style="margin-bottom: 10px; padding-left: 30px"
                     data-toggle="tooltip" data-placement="left" title="Кисть">
            <!-- <span class="media-body">Кисть</span>-->
                 <img src="<?= UrlUtils::getFirstPartOfUrl()."/icons/brush.png" ?>" width="50"/>
@@ -77,7 +77,7 @@ JS;
 
             <button type="button" id="eraser-btn"
                     class="btn btn-outline-primary btn-rounded d-flex list-group-item-action"
-                    style="margin-bottom: 10px"
+                    style="margin-bottom: 10px; padding-left: 30px"
                     data-toggle="tooltip" data-placement="left" title="Ластик">
             <!-- <span class="media-body">Ластик</span>-->
                 <img src="<?=UrlUtils::getFirstPartOfUrl()."/icons/eraser.png" ?>" width="50"/>
@@ -85,7 +85,7 @@ JS;
 
             <button type="button" id="filler-btn"
                     class="btn btn-outline-primary btn-rounded d-flex list-group-item-action"
-                    style="margin-bottom: 10px"
+                    style="margin-bottom: 10px; padding-left: 30px"
                     data-toggle="tooltip" data-placement="left" title="Заливка">
                <!-- <span class="media-body">Заливка</span>-->
                 <img src="<?= UrlUtils::getFirstPartOfUrl()."/icons/fill.png" ?>" width="50"/>
@@ -93,9 +93,27 @@ JS;
 
             <label for="brushColor" id="change-color-btn">Цвет</label>
             <input type="color" id="brushColor" class ="color-value" value="#000000" name="drawingColor">
+            <br>
 
-            <label for="thickness" id="change-thickness-btn">Толщина кисти/ластика: </label>
-            <input type=range aria-orientation="vertical" id="thickness" style="width: 100px; margin-bottom: 10px" class="thickness-value" step='1' min='1' max='10' value='5' >
+            <label for="thickness" id="change-thickness-btn" style="margin-right: 10px">Толщина кисти/ластика: </label>
+            <img src="<?= UrlUtils::getFirstPartOfUrl()."/icons/line.png" ?>"
+                 style="padding-left: 20px"
+                 width="100px"
+                height="2px"/>
+            <br>
+            <br>
+            <input type=range
+                   id="thickness"
+                   style="width: 100px; margin-bottom: 10px; transform: rotate(90deg);"
+                   class="thickness-value"
+                   step='1' min='1' max='10' value='5''">
+            <br>
+            <br>
+            <img src="<?= UrlUtils::getFirstPartOfUrl()."/icons/line.png" ?>"
+                 style="padding-left: 20px"
+            width="100px"
+            height="12px"/>
+
         </div>
     </div>
 
