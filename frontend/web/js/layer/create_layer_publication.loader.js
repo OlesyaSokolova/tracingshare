@@ -411,14 +411,14 @@ function prepareLayersToDraw() {
                     var currentLayerElement = '<div id=\'' + divId + '\' class = "bordered_div" style="border:1px solid black;\n' +
                         '            border-radius: 10px;\n' +
                         '            padding-left: 20px;\n' +
-                        '            width: 400px;\n' +
-                        '            height: 250px;\n' +
+                        '            width: 300px;\n' +
+                        '            height: fit-content;\n' +
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
                     currentLayerElement += ("Новый слой " + (layersCounter + 1)) + ':<br>'
                         + '<canvas id=\'' + thumbnailId + '\'></canvas>'
                         + '<br>'
-                        + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
+                        + '<label for=\'' + alphaId + '\'>Прозрачность: </label><br>'
                         + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + 1 + '\'>'
                     currentLayerElement += '</div>';
                 currentLayerElement += '</div>';
@@ -601,14 +601,14 @@ function prepareLayersToDraw() {
                     currentLayerElement += '<div id=\'' + divId + '\' class = "bordered_div" style="border:1px solid black;\n' +
                         '            border-radius: 10px;\n' +
                         '            padding-left: 20px;\n' +
-                        '            width: 400px;\n' +
-                        '            height: 250px;\n' +
+                        '            width: 300px;\n' +
+                        '            height: fit-content;\n' +
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
                     currentLayerElement += (drawingsImages[i].title) + ':<br>'
                         + '<canvas id=\'' + thumbnailId + '\'></canvas>'
                         + '<br>'
-                        + '<label for=\'' + alphaId + '\'>Прозрачность: </label>'
+                        + '<label for=\'' + alphaId + '\'>Прозрачность: </label><br>'
                         + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + alphaValue + '\'>'
                     currentLayerElement += '</div>';
                 }
