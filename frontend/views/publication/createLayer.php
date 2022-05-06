@@ -47,25 +47,33 @@ JS;
     <?php endif; ?>
 </p>
 
-<div class="d-flex justify-content-between">
+
+<div class="d-flex">
     <div class="toolbar">
-        <div class="list-group pmd-list pmd-card-list" style="width: fit-content; padding-right: 10px">
-            <button type="button" class="btn btn-outline-danger btn-rounded" id="delete-layer-button" style="margin-bottom: 10px">Удалить слой</button>
+        <div class="list-group pmd-list pmd-card-list" style="width: 100px; padding-right: 10px">
+<!--            <button type="button" class="btn btn-outline-danger btn-rounded" id="delete-layer-button" style="margin-bottom: 10px">Удалить слой</button>
+-->            <button type="button" id="delete-layer-button" class="btn btn-outline-danger btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px;">
+                <!--<span class="media-body">Удалить слой</span>-->
+                <img src="<?=UrlUtils::getFirstPartOfUrl()."/icons/eraser.png" ?>" width="50"/>
+            </button>
 
-            <button type="button" class="btn btn-outline-primary btn-rounded" id="clear-layer-button" style="margin-bottom: 10px">Очистить слой</button>
-
+<!--            <button type="button" class="btn btn-outline-primary btn-rounded" id="clear-layer-button" style="margin-bottom: 10px">Очистить слой</button>
+-->            <button type="button" id="clear-layer-button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+                <!--<span class="media-body">Удалить слой</span>-->
+                <img src="<?=UrlUtils::getFirstPartOfUrl()."/icons/eraser.png" ?>" width="50"/>
+            </button>
             <button type="button" id="brush-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-            <span class="media-body">Кисть</span>
+           <!-- <span class="media-body">Кисть</span>-->
                 <img src="<?= UrlUtils::getFirstPartOfUrl()."/icons/brush.png" ?>" width="50"/>
             </button>
 
             <button type="button" id="eraser-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-             <span class="media-body">Ластик</span>
+            <!-- <span class="media-body">Ластик</span>-->
                 <img src="<?=UrlUtils::getFirstPartOfUrl()."/icons/eraser.png" ?>" width="50"/>
             </button>
 
             <button type="button" id="filler-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-                <span class="media-body">Заливка</span>
+               <!-- <span class="media-body">Заливка</span>-->
                 <img src="<?= UrlUtils::getFirstPartOfUrl()."/icons/fill.png" ?>" width="50"/>
             </button>
 
@@ -73,7 +81,7 @@ JS;
             <input type="color" id="brushColor" class ="color-value" value="#000000" name="drawingColor">
 
             <label for="thickness" id="change-thickness-btn">Толщина кисти/ластика: </label>
-            <input type=range id="thickness" style="width: 300px; margin-bottom: 10px" class="thickness-value" step='1' min='1' max='10' value='5' >
+            <input type=range aria-orientation="vertical" id="thickness" style="width: 100px; margin-bottom: 10px" class="thickness-value" step='1' min='1' max='10' value='5' >
         </div>
     </div>
 

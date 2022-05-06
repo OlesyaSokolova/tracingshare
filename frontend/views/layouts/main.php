@@ -85,7 +85,7 @@ AppAsset::register($this);
 
 
 <main role="main" class="flex-shrink-0">
-    <div class="container" style="margin-top: 50px">
+    <div class="container-fluid" style="padding-left: 200px; padding-right: 200px; padding-top: 30px">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
