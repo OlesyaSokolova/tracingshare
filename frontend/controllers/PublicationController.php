@@ -163,13 +163,19 @@ class PublicationController extends Controller
             if ($model->load(Yii::$app->request->post())) {
                 $model->author_id = Yii::$app->user->getId();
                     $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                    if(!is_null($model->imageFile)) {
                     $model->image = $model->imageFile->baseName . '.' . $model->imageFile->extension;
                     if($model->save()) {
                         if ($model->uploadOriginalImage()) {
-                        Yii::$app->session->setFlash('success', "Успешно сохранено.");
-                         return $this->redirect(['publication/view', 'id' => $model->id]);
+                            Yii::$app->session->setFlash('success', "Успешно сохранено.");
+                            return $this->redirect(['publication/view', 'id' => $model->id]);
+                        }
                     }
+
                     Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
+                }
+                else {
+                    Yii::$app->session->setFlash('error', "Файл отсутствует.");
                 }
             }
         }
@@ -185,9 +191,8 @@ class PublicationController extends Controller
 
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
-                //$model->author_id = Yii::$app->user->getId();
                 $model->drawingsFiles = UploadedFile::getInstances($model, 'drawingsFiles');
-                //if($model->save()) {
+                if(is_null($model->drawingsFiles)) {
                     if ($model->uploadDrawings()) {
                         $model->drawings = $model->updateDrawings();
                         var_dump($model->drawings);
@@ -197,8 +202,11 @@ class PublicationController extends Controller
                         }
                         Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
                     }
-                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
-                //}
+                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка. ". print_r($model->errors, true));
+                }
+                else {
+                    Yii::$app->session->setFlash('error', "Файлы прорисовок отсутствуют.");
+                }
             }
         }
 
