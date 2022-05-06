@@ -112,7 +112,8 @@ class PublicationController extends Controller
 
         if (strcmp(json_encode($data['newDrawings']), "") != 2) {
             $newDrawings = json_encode($data['newDrawings'], JSON_UNESCAPED_UNICODE);
-            $previousDrawingsJsonArray = json_decode($publication->drawings, true);
+            $previousDrawings = $publication->drawings;
+            $previousDrawingsJsonArray = json_decode($previousDrawings, true);
             $publication->drawings = $newDrawings;
 
             $layersUrls = $data['layersUrls'];
@@ -150,8 +151,11 @@ class PublicationController extends Controller
         if($publication->update(true, ["drawings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
+        else if (strcmp($publication->drawings ,$previousDrawings) == 0) {
+            Yii::$app->session->setFlash('success', "Успешно сохранено. (Новых слоев нет)");
+        }
         else {
-            Yii::$app->session->setFlash('info', "Изменений нет.");
+            Yii::$app->session->setFlash('info', "Произошла ошибка про сохранении данных. ". print_r($publication->errors, true));
         }
     }
 
