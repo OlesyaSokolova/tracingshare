@@ -107,7 +107,7 @@ class PublicationController extends Controller
     public function actionSaveLayers($id)
     {
         $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
-        var_dump($data);
+        //print_r($data);
         $publication = Publication::findOne($id);
 
         if (strcmp(json_encode($data['newDrawings']), "") != 2) {

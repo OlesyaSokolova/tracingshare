@@ -522,7 +522,6 @@ function prepareLayersToDraw() {
                         bi = parseInt((b.id).split('_')[1]);
                         return ai - bi;
                 })
-                //console.log(mutableCanvasesAndContexts);
                 for(let i = 0; i < mutableCanvasesAndContexts.length; i++) {
                     var tmp = mutableCanvasesAndContexts[i];
                     var contextToSave = tmp.context;
