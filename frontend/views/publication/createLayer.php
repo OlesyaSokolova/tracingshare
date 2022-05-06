@@ -47,32 +47,46 @@ JS;
     <?php endif; ?>
 </p>
 
-
 <div class="d-flex">
     <div class="toolbar">
         <div class="list-group pmd-list pmd-card-list" style="width: 100px; padding-right: 10px">
 <!--            <button type="button" class="btn btn-outline-danger btn-rounded" id="delete-layer-button" style="margin-bottom: 10px">Удалить слой</button>
--->            <button type="button" id="delete-layer-button" class="btn btn-outline-danger btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px;">
+-->            <button type="button" id="delete-layer-button"
+                       class="btn btn-outline-danger btn-rounded d-flex list-group-item-action"
+                       style="margin-bottom: 10px;"
+                       data-toggle="tooltip" data-placement="left" title="Удалить слой">
                 <!--<span class="media-body">Удалить слой</span>-->
-                <img src="<?=UrlUtils::getFirstPartOfUrl()."/icons/eraser.png" ?>" width="50"/>
+                <img src="<?=UrlUtils::getFirstPartOfUrl()."/icons/delete.png" ?>" width="50"/>
             </button>
 
 <!--            <button type="button" class="btn btn-outline-primary btn-rounded" id="clear-layer-button" style="margin-bottom: 10px">Очистить слой</button>
--->            <button type="button" id="clear-layer-button" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
-                <!--<span class="media-body">Удалить слой</span>-->
-                <img src="<?=UrlUtils::getFirstPartOfUrl()."/icons/eraser.png" ?>" width="50"/>
+-->            <button type="button" id="clear-layer-button"
+                       class="btn btn-outline-primary btn-rounded d-flex list-group-item-action"
+                       style="margin-bottom: 10px"
+                       data-toggle="tooltip" data-placement="left" title="Очистить слой">
+                <img src="<?=UrlUtils::getFirstPartOfUrl()."/icons/clear.png" ?>" width="50"/>
             </button>
-            <button type="button" id="brush-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+
+            <button type="button" id="brush-btn"
+                    class="btn btn-outline-primary btn-rounded d-flex list-group-item-action"
+                    style="margin-bottom: 10px"
+                    data-toggle="tooltip" data-placement="left" title="Кисть">
            <!-- <span class="media-body">Кисть</span>-->
                 <img src="<?= UrlUtils::getFirstPartOfUrl()."/icons/brush.png" ?>" width="50"/>
             </button>
 
-            <button type="button" id="eraser-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+            <button type="button" id="eraser-btn"
+                    class="btn btn-outline-primary btn-rounded d-flex list-group-item-action"
+                    style="margin-bottom: 10px"
+                    data-toggle="tooltip" data-placement="left" title="Ластик">
             <!-- <span class="media-body">Ластик</span>-->
                 <img src="<?=UrlUtils::getFirstPartOfUrl()."/icons/eraser.png" ?>" width="50"/>
             </button>
 
-            <button type="button" id="filler-btn" class="btn btn-outline-primary btn-rounded d-flex list-group-item-action" style="margin-bottom: 10px">
+            <button type="button" id="filler-btn"
+                    class="btn btn-outline-primary btn-rounded d-flex list-group-item-action"
+                    style="margin-bottom: 10px"
+                    data-toggle="tooltip" data-placement="left" title="Заливка">
                <!-- <span class="media-body">Заливка</span>-->
                 <img src="<?= UrlUtils::getFirstPartOfUrl()."/icons/fill.png" ?>" width="50"/>
             </button>
