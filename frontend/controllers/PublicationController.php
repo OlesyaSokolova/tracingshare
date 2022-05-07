@@ -203,10 +203,10 @@ class PublicationController extends Controller
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
                 $model->drawingsFiles = UploadedFile::getInstances($model, 'drawingsFiles');
-                if(is_null($model->drawingsFiles)) {
+                if(sizeof($model->drawingsFiles) > 0) {
                     if ($model->uploadDrawings()) {
                         $model->drawings = $model->updateDrawings();
-                        var_dump($model->drawings);
+                        //var_dump($model->drawings);
                         if($model->update(true, ["drawings"])) {
                             Yii::$app->session->setFlash('success', "Успешно сохранено.");
                             return $this->redirect(['publication/edit', 'id' => $model->id]);
@@ -222,6 +222,36 @@ class PublicationController extends Controller
         }
 
         return $this->render('uploadDrawings', [
+            'model' => $model
+        ]);
+    }
+
+    public function actionUploadTextures($id)
+    {
+        $model = Publication::findOne($id);
+
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post())) {
+                $model->texturesFiles = UploadedFile::getInstances($model, 'texturesFiles');
+                if(sizeof($model->texturesFiles) > 0) {
+                    if ($model->uploadTextures()) {
+                        $model->textures = $model->updateTextures();
+                        var_dump($model->textures);
+                        if($model->update(true, ["textures"])) {
+                            Yii::$app->session->setFlash('success', "Успешно сохранено.");
+                            return $this->redirect(['publication/view', 'id' => $model->id]);
+                        }
+                        Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.");
+                    }
+                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.");
+                }
+                else {
+                    Yii::$app->session->setFlash('error', "Файлы текстур отсутствуют.");
+                }
+            }
+        }
+
+        return $this->render('uploadTextures', [
             'model' => $model
         ]);
     }
