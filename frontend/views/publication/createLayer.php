@@ -44,6 +44,7 @@ JS;
             ['/publication/view', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'exit-button',]) ?>
+
     <?php endif; ?>
 </p>
 
@@ -125,11 +126,10 @@ JS;
             }
     $canvasId = "layer_" . "b"  . "_canvas";
     ?>
-    <div id="canvases" class="canvasDiv" data-state="static" style="border:1px solid black;
-            border-radius: 10px;
+    <div id="canvases" class="canvasDiv" data-state="static">
+        <canvas id="<?= $canvasId ?>" style="border:1px solid black;
             height: fit-content;
             width: max-content;">
-        <canvas id="<?= $canvasId ?>">
         </canvas>
         <?php if (strcmp($publication->drawings ,'') != 0
             && sizeof($publication->getDrawings()) > 0) {
@@ -144,6 +144,13 @@ JS;
         ?>
         <canvas id="<?= $canvasId ?>">
         </canvas>
+        <div class="form-group">
+            <label for="selectTextures">Фоновое изображение:</label>
+            <select id="selectTextures" class="form-control"  data-role="select-dropdown" data-profile="minimal">
+                <option id="originalImage" value="">Оригинальное изображение</option>
+                <option id="none" value="">-</option>
+            </select>
+        </div>
     </div>
 
 <!--    <div class="overflow-auto">

@@ -476,42 +476,49 @@ function prepareLayersToDraw() {
             var deleteLayerButton = document.getElementById("delete-layer-button");
             deleteLayerButton.addEventListener(
                 'click', function (event) {
-                    var index = parseInt((canvas.id).split('_')[1]);
-                    //alert(index);
-                    //remove thumbnail
-                    var divId = "thumbnail_div_" + index;
-                    document.getElementById(divId).remove();
+                        var index = parseInt((canvas.id).split('_')[1]);
+                        //alert(index);
+                        //remove thumbnail
+                        var divId = "thumbnail_div_" + index;
+                        var elem =  document.getElementById(divId)
+                        if(elem) {
+                            elem.remove();
+                        }
+                        //document.getElementById(divId).remove();
 
-                    //remove canvas from markup
-                    var canvasId = "layer_" + index + "_canvas";
-                    document.getElementById(canvasId).remove();
+                        //remove canvas from markup
+                        var canvasId = "layer_" + index + "_canvas";
+                        elem =  document.getElementById(canvasId)
+                        if(elem) {
+                            elem.remove();
+                        }
 
-                    //remove canvas and context from mutableCanvasesAndContexts
-                    var removeIndex = mutableCanvasesAndContexts.map(x => x.id).indexOf(canvasId);
-                    ~removeIndex && mutableCanvasesAndContexts.splice(removeIndex, 1);
+                        //remove canvas and context from mutableCanvasesAndContexts
+                        var removeIndex = mutableCanvasesAndContexts.map(x => x.id).indexOf(canvasId);
+                        ~removeIndex && mutableCanvasesAndContexts.splice(removeIndex, 1);
 
-                    //remove layer from settings
-                    if(typeof currentDrawings.drawings[index] != 'undefined') {
-                        currentDrawings.drawings.splice(index, 1)
-                    }
+                        //remove layer from settings
+                        if (typeof currentDrawings.drawings[index] != 'undefined') {
+                            currentDrawings.drawings.splice(index, 1)
+                        }
 
-                    layersCounter--;
+                        layersCounter--;
 
-                    if(mutableCanvasesAndContexts.length !== 0) {
-                        canvas = mutableCanvasesAndContexts[0].canvas;
-                        context = mutableCanvasesAndContexts[0].context;
+                        if (mutableCanvasesAndContexts.length !== 0) {
+                            canvas = mutableCanvasesAndContexts[0].canvas;
+                            context = mutableCanvasesAndContexts[0].context;
 
-                        canvas.onmousedown = startEditing;
-                        canvas.onmouseup = stopEditing;
-                        canvas.onmouseout = stopEditing;
-                        canvas.onmousemove = edit;
-                        context.lineWidth = thickness
-                        currentColor.a = context.globalAlpha*255
+                            canvas.onmousedown = startEditing;
+                            canvas.onmouseup = stopEditing;
+                            canvas.onmouseout = stopEditing;
+                            canvas.onmousemove = edit;
+                            context.lineWidth = thickness
+                            currentColor.a = context.globalAlpha * 255
 
-                        var id = parseInt((canvas.id).split('_')[1])
-                        document.getElementById('thumbnail_div_' + id).style.background = "#d6d5d5";
-                        previousThumbnail = document.getElementById('thumbnail_div_' + id)
-                    }
+                            var id = parseInt((canvas.id).split('_')[1])
+                            document.getElementById('thumbnail_div_' + id).style.background = "#d6d5d5";
+                            previousThumbnail = document.getElementById('thumbnail_div_' + id)
+                        }
                 });
 
         var saveButton = document.getElementById("save-layer-button");
