@@ -110,13 +110,13 @@ JS;
 
             <h5 id ="layer_title"> </h5>
 
-            <div id = "description" >
+            <div id = "description" sty>
             </div>
         </div>
     <?php
     else:  ?>
-        <p style="margin-left: 30px">
-        <?=$publication->description?>
+        <p style="margin-left: 30px; ">
+        <?= $publication->description?>
         </p>
     <?php endif; ?>
 
@@ -126,8 +126,8 @@ JS;
 if ((strcmp($publication->drawings ,'') != 0)
     && sizeof($publication->getDrawings()) > 0): ?>
 
-    <p style="margin-top: 20px">
-        <?= $publication->description ?>
+    <p style="margin-top: 10px; display: flex; word-break: break-word">
+        <?= "test".$publication->description ?>
     </p>
 <?php endif; ?>
 

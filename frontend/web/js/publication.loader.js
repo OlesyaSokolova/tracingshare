@@ -133,8 +133,6 @@ function addDropdownMenuForTextures(jsonTextures) {
 
                     descriptionDiv.innerHTML = '<div style="border:1px solid black;\n' +
                         '                border-radius: 10px;\n' +
-                        '                width: 700px;\n' +
-                        '                padding-bottom: 20px;\n' +
                         '                height: fit-content;\n' +
                         '                text-align: center;\n' +
                         '                margin-bottom: 10px"">' +
