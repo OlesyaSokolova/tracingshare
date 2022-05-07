@@ -3,7 +3,13 @@ function prepareLayersToDraw() {
     var currentDrawings = {
         drawings: Array()
     }
-
+        preparedTextures = ''
+        if(typeof textures != "undefined"
+            && textures !== ''
+            && textures !== ""
+            && textures.textures.length > 0) {
+            preparedTextures = textures.textures
+        }
         originalImage = new Image();
         originalImage.src = originalImageSrc;
         var drawingsImages = [];
@@ -17,13 +23,15 @@ function prepareLayersToDraw() {
         //create context and thumbnail for background
         var backroundId = "layer_" + "b" + "_canvas";
         var originalImageCtx = drawBackground(backroundId, originalImage);
-        var originalImageThumbnailId = "thumbnail_"+ "b";
-        drawOriginalImageLayerThumbnail(originalImageThumbnailId, originalImage);
+        /*var originalImageThumbnailId = "thumbnail_"+ "b";
+        drawOriginalImageLayerThumbnail(originalImageThumbnailId, originalImage);*/
 
         //create thumbnail for new layer
         newLayerThumbnail = new Image();
         var newLayerThumbnailId = "thumbnail_" + (drawingsImages.length);
+/*
         drawNewLayerThumbnail(newLayerThumbnailId, originalImage.width, originalImage.height);
+*/
 
         var layersCounter = drawingsImages.length
         //create array of contexts and canvases for layers to draw on:
@@ -411,7 +419,9 @@ function prepareLayersToDraw() {
                     var currentLayerElement = '<div id=\'' + divId + '\' class = "bordered_div" style="border:1px solid black;\n' +
                         '            border-radius: 10px;\n' +
                         '            padding-left: 20px;\n' +
+/*
                         '            width: 300px;\n' +
+*/
                         '            height: fit-content;\n' +
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
@@ -598,7 +608,7 @@ function prepareLayersToDraw() {
         function drawExistingLayersThumbnails(drawingsImages) {
 
             if (Array.isArray(drawingsImages)) {
-                var currentLayerElement = '<div id="layers" style="width: 200px">';
+                var currentLayerElement = '<div id="layers"">';
                 for (let i = 0; i < drawingsImages.length; i++) {
                     if (typeof drawingsImages[i].alpha != 'undefined') {
                         alphaValue = drawingsImages[i].alpha;
@@ -612,7 +622,9 @@ function prepareLayersToDraw() {
                     currentLayerElement += '<div id=\'' + divId + '\' class = "bordered_div" style="border:1px solid black;\n' +
                         '            border-radius: 10px;\n' +
                         '            padding-left: 20px;\n' +
+/*
                         '            width: 300px;\n' +
+*/
                         '            height: fit-content;\n' +
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';

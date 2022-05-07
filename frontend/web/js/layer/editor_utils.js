@@ -64,7 +64,7 @@ function redrawLayer(context, newAlpha) {
     return context;
 }
 
-function drawOriginalImageLayerThumbnail(elementId, originalImage) {
+/*function drawOriginalImageLayerThumbnail(elementId, originalImage) {
 
     var canvas = document.getElementById(elementId)
     var ratio = originalImage.width/originalImage.height
@@ -77,7 +77,7 @@ function drawOriginalImageLayerThumbnail(elementId, originalImage) {
     originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
 
     return originalImageCtx
-}
+}*/
 
 function createCanvasToDrawOn(canvasId, width, height, x, y) {
 
@@ -93,7 +93,7 @@ function createCanvasToDrawOn(canvasId, width, height, x, y) {
     return canvas;
 }
 
-function drawNewLayerThumbnail(elementId, width, height) {
+/*function drawNewLayerThumbnail(elementId, width, height) {
     var canvas = document.getElementById(elementId)
     var ratio = width/height
     var constWidth = 150
@@ -105,7 +105,7 @@ function drawNewLayerThumbnail(elementId, width, height) {
     originalImageCtx.drawImage(new Image(), 0, 0,canvas.width,  canvas.height);
 
     return originalImageCtx
-}
+}*/
 
 function drawExistingLayerThumbnail(elementId, layerImage, color, width, height) {
 

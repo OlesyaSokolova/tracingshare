@@ -14,7 +14,30 @@ if(!empty($publication)) {
     $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . $baseName . "_" . "\"";
     $drawingPathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
     $currentDrawings = "\"" . $publication->drawings . "\"";
-    $script = <<< JS
+    $texturePathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_TEXTURES . '/' . "\"";
+
+    if(strcmp($publication->drawings ,'') == 0) {
+        $script = <<< JS
+        publicationId = $publication->id
+        originalImageSrc = $originalImageSrc
+        drawingPathPrefix =  $drawingPathPrefix
+        texturePathPrefix = $texturePathPrefix
+        textures = $publication->textures 
+        prepareLayersToDraw()
+        JS;
+    }
+    else
+    {
+        $script = <<< JS
+        originalImageSrc = $originalImageSrc
+        drawingPathPrefix =  $drawingPathPrefix
+        texturePathPrefix = $texturePathPrefix
+        drawings = $publication->drawings
+        textures = $publication->textures  
+        prepareLayersToDraw()
+        JS;
+    }
+   /* $script = <<< JS
     
     publicationId = $publication->id
     originalImageSrc = $originalImageSrc
@@ -24,7 +47,7 @@ if(!empty($publication)) {
     
     prepareLayersToDraw()
 
-JS;
+JS; */
 
     ViewAsset::register($this);
     $this->registerJs($script, yii\web\View::POS_READY);
@@ -169,7 +192,7 @@ JS;
     background: #d6d5d5">
         <?php $canvasId = "thumbnail_" . $idCounter;
         echo '<label for="'. $canvasId. '">Новый слой: </label>';
-        echo '<canvas id="'.$canvasId.'" > </canvas>';?>
+        /*echo '<canvas id="'.$canvasId.'" > </canvas>';*/?>
         <!--<canvas id="newLayerThumbnail">
         </canvas>-->
         <br>
@@ -184,14 +207,14 @@ JS;
         <?php $id = "b";?>
         <div id="<?= "thumbnail_div_".$id ?>" style="border:1px solid black;
         border-radius: 10px;
-        padding-left: 20px;
+        padding-left: 5px;
         width: 300px;
         height: fit-content;
         text-align: left;
-        margin-bottom: 10px">
+        margin-bottom: 5px">
             <?php $canvasId = "thumbnail_" . $id;
             echo '<label for="'. $canvasId. '">Фоновое изображение: </label>';
-            echo '<canvas id="'.$canvasId.'" > </canvas>';?>
+            /*echo '<canvas id="'.$canvasId.'" > </canvas>';*/?>
             <br>
             <?php $alphaId = "alpha_" . $id;
             echo '<label for="'. $alphaId. '">Прозрачность: </label><br>';
