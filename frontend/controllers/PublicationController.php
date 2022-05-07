@@ -73,13 +73,16 @@ class PublicationController extends Controller
         $newDescription = $data["newDescription"];
 
         $publication = Publication::findOne($id);
+        $previousDrawings = $publication->drawings;
+        $previousName = $publication->name;
+        $previousDescription = $publication->description;
+
         $publication->name = $newName;
         $publication->description = $newDescription;
 
         if (strcmp(json_encode($data["newDrawings"]), "") != 2) {
             $newDrawings = json_encode($data["newDrawings"], JSON_UNESCAPED_UNICODE);
-
-            $previousDrawingsJsonArray = json_decode($publication->drawings, true);
+            $previousDrawingsJsonArray = json_decode($previousDrawings, true);
             $publication->drawings = $newDrawings;
             if(!is_null($previousDrawingsJsonArray)) {
                 for ($i = 0; $i < sizeof($previousDrawingsJsonArray['drawings']); $i++) {
@@ -99,8 +102,13 @@ class PublicationController extends Controller
         if($publication->update(true, ["name", "description", "drawings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
-        else {
+        else if ((strcmp($publication->drawings ,$previousDrawings) == 0)
+        && (strcmp($publication->name ,$previousName) == 0)
+            && (strcmp($publication->description ,$previousDescription) == 0)){
             Yii::$app->session->setFlash('info', "Изменений нет.");
+        }
+        else {
+            Yii::$app->session->setFlash('info', "Произошла ошибка про сохранении данных.");
         }
     }
 
@@ -147,7 +155,6 @@ class PublicationController extends Controller
             }
         }
 
-
         if($publication->update(true, ["drawings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
@@ -155,7 +162,7 @@ class PublicationController extends Controller
             Yii::$app->session->setFlash('success', "Успешно сохранено. (Новых слоев нет)");
         }
         else {
-            Yii::$app->session->setFlash('info', "Произошла ошибка про сохранении данных. ". print_r($publication->errors, true));
+            Yii::$app->session->setFlash('info', "Произошла ошибка про сохранении данных. ");
         }
     }
 

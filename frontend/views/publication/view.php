@@ -48,6 +48,11 @@ JS;
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'upload-drawings-button',]) ?>
 
+        <?= Html::a(Yii::t('app', 'Загрузить ' . '<br>' . 'текстуры'),
+            ['/publication/upload-textures', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'upload-textures-button',]) ?>
+
         <?= Html::a(Yii::t('app', 'Редактировать демонстрационные' . '<br>' . 'настройки'),
             ['/publication/edit', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
