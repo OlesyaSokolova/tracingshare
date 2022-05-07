@@ -3,7 +3,7 @@ function prepareLayersToDraw() {
     var currentDrawings = {
         drawings: Array()
     }
-        backgroundId = "originalImage";
+
         preparedTextures = ''
         if(typeof textures != "undefined"
             && textures !== ''
@@ -12,6 +12,8 @@ function prepareLayersToDraw() {
             preparedTextures = textures.textures
         }
         originalImage = new Image();
+        backgroundImage = originalImage;
+        backgroundId = "originalImage";
         originalImage.src = originalImageSrc;
         var drawingsImages = [];
         originalImage.onload = function () {
@@ -22,22 +24,21 @@ function prepareLayersToDraw() {
                 drawingsImages = initDrawingsArray(currentDrawings);
             }
         //create context and thumbnail for background
-        var backroundId = "layer_" + "b" + "_canvas";
-        var originalImageCtx = drawBackground(backroundId, originalImage);
+        var backgroundCanvasId = "layer_" + "b" + "_canvas";
+        var originalImageCtx = drawBackground(backgroundCanvasId, originalImage);
         /*var originalImageThumbnailId = "thumbnail_"+ "b";
         drawOriginalImageLayerThumbnail(originalImageThumbnailId, originalImage);*/
 
         //create thumbnail for new layer
         newLayerThumbnail = new Image();
-        var newLayerThumbnailId = "thumbnail_" + (drawingsImages.length);
-/*
+   /*     var newLayerThumbnailId = "thumbnail_" + (drawingsImages.length);
         drawNewLayerThumbnail(newLayerThumbnailId, originalImage.width, originalImage.height);
 */
 
         var layersCounter = drawingsImages.length
         //create array of contexts and canvases for layers to draw on:
         var mutableCanvasesAndContexts = [];
-        var backgroundElement = document.getElementById(backroundId);
+        var backgroundElement = document.getElementById(backgroundCanvasId);
         const backgroundX = backgroundElement.offsetLeft, backgroundY = backgroundElement.offsetTop;
 
         for (let i = 0; i < drawingsImages.length; i++) {
@@ -378,18 +379,21 @@ function prepareLayersToDraw() {
                 var tmp = mutableCanvasesAndContexts.find(x => x.id === layerId);
                 var contextToChange;
                 if(typeof tmp === 'undefined') {
-                    contextToChange = originalImageCtx
+                    if (backgroundId !== 'none')
+                    {
+                        contextToChange = originalImageCtx
 
-                    brushStyle = colorToRGBAString(currentColor);
-                    contextToChange.strokeStyle = brushStyle;
+                        brushStyle = colorToRGBAString(currentColor);
+                        contextToChange.strokeStyle = brushStyle;
 
-                    contextToChange.globalAlpha = newAlpha;
+                        contextToChange.globalAlpha = newAlpha;
 
-                    contextToChange.clearRect(0, 0, canvas.width, canvas.height);
-                    contextToChange.globalCompositeOperation = "source-in";
-                    contextToChange.fillRect(0, 0, canvas.width, canvas.height);
-                    contextToChange.globalCompositeOperation = "source-over";
-                    contextToChange.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
+                        contextToChange.clearRect(0, 0, canvas.width, canvas.height);
+                        contextToChange.globalCompositeOperation = "source-in";
+                        contextToChange.fillRect(0, 0, canvas.width, canvas.height);
+                        contextToChange.globalCompositeOperation = "source-over";
+                        contextToChange.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+                    }
                 }
                 else {
                     contextToChange = tmp.context;
@@ -457,7 +461,6 @@ function prepareLayersToDraw() {
                 canvas = createdLayerCanvas;
                 context = createdLayerContext;
                 currentColor.a = context.globalAlpha*255
-
 
                 var id = parseInt((canvas.id).split('_')[1])
                 document.getElementById('thumbnail_div_' + id).style.background =  "#d6d5d5";
@@ -710,13 +713,15 @@ function prepareLayersToDraw() {
                         textureImage.src = textureSrc;
 
                         if (isImageOk(textureImage)) {
+                            backgroundImage = textureImage;
                             originalImageCtx.clearRect(0, 0, canvas.width, canvas.height);
-                            originalImageCtx.drawImage(textureImage, 0, 0, canvas.width,  canvas.height);
+                            originalImageCtx.drawImage(backgroundImage, 0, 0, canvas.width,  canvas.height);
                         }
                         else {
                             textureImage.onload = function () {
+                                backgroundImage = textureImage;
                                 originalImageCtx.clearRect(0, 0, canvas.width, canvas.height);
-                                originalImageCtx.drawImage(textureImage, 0, 0, canvas.width,  canvas.height);
+                                originalImageCtx.drawImage(backgroundImage, 0, 0, canvas.width,  canvas.height);
                             }
                         }
                     }
