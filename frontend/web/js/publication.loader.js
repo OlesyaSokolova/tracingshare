@@ -1,10 +1,9 @@
 function prepareView() {
 
-    //0.save settings for reset
-    //defaultSettings = settings;
     if(typeof drawings != "undefined"
         && drawings !== ''
         && drawings !== ""
+        && drawings !== "0"
         && drawings.drawings.length > 0) {
         defaultDrawings = JSON.parse(JSON.stringify(drawings));
 
@@ -74,84 +73,91 @@ function prepareView() {
         }
     }
 
-    if(typeof textures != "undefined"
-        && textures !== ''
-        && textures !== ""
-        && textures.textures.length > 0) {
-        addDropdownMenuForTextures(textures);
-    }
-}
+    addDropdownMenuForTextures();
 
-function addDropdownMenuForTextures(jsonTextures) {
-    var textures = jsonTextures.textures
-    if (Array.isArray(textures)) {
+    function addDropdownMenuForTextures() {
+
         var texturesSelectElement = document.getElementById("selectTextures");
-        var options = '';
-        for (let i = 0; i < textures.length; i++) {
-            var currentId = "texture_" + i;
-            options += '<option id=\'' + currentId + '\'>'
-                + textures[i].layerParams.title
-                + '</option>'
-        }
-        texturesSelectElement.insertAdjacentHTML('beforeend', options);
-        texturesSelectElement.onchange = function () {
-            var selectedValue = texturesSelectElement.options[texturesSelectElement.selectedIndex].id;
-            var descriptionDiv = document.getElementById('backgroundDescription');
-            if(selectedValue === "originalImage") {
-                var imageCtx = drawOriginalImage(originalImage)
-                if (typeof drawings != "undefined"
-                    && drawings !== ''
-                    && drawings !== ""
-                    && drawings.drawings.length > 0) {
-                    var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
-                    addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = imageCtx)
-                    descriptionDiv.innerHTML = ''
-                }
-            }
-            else if (selectedValue === "none") {
-                var emptyCanvas = document.getElementById('publicationCanvas');
-                var emptyCtx = emptyCanvas.getContext('2d');
-                emptyCtx.clearRect(0, 0, emptyCanvas.width, emptyCanvas.height);
-                if (typeof drawings != "undefined"
-                    && drawings !== ''
-                    && drawings !== ""
-                    && drawings.drawings.length > 0) {
-                    var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
-                    addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = emptyCtx)
-                    descriptionDiv.innerHTML = ''
-                }
-            }
-            else {
-                var index = parseInt((selectedValue).split('_')[1])
-                var textureSrc = texturePathPrefix + textures[index].image;
-                textureImage = new Image();
-                textureImage.src = textureSrc;
+        if(typeof textures != "undefined"
+            && textures !== ''
+            && textures !== ""
+            && textures.textures.length > 0) {
+            var preparedTextures = textures.textures
+            if (Array.isArray(preparedTextures)) {
 
-                textureImage.onload = function () {
-                    var textureImageCtx = drawOriginalImage(textureImage)
+                var options = '';
+                for (let i = 0; i < preparedTextures.length; i++) {
+                    var currentId = "texture_" + i;
+                    options += '<option id=\'' + currentId + '\'>'
+                        + preparedTextures[i].layerParams.title
+                        + '</option>'
+                }
+                texturesSelectElement.insertAdjacentHTML('beforeend', options);
+            }
+        }
+            texturesSelectElement.onchange = function () {
+                var selectedValue = texturesSelectElement.options[texturesSelectElement.selectedIndex].id;
+                var descriptionDiv = document.getElementById('backgroundDescription');
+                if(selectedValue === "originalImage") {
+                    var imageCtx = drawOriginalImage(originalImage)
                     if (typeof drawings != "undefined"
                         && drawings !== ''
                         && drawings !== ""
+                        && drawings !== "0"
                         && drawings.drawings.length > 0) {
-                        var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
-                        addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
+                        drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                        addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = imageCtx)
+                        descriptionDiv.innerHTML = ''
                     }
                 }
+                else if (selectedValue === "none") {
+                    var emptyCanvas = document.getElementById('publicationCanvas');
+                    var emptyCtx = emptyCanvas.getContext('2d');
+                    emptyCtx.clearRect(0, 0, emptyCanvas.width, emptyCanvas.height);
+                    if (typeof drawings != "undefined"
+                        && drawings !== ''
+                        && drawings !== ""
+                        && drawings !== "0"
+                        && drawings.drawings.length > 0) {
+                        drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                        addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = emptyCtx)
+                        descriptionDiv.innerHTML = ''
+                    }
+                }
+                else {
+                    var index = parseInt((selectedValue).split('_')[1])
+                    var textureSrc = texturePathPrefix + preparedTextures[index].image;
+                    textureImage = new Image();
+                    textureImage.src = textureSrc;
 
-                if(textures[index].layerParams.description.trim().length !== 0) {
+                    textureImage.onload = function () {
+                        var textureImageCtx = drawOriginalImage(textureImage)
+                        if (typeof drawings != "undefined"
+                            && drawings !== ''
+                            && drawings !== ""
+                            && drawings !== "0"
+                            && drawings.drawings.length > 0) {
+                            var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                            addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
+                        }
+                    }
 
-                    descriptionDiv.innerHTML = '<div style="border:1px solid black;\n' +
-                        '                border-radius: 10px;\n' +
-                        '                height: fit-content;\n' +
-                        '                text-align: center;\n' +
-                        '                margin-bottom: 10px"">' +
-                        textures[index].layerParams.description +
-                        '                </div>'
+                    if(preparedTextures[index].layerParams.description.trim().length !== 0) {
+
+                        descriptionDiv.innerHTML = '<div style="border:1px solid black;\n' +
+                            '                border-radius: 10px;\n' +
+                            '                height: fit-content;\n' +
+                            '                text-align: center;\n' +
+                            '                margin-bottom: 10px"">' +
+                            preparedTextures[index].layerParams.description +
+                            '                </div>'
+                    }
                 }
             }
-        }
     }
 }
+
+
 
 function reloadSettings(defaultDrawings) {
     initLayersSettings(defaultDrawings)

@@ -12,17 +12,28 @@ if(!empty($publication)) {
     $originalImageSrc = "\"" . Publication::getStorageHttpPath().Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
     $drawingPathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
     $texturePathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_TEXTURES . '/' . "\"";
+    //$settings = json_encode(array("drawings"=>$publication->drawings, "textures"=>$publication->textures));
 
-    $script = <<< JS
-    originalImageSrc = $originalImageSrc
-    drawingPathPrefix =  $drawingPathPrefix
-    texturePathPrefix = $texturePathPrefix
-    drawings = $publication->drawings
-    textures = $publication->textures   
-   
-    prepareView()
-
-JS;
+    if(strcmp($publication->drawings ,'') == 0) {
+        $script = <<< JS
+        originalImageSrc = $originalImageSrc
+        drawingPathPrefix =  $drawingPathPrefix
+        texturePathPrefix = $texturePathPrefix
+        textures = $publication->textures 
+        prepareView()
+        JS;
+    }
+    else
+    {
+        $script = <<< JS
+        originalImageSrc = $originalImageSrc
+        drawingPathPrefix =  $drawingPathPrefix
+        texturePathPrefix = $texturePathPrefix
+        drawings = $publication->drawings
+        textures = $publication->textures  
+        prepareView()
+        JS;
+    }
 
     ViewAsset::register($this);
     $this->registerJs($script, yii\web\View::POS_READY);
@@ -80,8 +91,8 @@ JS;
         </div>
 
         <?php
-        if ((strcmp($publication->textures ,'') != 0)
-            && sizeof($publication->getTextures()) > 0): ?>
+        /*if ((strcmp($publication->textures ,'') != 0)
+            && sizeof($publication->getTextures()) > 0): */?>
 
             <div class="form-group">
                 <label for="selectTextures">Фоновое изображение:</label>
@@ -91,7 +102,7 @@ JS;
                 </select>
             </div>
         <div id="backgroundDescription"></div>
-        <?php endif; ?>
+       <!-- --><?php /*endif; */?>
     </div>
 
     <?php
@@ -128,7 +139,7 @@ if ((strcmp($publication->drawings ,'') != 0)
     && sizeof($publication->getDrawings()) > 0): ?>
 
     <p style="margin-top: 10px; display: flex; word-break: break-word">
-        <?= "test".$publication->description ?>
+        <?= $publication->description ?>
     </p>
 <?php endif; ?>
 
