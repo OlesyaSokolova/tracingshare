@@ -7,11 +7,18 @@ function prepareView() {
         && drawings.drawings.length > 0) {
         defaultDrawings = JSON.parse(JSON.stringify(drawings));
 
+        if(typeof textures != "undefined"
+            && textures !== ''
+            && textures !== ""
+            && textures.textures.length > 0) {
+            preparedTextures = textures.textures
+        }
         //1. update settings from query (if exist)
         updateSettingsFromQuery(drawings);
 
         //2. put (updated) settings to url
         updateAllQueryParameters(drawings)
+        backgroundId = "originalImage";
 
         originalImage = new Image();
         originalImage.src = originalImageSrc;
@@ -82,7 +89,6 @@ function prepareView() {
             && textures !== ''
             && textures !== ""
             && textures.textures.length > 0) {
-            var preparedTextures = textures.textures
             if (Array.isArray(preparedTextures)) {
 
                 var options = '';
@@ -96,9 +102,9 @@ function prepareView() {
             }
         }
             texturesSelectElement.onchange = function () {
-                var selectedValue = texturesSelectElement.options[texturesSelectElement.selectedIndex].id;
+                backgroundId = texturesSelectElement.options[texturesSelectElement.selectedIndex].id;
                 var descriptionDiv = document.getElementById('backgroundDescription');
-                if(selectedValue === "originalImage") {
+                if(backgroundId === "originalImage") {
                     var imageCtx = drawOriginalImage(originalImage)
                     if (typeof drawings != "undefined"
                         && drawings !== ''
@@ -110,7 +116,7 @@ function prepareView() {
                         descriptionDiv.innerHTML = ''
                     }
                 }
-                else if (selectedValue === "none") {
+                else if (backgroundId === "none") {
                     var emptyCanvas = document.getElementById('publicationCanvas');
                     var emptyCtx = emptyCanvas.getContext('2d');
                     emptyCtx.clearRect(0, 0, emptyCanvas.width, emptyCanvas.height);
@@ -125,12 +131,12 @@ function prepareView() {
                     }
                 }
                 else {
-                    var index = parseInt((selectedValue).split('_')[1])
+                    var index = parseInt((backgroundId).split('_')[1])
                     var textureSrc = texturePathPrefix + preparedTextures[index].image;
                     textureImage = new Image();
                     textureImage.src = textureSrc;
 
-                    textureImage.onload = function () {
+                    if (isImageOk(textureImage)) {
                         var textureImageCtx = drawOriginalImage(textureImage)
                         if (typeof drawings != "undefined"
                             && drawings !== ''
@@ -139,6 +145,19 @@ function prepareView() {
                             && drawings.drawings.length > 0) {
                             var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
                             addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
+                        }
+                    }
+                    else {
+                        textureImage.onload = function () {
+                            var textureImageCtx = drawOriginalImage(textureImage)
+                            if (typeof drawings != "undefined"
+                                && drawings !== ''
+                                && drawings !== ""
+                                && drawings !== "0"
+                                && drawings.drawings.length > 0) {
+                                var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                                addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
+                            }
                         }
                     }
 
@@ -158,8 +177,7 @@ function prepareView() {
 }
 
 
-
-function reloadSettings(defaultDrawings) {
+function reloadSettings( defaultDrawings) {
     initLayersSettings(defaultDrawings)
     updateAllLayers(initDrawingsArray(defaultDrawings))
     updateAllQueryParameters(defaultDrawings)
