@@ -41,17 +41,6 @@ if(!empty($publication)) {
         prepareLayersToDraw()
         JS;
     }
-   /* $script = <<< JS
-    
-    publicationId = $publication->id
-    originalImageSrc = $originalImageSrc
-    prefix = $drawingPrefix
-    drawingPathPrefix =  $drawingPathPrefix
-    drawings = $publication->drawings
-    
-    prepareLayersToDraw()
-
-JS; */
 
     ViewAsset::register($this);
     $this->registerJs($script, yii\web\View::POS_READY);

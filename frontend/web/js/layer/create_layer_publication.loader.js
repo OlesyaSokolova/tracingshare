@@ -698,36 +698,10 @@ function prepareLayersToDraw() {
                     backgroundId = texturesSelectElement.options[texturesSelectElement.selectedIndex].id;
                     if(backgroundId === "originalImage") {
                         originalImageCtx.clearRect(0, 0, canvas.width, canvas.height);
-                        //originalImageCtx.globalCompositeOperation = "source-in";
-                        //originalImageCtx.fillRect(0, 0, canvas.width, canvas.height);
-                       // originalImageCtx.globalCompositeOperation = "source-over";
                         originalImageCtx.drawImage(originalImage, 0, 0, canvas.width,  canvas.height);
-                        //var imageCtx = drawOriginalImage(originalImage)
-                        /*if (typeof drawings != "undefined"
-                            && drawings !== ''
-                            && drawings !== ""
-                            && drawings !== "0"
-                            && drawings.drawings.length > 0) {
-                            drawingsImages = initDrawingsArray(jsonDrawings = drawings)
-                            addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = imageCtx)
-                        }*/
                     }
                     else if (backgroundId === "none") {
                         originalImageCtx.clearRect(0, 0, canvas.width, canvas.height);
-
-                        //var emptyCanvas = document.getElementById('publicationCanvas');
-
-                        //var emptyCtx = emptyCanvas.getContext('2d');
-                        //emptyCtx.clearRect(0, 0, emptyCanvas.width, emptyCanvas.height);
-                        /*if (typeof drawings != "undefined"
-                            && drawings !== ''
-                            && drawings !== ""
-                            && drawings !== "0"
-                            && drawings.drawings.length > 0) {
-                            drawingsImages = initDrawingsArray(jsonDrawings = drawings)
-                            addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = emptyCtx)
-                            descriptionDiv.innerHTML = ''
-                        }*/
                     }
                     else {
                         var index = parseInt((backgroundId).split('_')[1])
@@ -738,31 +712,11 @@ function prepareLayersToDraw() {
                         if (isImageOk(textureImage)) {
                             originalImageCtx.clearRect(0, 0, canvas.width, canvas.height);
                             originalImageCtx.drawImage(textureImage, 0, 0, canvas.width,  canvas.height);
-
-                            //var textureImageCtx = drawOriginalImage(textureImage)
-                            /*if (typeof drawings != "undefined"
-                                && drawings !== ''
-                                && drawings !== ""
-                                && drawings !== "0"
-                                && drawings.drawings.length > 0) {
-                                var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
-                                addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
-                            }*/
                         }
                         else {
                             textureImage.onload = function () {
                                 originalImageCtx.clearRect(0, 0, canvas.width, canvas.height);
                                 originalImageCtx.drawImage(textureImage, 0, 0, canvas.width,  canvas.height);
-
-                                //var textureImageCtx = drawOriginalImage(textureImage)
-                               /* if (typeof drawings != "undefined"
-                                    && drawings !== ''
-                                    && drawings !== ""
-                                    && drawings !== "0"
-                                    && drawings.drawings.length > 0) {
-                                    var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
-                                    addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
-                                }*/
                             }
                         }
                     }
