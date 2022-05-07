@@ -82,11 +82,14 @@ JS;
         <?php
         if ((strcmp($publication->textures ,'') != 0)
             && sizeof($publication->getTextures()) > 0): ?>
+
             <div class="form-group">
-                <select id="selectTextures"  class="form-control" data-role="select-dropdown" data-profile="minimal">
+                <label for="selectTextures">Фоновое изображение:</label>
+                <select id="selectTextures" class="form-control" data-role="select-dropdown" data-profile="minimal">
                     <option id="originalImage" value="">Оригинальное изображение</option>
                 </select>
             </div>
+        <div id="backgroundDescription"></div>
         <?php endif; ?>
     </div>
 

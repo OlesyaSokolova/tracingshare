@@ -96,6 +96,7 @@ function addDropdownMenuForTextures(jsonTextures) {
         texturesSelectElement.insertAdjacentHTML('beforeend', options);
         texturesSelectElement.onchange = function () {
             var selectedValue = texturesSelectElement.options[texturesSelectElement.selectedIndex].id;
+            var descriptionDiv = document.getElementById('backgroundDescription');
             if(selectedValue === "originalImage") {
                 var imageCtx = drawOriginalImage(originalImage)
                 if (typeof drawings != "undefined"
@@ -104,6 +105,7 @@ function addDropdownMenuForTextures(jsonTextures) {
                     && drawings.drawings.length > 0) {
                     var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
                     addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = imageCtx)
+                    descriptionDiv.remove()
                 }
             }
             else {
@@ -121,6 +123,23 @@ function addDropdownMenuForTextures(jsonTextures) {
                         var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
                         addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
                     }
+                }
+
+                function onlySpaces(str) {
+                    return str.trim().length === 0;
+                }
+
+                if(!onlySpaces(textures[index].layerParams.description)) {
+
+                    descriptionDiv.innerHTML = '<div style="border:1px solid black;\n' +
+                        '                border-radius: 10px;\n' +
+                        '                width: 700px;\n' +
+                        '                padding-bottom: 20px;\n' +
+                        '                height: fit-content;\n' +
+                        '                text-align: center;\n' +
+                        '                margin-bottom: 10px"">' +
+                        textures[index].layerParams.description +
+                        '                </div>'
                 }
             }
         }
