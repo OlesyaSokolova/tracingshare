@@ -105,7 +105,20 @@ function addDropdownMenuForTextures(jsonTextures) {
                     && drawings.drawings.length > 0) {
                     var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
                     addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = imageCtx)
-                    descriptionDiv.remove()
+                    descriptionDiv.innerHTML = ''
+                }
+            }
+            else if (selectedValue === "none") {
+                var emptyCanvas = document.getElementById('publicationCanvas');
+                var emptyCtx = emptyCanvas.getContext('2d');
+                emptyCtx.clearRect(0, 0, emptyCanvas.width, emptyCanvas.height);
+                if (typeof drawings != "undefined"
+                    && drawings !== ''
+                    && drawings !== ""
+                    && drawings.drawings.length > 0) {
+                    var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                    addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = emptyCtx)
+                    descriptionDiv.innerHTML = ''
                 }
             }
             else {
@@ -125,11 +138,7 @@ function addDropdownMenuForTextures(jsonTextures) {
                     }
                 }
 
-                function onlySpaces(str) {
-                    return str.trim().length === 0;
-                }
-
-                if(!onlySpaces(textures[index].layerParams.description)) {
+                if(textures[index].layerParams.description.trim().length !== 0) {
 
                     descriptionDiv.innerHTML = '<div style="border:1px solid black;\n' +
                         '                border-radius: 10px;\n' +

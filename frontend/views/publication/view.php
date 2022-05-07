@@ -87,6 +87,7 @@ JS;
                 <label for="selectTextures">Фоновое изображение:</label>
                 <select id="selectTextures" class="form-control" data-role="select-dropdown" data-profile="minimal">
                     <option id="originalImage" value="">Оригинальное изображение</option>
+                    <option id="none" value="">-</option>
                 </select>
             </div>
         <div id="backgroundDescription"></div>
