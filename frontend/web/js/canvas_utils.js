@@ -1,7 +1,13 @@
 function updateAllLayers(drawingsImages) {
-    if (backgroundId === "originalImage") {
+
+    if(typeof backgroundId === 'undefined') {
         var originalImageCtx = drawOriginalImage(originalImage)
         addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = originalImageCtx)
+    }
+
+    else if (backgroundId === "originalImage") {
+        var originalImageContext = drawOriginalImage(originalImage)
+        addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = originalImageContext)
     }
     else if (backgroundId === "none") {
         var emptyCanvas = document.getElementById('publicationCanvas');

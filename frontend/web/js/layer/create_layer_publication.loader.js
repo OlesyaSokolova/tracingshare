@@ -445,6 +445,7 @@ function prepareLayersToDraw() {
 
                 canvas = createdLayerCanvas;
                 context = createdLayerContext;
+                currentColor.a = context.globalAlpha*255
 
 
                 var id = parseInt((canvas.id).split('_')[1])
@@ -462,6 +463,8 @@ function prepareLayersToDraw() {
                         canvas.onmouseout = stopEditing;
                         canvas.onmousemove = edit;
                         context.lineWidth = thickness;
+                        currentColor.a = context.globalAlpha*255
+
                         this.style.background = "#d6d5d5";
                         if (previousThumbnail != null && !previousThumbnail.isSameNode(this)) {
                             previousThumbnail.style.background = "#ffffff";
@@ -503,6 +506,7 @@ function prepareLayersToDraw() {
                         canvas.onmouseout = stopEditing;
                         canvas.onmousemove = edit;
                         context.lineWidth = thickness
+                        currentColor.a = context.globalAlpha*255
 
                         var id = parseInt((canvas.id).split('_')[1])
                         document.getElementById('thumbnail_div_' + id).style.background = "#d6d5d5";
@@ -635,6 +639,7 @@ function prepareLayersToDraw() {
                            canvas.onmouseout = stopEditing;
                            canvas.onmousemove = edit;
                            context.lineWidth = thickness
+                           currentColor.a = context.globalAlpha*255
                            this.style.background = "#d6d5d5";
                            if (previousThumbnail != null && !previousThumbnail.isSameNode(this)) {
                                previousThumbnail.style.background = "#ffffff";

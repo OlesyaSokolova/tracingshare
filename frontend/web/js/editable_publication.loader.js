@@ -143,7 +143,8 @@ function prepareEditablePublication() {
                 var layerId = "layer_" + i;
                 layerInfo += '<div className="form-group" id=\'' + layerId + '\' style="border:1px solid black;\n' +
                     '                border-radius: 10px;\n' +
-                    '                padding-left: 20px;\n' +
+                    '                padding-left: 10px;\n' +
+                    '                padding-right: 10px;\n' +
                     '                width: 700px;\n' +
                     '                text-align: left;\n' +
                     '                margin-bottom: 10px">';
@@ -171,7 +172,7 @@ function prepareEditablePublication() {
                     + '<input type="color" id=\'' + colorId + '\' class =\'color-value\' value=\'' + colorValue + '\' name="drawingColor"></button>' + '<br>'
 
                     + '<label for=\'' + descId + '\'>Описание: </label>'
-                    + '<textarea id=\'' + descId + '\' style="width: 500px" class="form-control">'
+                    + '<textarea id=\'' + descId + '\' class="form-control">'
                     + jsonArrayDrawings[i].layerParams.description
                     +'</textarea>'
                 layerInfo += '<br>'
