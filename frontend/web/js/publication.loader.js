@@ -73,6 +73,28 @@ function prepareView() {
             drawOriginalImage(originalImage)
         }
     }
+
+    if(typeof textures != "undefined"
+        && textures !== ''
+        && textures !== ""
+        && textures.textures.length > 0) {
+        addDropdownMenuForTextures(textures);
+    }
+}
+
+function addDropdownMenuForTextures(jsonTextures) {
+    var textures = jsonTextures.textures
+    if (Array.isArray(textures)) {
+        var texturesSelectElement = document.getElementById("selectTextures");
+        var options = '';
+        for (let i = 0; i < textures.length; i++) {
+            var currentId = "texture_" + i;
+            options += '<option id=\'' + currentId + '\'>'
+                + textures[i].layerParams.title
+                + '</option>'
+        }
+        texturesSelectElement.insertAdjacentHTML('beforeend', options);
+    }
 }
 
 function reloadSettings(defaultDrawings, drawingsImages) {

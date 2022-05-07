@@ -15,7 +15,8 @@ if(!empty($publication)) {
     $script = <<< JS
     originalImageSrc = $originalImageSrc
     drawingPathPrefix =  $drawingPathPrefix
-    drawings = $publication->drawings   
+    drawings = $publication->drawings
+    textures = $publication->textures   
    
     prepareView()
 
@@ -75,6 +76,16 @@ JS;
             <canvas id="publicationCanvas">
             </canvas>
         </div>
+
+        <?php
+        if ((strcmp($publication->textures ,'') != 0)
+            && sizeof($publication->getTextures()) > 0): ?>
+            <div class="form-group">
+                <select id="selectTextures"  class="form-control" data-role="select-dropdown" data-profile="minimal">
+                    <option id="originalImage" value="">Оригинальное изображение</option>
+                </select>
+            </div>
+        <?php endif; ?>
     </div>
 
     <?php
@@ -106,9 +117,9 @@ JS;
 
 </div>
 
-
 <?php
-if (strcmp($publication->drawings ,'') != 0): ?>
+if ((strcmp($publication->drawings ,'') != 0)
+    && sizeof($publication->getDrawings()) > 0): ?>
 
     <p style="margin-top: 20px">
         <?= $publication->description ?>
