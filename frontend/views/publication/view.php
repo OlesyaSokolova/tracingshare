@@ -11,10 +11,12 @@ if(!empty($publication)) {
     $this->title = $publication->name;
     $originalImageSrc = "\"" . Publication::getStorageHttpPath().Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
     $drawingPathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
+    $texturePathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_TEXTURES . '/' . "\"";
 
     $script = <<< JS
     originalImageSrc = $originalImageSrc
     drawingPathPrefix =  $drawingPathPrefix
+    texturePathPrefix = $texturePathPrefix
     drawings = $publication->drawings
     textures = $publication->textures   
    
