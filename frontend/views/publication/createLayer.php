@@ -19,9 +19,11 @@ if(!empty($publication)) {
     if(strcmp($publication->drawings ,'') == 0) {
         $script = <<< JS
         publicationId = $publication->id
+        publicationId = $publication->id
         originalImageSrc = $originalImageSrc
         drawingPathPrefix =  $drawingPathPrefix
         texturePathPrefix = $texturePathPrefix
+        prefix = $drawingPrefix
         textures = $publication->textures 
         prepareLayersToDraw()
         JS;
@@ -29,9 +31,11 @@ if(!empty($publication)) {
     else
     {
         $script = <<< JS
+        publicationId = $publication->id
         originalImageSrc = $originalImageSrc
         drawingPathPrefix =  $drawingPathPrefix
         texturePathPrefix = $texturePathPrefix
+        prefix = $drawingPrefix
         drawings = $publication->drawings
         textures = $publication->textures  
         prepareLayersToDraw()

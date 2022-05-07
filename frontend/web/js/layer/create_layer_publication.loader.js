@@ -3,6 +3,7 @@ function prepareLayersToDraw() {
     var currentDrawings = {
         drawings: Array()
     }
+        backgroundId = "originalImage";
         preparedTextures = ''
         if(typeof textures != "undefined"
             && textures !== ''
@@ -426,7 +427,7 @@ function prepareLayersToDraw() {
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
                     currentLayerElement += ("Новый слой " + (layersCounter + 1)) + ':<br>'
-                        + '<canvas id=\'' + thumbnailId + '\'></canvas>'
+                       /* + '<canvas id=\'' + thumbnailId + '\'></canvas>'*/
                         + '<br>'
                         + '<label for=\'' + alphaId + '\'>Прозрачность: </label><br>'
                         + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + 1 + '\'>'
@@ -672,6 +673,101 @@ function prepareLayersToDraw() {
                 }
             }
         }
+            addDropdownMenuForTextures();
+
+            function addDropdownMenuForTextures() {
+                var texturesSelectElement = document.getElementById("selectTextures");
+                if(typeof textures != "undefined"
+                    && textures !== ''
+                    && textures !== ""
+                    && textures.textures.length > 0) {
+                    preparedTextures = textures.textures
+                    if (Array.isArray(preparedTextures)) {
+
+                        var options = '';
+                        for (let i = 0; i < preparedTextures.length; i++) {
+                            var currentId = "texture_" + i;
+                            options += '<option id=\'' + currentId + '\'>'
+                                + preparedTextures[i].layerParams.title
+                                + '</option>'
+                        }
+                        texturesSelectElement.insertAdjacentHTML('beforeend', options);
+                    }
+                }
+                texturesSelectElement.onchange = function () {
+                    backgroundId = texturesSelectElement.options[texturesSelectElement.selectedIndex].id;
+                    if(backgroundId === "originalImage") {
+                        originalImageCtx.clearRect(0, 0, canvas.width, canvas.height);
+                        //originalImageCtx.globalCompositeOperation = "source-in";
+                        //originalImageCtx.fillRect(0, 0, canvas.width, canvas.height);
+                       // originalImageCtx.globalCompositeOperation = "source-over";
+                        originalImageCtx.drawImage(originalImage, 0, 0, canvas.width,  canvas.height);
+                        //var imageCtx = drawOriginalImage(originalImage)
+                        /*if (typeof drawings != "undefined"
+                            && drawings !== ''
+                            && drawings !== ""
+                            && drawings !== "0"
+                            && drawings.drawings.length > 0) {
+                            drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                            addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = imageCtx)
+                        }*/
+                    }
+                    else if (backgroundId === "none") {
+                        originalImageCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+                        //var emptyCanvas = document.getElementById('publicationCanvas');
+
+                        //var emptyCtx = emptyCanvas.getContext('2d');
+                        //emptyCtx.clearRect(0, 0, emptyCanvas.width, emptyCanvas.height);
+                        /*if (typeof drawings != "undefined"
+                            && drawings !== ''
+                            && drawings !== ""
+                            && drawings !== "0"
+                            && drawings.drawings.length > 0) {
+                            drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                            addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = emptyCtx)
+                            descriptionDiv.innerHTML = ''
+                        }*/
+                    }
+                    else {
+                        var index = parseInt((backgroundId).split('_')[1])
+                        var textureSrc = texturePathPrefix + preparedTextures[index].image;
+                        textureImage = new Image();
+                        textureImage.src = textureSrc;
+
+                        if (isImageOk(textureImage)) {
+                            originalImageCtx.clearRect(0, 0, canvas.width, canvas.height);
+                            originalImageCtx.drawImage(textureImage, 0, 0, canvas.width,  canvas.height);
+
+                            //var textureImageCtx = drawOriginalImage(textureImage)
+                            /*if (typeof drawings != "undefined"
+                                && drawings !== ''
+                                && drawings !== ""
+                                && drawings !== "0"
+                                && drawings.drawings.length > 0) {
+                                var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                                addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
+                            }*/
+                        }
+                        else {
+                            textureImage.onload = function () {
+                                originalImageCtx.clearRect(0, 0, canvas.width, canvas.height);
+                                originalImageCtx.drawImage(textureImage, 0, 0, canvas.width,  canvas.height);
+
+                                //var textureImageCtx = drawOriginalImage(textureImage)
+                               /* if (typeof drawings != "undefined"
+                                    && drawings !== ''
+                                    && drawings !== ""
+                                    && drawings !== "0"
+                                    && drawings.drawings.length > 0) {
+                                    var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                                    addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
+                                }*/
+                            }
+                        }
+                    }
+                }
+            }
     }
 }
 
