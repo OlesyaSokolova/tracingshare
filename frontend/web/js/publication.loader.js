@@ -7,6 +7,7 @@ function prepareView() {
         && drawings.drawings.length > 0) {
         defaultDrawings = JSON.parse(JSON.stringify(drawings));
 
+        preparedTextures = ''
         if(typeof textures != "undefined"
             && textures !== ''
             && textures !== ""
@@ -89,6 +90,7 @@ function prepareView() {
             && textures !== ''
             && textures !== ""
             && textures.textures.length > 0) {
+            preparedTextures = textures.textures
             if (Array.isArray(preparedTextures)) {
 
                 var options = '';
