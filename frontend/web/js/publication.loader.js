@@ -96,19 +96,31 @@ function addDropdownMenuForTextures(jsonTextures) {
         texturesSelectElement.insertAdjacentHTML('beforeend', options);
         texturesSelectElement.onchange = function () {
             var selectedValue = texturesSelectElement.options[texturesSelectElement.selectedIndex].id;
-            var index = parseInt((selectedValue).split('_')[1])
-            var textureSrc = texturePathPrefix + textures[index].image;
-            textureImage = new Image();
-            textureImage.src = textureSrc;
-
-            textureImage.onload = function () {
-                var textureImageCtx = drawOriginalImage(textureImage)
+            if(selectedValue === "originalImage") {
+                var imageCtx = drawOriginalImage(originalImage)
                 if (typeof drawings != "undefined"
                     && drawings !== ''
                     && drawings !== ""
                     && drawings.drawings.length > 0) {
                     var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
-                    addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
+                    addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = imageCtx)
+                }
+            }
+            else {
+                var index = parseInt((selectedValue).split('_')[1])
+                var textureSrc = texturePathPrefix + textures[index].image;
+                textureImage = new Image();
+                textureImage.src = textureSrc;
+
+                textureImage.onload = function () {
+                    var textureImageCtx = drawOriginalImage(textureImage)
+                    if (typeof drawings != "undefined"
+                        && drawings !== ''
+                        && drawings !== ""
+                        && drawings.drawings.length > 0) {
+                        var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                        addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
+                    }
                 }
             }
         }
