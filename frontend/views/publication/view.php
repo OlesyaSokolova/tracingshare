@@ -67,6 +67,14 @@ if(!empty($publication)) {
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'upload-textures-button',]) ?>
 
+        <?php if (strcmp($publication->textures ,'') != 0
+        && sizeof($publication->getTextures()) > 0): ?>
+        <?= Html::a(Yii::t('app', 'Редактировать ' . '<br>' . 'текстуры'),
+            ['/publication/edit-textures', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'edit-textures-button',]) ?>
+        <?php endif; ?>
+
         <?= Html::a(Yii::t('app', 'Редактировать демонстрационные' . '<br>' . 'настройки'),
             ['/publication/edit', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',

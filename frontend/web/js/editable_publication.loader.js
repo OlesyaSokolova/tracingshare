@@ -160,7 +160,7 @@ function prepareEditablePublication() {
                     + '<button type="button" id=\'' + delBtnId  + '\' ' +
                     'class="btn btn-outline-danger btn-sm" ' +
                     'style="float: right; margin-bottom: 10px"' +
-                    '>Удалить слой</button>'
+                    '>Удалить</button>'
                     + '<input type="text" id=\'' + titleId + '\' class="form-control" value=\'' + (jsonArrayDrawings[i].layerParams.title) + '\'/>'
                     + '<br>'
 

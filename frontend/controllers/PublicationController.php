@@ -40,6 +40,21 @@ class PublicationController extends Controller
         ]);
     }
 
+    public function actionEditTextures($id)
+    {
+        $publication = Publication::findOne($id);
+        if (empty($publication)) {
+            throw new HttpException(404);
+        }
+
+        return $this->render('editTextures', [
+            'publication' => $publication,
+            /*'categoryId' => $categoryId,
+            'objectPrev' => $objectPrev,
+            'objectNext' => $objectNext,*/
+        ]);
+    }
+
     public function actionCreateLayer($id)
     {
         $publication = Publication::findOne($id);
