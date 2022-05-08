@@ -216,6 +216,14 @@ class Publication extends ActiveRecord
         else return "";
     }
 
+    public function getAuthorEmail() {
+        if(($this->author_id) != null) {
+            $user = User::findIdentity($this->author_id);
+            return $user->email;
+        }
+        else return "";
+    }
+
     public function updateDrawings()
     {
         $drawingsArray = array();

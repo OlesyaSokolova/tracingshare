@@ -321,7 +321,7 @@ class PublicationController extends Controller
         //1. find model and create empty tiff-result
         $model = Publication::findOne($id);
         $resultTiff = new Imagick();
-
+        $metadata = array();
         //2. add original image to tiff-result
         // and write attributes about the image to tiff-result (not to original image!!)
         $originalImagePath = Publication::basePath() . '/'
@@ -329,14 +329,13 @@ class PublicationController extends Controller
             . $model->image;
         $originalImage = new Imagick();
         $originalImage->readImage($originalImagePath);
+        $metadata['title'] =  "\"". $model->name . "\"";
+        $metadata['author'] =  "\"".  $model->getAuthorName() . "\"";
         $resultTiff->addImage($originalImage);
 
         $originalImageSize = getimagesize($originalImagePath);
 
-        //var_dump(getimagesize($originalImagePath));
-
         //3. add drawings (if exist) and write attributes about each drawing
-        //3.1. add info about number of drawings to attributes of tiff-result
         if(sizeof($model->getDrawings()) > 0) {
             foreach ($model->getDrawings() as $drawing) {
                 $drawingPath = Publication::basePath(). '/' . Publication::PREFIX_PATH_DRAWINGS . '/' . $drawing['image'];
@@ -344,12 +343,12 @@ class PublicationController extends Controller
                 $drawingImage->readImage($drawingPath);
                 $drawingImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
                 $resultTiff->addImage($drawingImage);
-                //var_dump(getimagesize($drawingPath));
             }
         }
+        //3.1. add info about number of drawings to attributes of tiff-result
+        $metadata['drawings'] = sizeof($model->getDrawings());
 
         //4. add textures (if exist) and write attributes about each texture
-        //4.1. add info about number of textures to attributes of tiff-result
         if(sizeof($model->getTextures()) > 0) {
             foreach ($model->getTextures() as $texture) {
                 $texturePath = Publication::basePath(). '/' . Publication::PREFIX_PATH_TEXTURES . '/' . $texture['image'];
@@ -357,11 +356,11 @@ class PublicationController extends Controller
                 $textureImage->readImage($texturePath);
                 $textureImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
                 $resultTiff->addImage($textureImage);
-                //var_dump(getimagesize($texturePath));
             }
         }
-        //https://www.php.net/manual/en/function.iptcembed.php
-        //https://www.example-code.com/phpext/xmp_add_new.asp
+        //4.1. add info about number of textures to attributes of tiff-result
+        $metadata['textures'] = sizeof($model->getTextures());
+
         try {
             $tiffDir = Publication::basePath(). '/' . "tiff";
             // Создаем директорию, если не существует
@@ -370,14 +369,23 @@ class PublicationController extends Controller
             if (file_exists($tiffDir . '/' . $tiffFilename)) {
                 unlink($tiffDir . '/' . $tiffFilename);
             }
-            $resultTiff->writeImages($tiffDir . '/' . $tiffFilename, true);
-        } catch (\ImagickException $e) {
-            Yii::$app->session->setFlash('error', "При скачивании файла произошла ошибка: ". $e->getMessage());
-        }
 
         $tiffFilepath = $resultTiff->getImageFilename();
 
-        if (file_exists($tiffFilepath)) {
+        $resultTiff->writeImages($tiffDir . '/' . $tiffFilename, true);
+
+        foreach ($metadata as $key => $value) {
+            $output=null;
+            $retval=null;
+            //$tmp = '-'.$key.'='. "\"". $value . "\"";
+            $tmp = '-'.$key.'='.$value;
+            //$tmp = '-drawings=0';
+            //var_dump($tmp);
+            exec('exiftool -v2 '. $tmp . ' '. $tiffFilepath, $output, $retval);
+            echo "Returned with status $retval and output:\n";
+            print_r($output);
+        }
+        /*if (file_exists($tiffFilepath)) {
             if (file_exists($tiffFilepath)) {
                 header('Content-Description: File Transfer');
                 header('Content-Type: application/octet-stream');
@@ -391,11 +399,9 @@ class PublicationController extends Controller
                 //readfile($tiffFilepath);
                 exit;
             }
+        }*/
+        } catch (\ImagickException $e) {
+            Yii::$app->session->setFlash('error', "При скачивании файла произошла ошибка: ". $e->getMessage());
         }
-        $output=null;
-        $retval=null;
-        exec('exiftool -artist=me '. $tiffFilepath, $output, $retval);
-        echo "Returned with status $retval and output:\n";
-        print_r($output);
     }
 }
