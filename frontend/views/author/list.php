@@ -10,19 +10,22 @@ use yii\helpers\Url;
 $this->title = 'Авторы'; ?>
 
 <h3>Авторы</h3>
-
+<br>
 <div>
     <?php if (!empty($authors)):?>
         <div class="btn-group-vertical" ">
-            <?php foreach ($authors as $author):?>
+            <?php $number = 0;
+            foreach ($authors as $author):?>
             <p style="margin-bottom: 10px">
-                <?= Html::a(Yii::t('app', $author->last_name
+
+                <?php $number++;
+                echo $number.". ";
+                $label = $author->last_name
                     . " " . $author->first_name
                     . " " . $author->patronymic
-                    . " (" . $author->email . ")"),
-                    ['/author/publications?id='.$author->id],
-                    ['class' => 'btn btn-outline-primary btn-rounded',
-                        'name' => 'publications-button']) ?>
+                    . " (" . $author->email . ")";
+                echo Html::a(Yii::t('app', $label),
+                    Url::to(['/author/publications?id='.$author->id])); ?>
             </p>
 
                     <!--<a href="<?/*= Url::to(['publication/view', 'id' => $publication->id])*/?>" class="publication-item">
