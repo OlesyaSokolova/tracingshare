@@ -293,7 +293,7 @@ class PublicationController extends Controller
                         var_dump($model->textures);
                         if($model->update(true, ["textures"])) {
                             Yii::$app->session->setFlash('success', "Успешно сохранено.");
-                            return $this->redirect(['publication/view', 'id' => $model->id]);
+                            return $this->redirect(['publication/edit-textures', 'id' => $model->id]);
                         }
                         Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.");
                     }

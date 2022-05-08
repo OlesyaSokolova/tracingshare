@@ -30,6 +30,12 @@ JS;
     if (Yii::$app->user->can('updateOwnPost',
             ['publication' => $publication]) || isset($userRoles['admin'])):?>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="save-textures-button">Сохранить изменения</button>
+
+        <?= Html::a(Yii::t('app', 'Добавить (загрузить) текстуры'),
+            ['/publication/upload-textures', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'upload-textures-button',]) ?>
+    <br><br>
     <?php endif; ?>
 
 <div class="d-flex justify-content-center">

@@ -284,8 +284,14 @@ class Publication extends ActiveRecord
                 }
             }
         }
-        //TODO: DELETE TEXTURES WITH PUBLICATION
-        //TODO: DELETE ONE TEXTURE
+        if(sizeof($this->getTextures()) > 0) {
+            foreach ($this->getTextures() as $texture) {
+                $texturesPath = self::basePath(). '/' . self::PREFIX_PATH_TEXTURES . '/' . $texture['image'];
+                if (file_exists($texturesPath)) {
+                    unlink($texturesPath);
+                }
+            }
+        }
     }
 
     public static function getStorageHttpPath() {
