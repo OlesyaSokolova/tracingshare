@@ -75,10 +75,13 @@ if(!empty($publication)) {
                 'name' => 'edit-textures-button',]) ?>
         <?php endif; ?>
 
+        <?php if (strcmp($publication->drawings ,'') != 0
+            && sizeof($publication->getDrawings()) > 0): ?>
         <?= Html::a(Yii::t('app', 'Редактировать демонстрационные' . '<br>' . 'настройки'),
             ['/publication/edit', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'edit-button',]) ?>
+        <?php endif; ?>
 
         <?= Html::a(Yii::t('app', 'Создать ' . '<br>' . 'новый слой'),
             ['/publication/create-layer', 'id' => $publication->id],
