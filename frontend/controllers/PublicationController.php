@@ -329,8 +329,9 @@ class PublicationController extends Controller
             . $model->image;
         $originalImage = new Imagick();
         $originalImage->readImage($originalImagePath);
-
         $resultTiff->addImage($originalImage);
+
+        $originalImageSize = getimagesize($originalImagePath);
 
         //var_dump(getimagesize($originalImagePath));
 
@@ -341,7 +342,7 @@ class PublicationController extends Controller
                 $drawingPath = Publication::basePath(). '/' . Publication::PREFIX_PATH_DRAWINGS . '/' . $drawing['image'];
                 $drawingImage = new Imagick();
                 $drawingImage->readImage($drawingPath);
-                $drawingImage->setImageProperty('title', $drawing['layerParams']['title']);
+                $drawingImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
                 $resultTiff->addImage($drawingImage);
                 //var_dump(getimagesize($drawingPath));
             }
@@ -354,7 +355,7 @@ class PublicationController extends Controller
                 $texturePath = Publication::basePath(). '/' . Publication::PREFIX_PATH_TEXTURES . '/' . $texture['image'];
                 $textureImage = new Imagick();
                 $textureImage->readImage($texturePath);
-                $textureImage->setImageProperty('title', $texture['layerParams']['title']);
+                $textureImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
                 $resultTiff->addImage($textureImage);
                 //var_dump(getimagesize($texturePath));
             }
@@ -375,7 +376,6 @@ class PublicationController extends Controller
         }
 
         $tiffFilepath = $resultTiff->getImageFilename();
-        //var_dump($tiffFilepath);
 
         if (file_exists($tiffFilepath)) {
             if (file_exists($tiffFilepath)) {
@@ -388,7 +388,7 @@ class PublicationController extends Controller
                 header('Content-Length: ' . filesize($tiffFilepath));
                 register_shutdown_function('unlink', $tiffFilepath);
                 ignore_user_abort(true);
-                readfile($tiffFilepath);
+                //readfile($tiffFilepath);
                 exit;
             }
         }
