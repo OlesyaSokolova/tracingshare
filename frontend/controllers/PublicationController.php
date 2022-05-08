@@ -3,7 +3,12 @@
 namespace frontend\controllers;
 
 use common\models\Publication;
+use Exception;
+use Imagick;
+use Imagine\Image\Box;
 use Yii;
+use yii\helpers\FileHelper;
+use yii\imagine\Image;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\UploadedFile;
@@ -308,5 +313,89 @@ class PublicationController extends Controller
         return $this->render('uploadTextures', [
             'model' => $model
         ]);
+    }
+
+    public function actionDownloadTiff($id)
+    {
+        //https://www.php.net/manual/en/imagick.writeimages.php
+        //1. find model and create empty tiff-result
+        $model = Publication::findOne($id);
+        $resultTiff = new Imagick();
+
+        //2. add original image to tiff-result
+        // and write attributes about the image to tiff-result (not to original image!!)
+        $originalImagePath = Publication::basePath() . '/'
+            . Publication::PREFIX_PATH_IMAGES . '/'
+            . $model->image;
+        $originalImage = new Imagick();
+        $originalImage->readImage($originalImagePath);
+
+        $resultTiff->addImage($originalImage);
+
+        //var_dump(getimagesize($originalImagePath));
+
+        //3. add drawings (if exist) and write attributes about each drawing
+        //3.1. add info about number of drawings to attributes of tiff-result
+        if(sizeof($model->getDrawings()) > 0) {
+            foreach ($model->getDrawings() as $drawing) {
+                $drawingPath = Publication::basePath(). '/' . Publication::PREFIX_PATH_DRAWINGS . '/' . $drawing['image'];
+                $drawingImage = new Imagick();
+                $drawingImage->readImage($drawingPath);
+                $drawingImage->setImageProperty('title', $drawing['layerParams']['title']);
+                $resultTiff->addImage($drawingImage);
+                //var_dump(getimagesize($drawingPath));
+            }
+        }
+
+        //4. add textures (if exist) and write attributes about each texture
+        //4.1. add info about number of textures to attributes of tiff-result
+        if(sizeof($model->getTextures()) > 0) {
+            foreach ($model->getTextures() as $texture) {
+                $texturePath = Publication::basePath(). '/' . Publication::PREFIX_PATH_TEXTURES . '/' . $texture['image'];
+                $textureImage = new Imagick();
+                $textureImage->readImage($texturePath);
+                $textureImage->setImageProperty('title', $texture['layerParams']['title']);
+                $resultTiff->addImage($textureImage);
+                //var_dump(getimagesize($texturePath));
+            }
+        }
+        //https://www.php.net/manual/en/function.iptcembed.php
+        //https://www.example-code.com/phpext/xmp_add_new.asp
+        try {
+            $tiffDir = Publication::basePath(). '/' . "tiff";
+            // Создаем директорию, если не существует
+            FileHelper::createDirectory($tiffDir);
+            $tiffFilename = explode('.', $model->image)[0] . ".tiff";
+            if (file_exists($tiffDir . '/' . $tiffFilename)) {
+                unlink($tiffDir . '/' . $tiffFilename);
+            }
+            $resultTiff->writeImages($tiffDir . '/' . $tiffFilename, true);
+        } catch (\ImagickException $e) {
+            Yii::$app->session->setFlash('error', "При скачивании файла произошла ошибка: ". $e->getMessage());
+        }
+
+        $tiffFilepath = $resultTiff->getImageFilename();
+        //var_dump($tiffFilepath);
+
+        if (file_exists($tiffFilepath)) {
+            if (file_exists($tiffFilepath)) {
+                header('Content-Description: File Transfer');
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename="'.basename($tiffFilepath).'"');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+                header('Content-Length: ' . filesize($tiffFilepath));
+                register_shutdown_function('unlink', $tiffFilepath);
+                ignore_user_abort(true);
+                readfile($tiffFilepath);
+                exit;
+            }
+        }
+        $output=null;
+        $retval=null;
+        exec('exiftool -artist=me '. $tiffFilepath, $output, $retval);
+        echo "Returned with status $retval and output:\n";
+        print_r($output);
     }
 }

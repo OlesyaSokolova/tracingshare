@@ -176,6 +176,12 @@ function prepareView() {
                 }
             }
     }
+
+   /* var downloadButton = document.getElementById("save-button");
+    saveButton.addEventListener('click', function (event) {
+        var redirectToView = true
+        saveData(drawings, redirectToView)
+    });*/
 }
 
 

@@ -43,12 +43,20 @@ if(!empty($publication)) {
 <h3><?=$this->title?></h3>
 
 <p>
-    <?php //endif;
-    if (strcmp($publication->drawings ,'') != 0): ?>
+    <?php
+    if (strcmp($publication->drawings ,'') != 0
+        && sizeof($publication->getTextures()) > 0): ?>
     <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить авторские настройки</button>
-</p>
     <?php endif;
-    $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+
+    echo Html::a(Yii::t('app', 'Скачать (.tiff)'),
+        ['/publication/download-tiff', 'id' => $publication->id],
+        ['class' => 'btn btn-outline-primary btn-rounded',
+            'name' => 'download-tiff-button',]); ?>
+<!--    <button type="button" class="btn btn-outline-primary btn-rounded" id="download-button">Скачать (.zip)</button>
+-->
+</p>
+    <?php $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     if (Yii::$app->user->can('updateOwnPost',
         ['publication' => $publication]) || isset($userRoles['admin'])):?>
 

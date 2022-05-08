@@ -169,6 +169,7 @@ class Publication extends ActiveRecord
         }
         return $drawings;
     }
+
     public function getDrawingsArray()
     {
         return json_decode($this->drawings, true);
@@ -183,6 +184,7 @@ class Publication extends ActiveRecord
         }
         return $textures;
     }
+
     public function getTexturesArray()
     {
         return json_decode($this->textures, true);
