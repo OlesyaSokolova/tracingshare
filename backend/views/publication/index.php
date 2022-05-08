@@ -41,9 +41,15 @@ $this->title = 'Публикации'; ?>
                 }
             ],
             [
-                'label' => 'Описание',
                 'attribute' => 'description',
-                'headerOptions' => ['style' => 'width:20%'],
+                'label' => 'Описание',
+                'value' => function ($data) {
+                    $tmp = $data['description'];
+                    if($tmp != '') {
+                        return "(Есть)";
+                    }
+                    else return "(Нет)";
+                },
             ],
             [
                 'attribute' => 'image',
@@ -56,20 +62,38 @@ $this->title = 'Публикации'; ?>
             ],
             [
                 'attribute' => 'drawings',
-                'label' => 'Информация о слоях',
+                'label' => 'Количество слоев прорисовок',
                 'value' => function ($data) {
                        $tmp = $data['drawings'];
                         if($tmp != '') {
                             $obj = json_decode($tmp, true);
                             $counter = sizeof($obj['drawings']);
                             if($counter > 0) {
-                                return "Количество слоев прорисовок: " . $counter;
+                                return $counter;
                             }
                             else {
-                                return "1 слой (оригинальное изображение)";
+                                return 0;
                             }
                         }
-                        else return "1 слой (оригинальное изображение)";
+                        else return 0;
+                },
+            ],
+            [
+                'attribute' => 'textures',
+                'label' => 'Количество текстур',
+                'value' => function ($data) {
+                    $tmp = $data['textures'];
+                    if($tmp != '') {
+                        $obj = json_decode($tmp, true);
+                        $counter = sizeof($obj['textures']);
+                        if($counter > 0) {
+                            return $counter;
+                        }
+                        else {
+                            return 0;
+                        }
+                    }
+                    else return 0;
                 },
             ],
             [

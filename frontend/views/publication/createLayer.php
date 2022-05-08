@@ -14,17 +14,33 @@ if(!empty($publication)) {
     $drawingPrefix =  "\"" . Publication::DRAWING_PREFIX . $baseName . "_" . "\"";
     $drawingPathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
     $currentDrawings = "\"" . $publication->drawings . "\"";
-    $script = <<< JS
-    
-    publicationId = $publication->id
-    originalImageSrc = $originalImageSrc
-    prefix = $drawingPrefix
-    drawingPathPrefix =  $drawingPathPrefix
-    drawings = $publication->drawings
-    
-    prepareLayersToDraw()
+    $texturePathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_TEXTURES . '/' . "\"";
 
-JS;
+    if(strcmp($publication->drawings ,'') == 0) {
+        $script = <<< JS
+        publicationId = $publication->id
+        publicationId = $publication->id
+        originalImageSrc = $originalImageSrc
+        drawingPathPrefix =  $drawingPathPrefix
+        texturePathPrefix = $texturePathPrefix
+        prefix = $drawingPrefix
+        textures = $publication->textures 
+        prepareLayersToDraw()
+        JS;
+    }
+    else
+    {
+        $script = <<< JS
+        publicationId = $publication->id
+        originalImageSrc = $originalImageSrc
+        drawingPathPrefix =  $drawingPathPrefix
+        texturePathPrefix = $texturePathPrefix
+        prefix = $drawingPrefix
+        drawings = $publication->drawings
+        textures = $publication->textures  
+        prepareLayersToDraw()
+        JS;
+    }
 
     ViewAsset::register($this);
     $this->registerJs($script, yii\web\View::POS_READY);
@@ -44,6 +60,7 @@ JS;
             ['/publication/view', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'exit-button',]) ?>
+
     <?php endif; ?>
 </p>
 
@@ -125,11 +142,10 @@ JS;
             }
     $canvasId = "layer_" . "b"  . "_canvas";
     ?>
-    <div id="canvases" class="canvasDiv" data-state="static" style="border:1px solid black;
-            border-radius: 10px;
+    <div id="canvases" class="canvasDiv" data-state="static">
+        <canvas id="<?= $canvasId ?>" style="border:1px solid black;
             height: fit-content;
             width: max-content;">
-        <canvas id="<?= $canvasId ?>">
         </canvas>
         <?php if (strcmp($publication->drawings ,'') != 0
             && sizeof($publication->getDrawings()) > 0) {
@@ -144,6 +160,13 @@ JS;
         ?>
         <canvas id="<?= $canvasId ?>">
         </canvas>
+        <div class="form-group">
+            <label for="selectTextures">Фоновое изображение:</label>
+            <select id="selectTextures" class="form-control"  data-role="select-dropdown" data-profile="minimal">
+                <option id="originalImage" value="">Оригинальное изображение</option>
+                <option id="none" value="">-</option>
+            </select>
+        </div>
     </div>
 
 <!--    <div class="overflow-auto">
@@ -162,7 +185,7 @@ JS;
     background: #d6d5d5">
         <?php $canvasId = "thumbnail_" . $idCounter;
         echo '<label for="'. $canvasId. '">Новый слой: </label>';
-        echo '<canvas id="'.$canvasId.'" > </canvas>';?>
+        /*echo '<canvas id="'.$canvasId.'" > </canvas>';*/?>
         <!--<canvas id="newLayerThumbnail">
         </canvas>-->
         <br>
@@ -177,14 +200,14 @@ JS;
         <?php $id = "b";?>
         <div id="<?= "thumbnail_div_".$id ?>" style="border:1px solid black;
         border-radius: 10px;
-        padding-left: 20px;
+        padding-left: 5px;
         width: 300px;
         height: fit-content;
         text-align: left;
-        margin-bottom: 10px">
+        margin-bottom: 5px">
             <?php $canvasId = "thumbnail_" . $id;
             echo '<label for="'. $canvasId. '">Фоновое изображение: </label>';
-            echo '<canvas id="'.$canvasId.'" > </canvas>';?>
+            /*echo '<canvas id="'.$canvasId.'" > </canvas>';*/?>
             <br>
             <?php $alphaId = "alpha_" . $id;
             echo '<label for="'. $alphaId. '">Прозрачность: </label><br>';

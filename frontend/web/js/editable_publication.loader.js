@@ -119,9 +119,9 @@ function prepareEditablePublication() {
                 if (userAnswer === true) {
                     jsonDrawings.drawings.splice(i, 1);
                     drawingsImages.splice(i, 1);
-                    var redirectToView = false;
+                    //var redirectToView = false;
                     initLayersSettingsForEdit(jsonDrawings)
-                    saveData(jsonDrawings, redirectToView)
+                    //saveData(jsonDrawings, redirectToView)
                 }
             })
         }
@@ -143,7 +143,8 @@ function prepareEditablePublication() {
                 var layerId = "layer_" + i;
                 layerInfo += '<div className="form-group" id=\'' + layerId + '\' style="border:1px solid black;\n' +
                     '                border-radius: 10px;\n' +
-                    '                padding-left: 20px;\n' +
+                    '                padding-left: 10px;\n' +
+                    '                padding-right: 10px;\n' +
                     '                width: 700px;\n' +
                     '                text-align: left;\n' +
                     '                margin-bottom: 10px">';
@@ -159,7 +160,7 @@ function prepareEditablePublication() {
                     + '<button type="button" id=\'' + delBtnId  + '\' ' +
                     'class="btn btn-outline-danger btn-sm" ' +
                     'style="float: right; margin-bottom: 10px"' +
-                    '>Удалить слой</button>'
+                    '>Удалить</button>'
                     + '<input type="text" id=\'' + titleId + '\' class="form-control" value=\'' + (jsonArrayDrawings[i].layerParams.title) + '\'/>'
                     + '<br>'
 
@@ -171,7 +172,7 @@ function prepareEditablePublication() {
                     + '<input type="color" id=\'' + colorId + '\' class =\'color-value\' value=\'' + colorValue + '\' name="drawingColor"></button>' + '<br>'
 
                     + '<label for=\'' + descId + '\'>Описание: </label>'
-                    + '<textarea id=\'' + descId + '\' style="width: 500px" class="form-control">'
+                    + '<textarea id=\'' + descId + '\' class="form-control">'
                     + jsonArrayDrawings[i].layerParams.description
                     +'</textarea>'
                 layerInfo += '<br>'

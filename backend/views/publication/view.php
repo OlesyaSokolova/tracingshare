@@ -66,7 +66,9 @@ if (Yii::$app->user->can('updateOwnPost',
     </div>
 
     <?php
-    if (strcmp($publication->drawings ,'') != 0): ?>
+    if (strcmp($publication->drawings ,'') != 0
+        && sizeof($publication->getDrawings()) > 0
+    ): ?>
         <div style="padding-left: 20px; margin-right: 20px" id="layers" class = "layers-class">
         </div>
 

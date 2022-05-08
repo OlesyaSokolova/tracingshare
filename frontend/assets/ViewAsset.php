@@ -23,6 +23,7 @@ class ViewAsset extends AssetBundle
         'js/canvas_utils.js',
         'js/publication.loader.js',
         'js/editable_publication.loader.js',
+        'js/edit_textures.js',
         'js/layer/create_layer_publication.loader.js',
         'js/layer/editor_utils.js',
         ];

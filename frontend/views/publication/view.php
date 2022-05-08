@@ -11,15 +11,29 @@ if(!empty($publication)) {
     $this->title = $publication->name;
     $originalImageSrc = "\"" . Publication::getStorageHttpPath().Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
     $drawingPathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
+    $texturePathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_TEXTURES . '/' . "\"";
+    //$settings = json_encode(array("drawings"=>$publication->drawings, "textures"=>$publication->textures));
 
-    $script = <<< JS
-    originalImageSrc = $originalImageSrc
-    drawingPathPrefix =  $drawingPathPrefix
-    drawings = $publication->drawings   
-   
-    prepareView()
-
-JS;
+    if(strcmp($publication->drawings ,'') == 0) {
+        $script = <<< JS
+        originalImageSrc = $originalImageSrc
+        drawingPathPrefix =  $drawingPathPrefix
+        texturePathPrefix = $texturePathPrefix
+        textures = $publication->textures 
+        prepareView()
+        JS;
+    }
+    else
+    {
+        $script = <<< JS
+        originalImageSrc = $originalImageSrc
+        drawingPathPrefix =  $drawingPathPrefix
+        texturePathPrefix = $texturePathPrefix
+        drawings = $publication->drawings
+        textures = $publication->textures  
+        prepareView()
+        JS;
+    }
 
     ViewAsset::register($this);
     $this->registerJs($script, yii\web\View::POS_READY);
@@ -48,6 +62,19 @@ JS;
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'upload-drawings-button',]) ?>
 
+        <?= Html::a(Yii::t('app', 'Загрузить ' . '<br>' . 'текстуры'),
+            ['/publication/upload-textures', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'upload-textures-button',]) ?>
+
+        <?php if (strcmp($publication->textures ,'') != 0
+        && sizeof($publication->getTextures()) > 0): ?>
+        <?= Html::a(Yii::t('app', 'Редактировать ' . '<br>' . 'текстуры'),
+            ['/publication/edit-textures', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'edit-textures-button',]) ?>
+        <?php endif; ?>
+
         <?= Html::a(Yii::t('app', 'Редактировать демонстрационные' . '<br>' . 'настройки'),
             ['/publication/edit', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
@@ -70,6 +97,20 @@ JS;
             <canvas id="publicationCanvas">
             </canvas>
         </div>
+
+        <?php
+        /*if ((strcmp($publication->textures ,'') != 0)
+            && sizeof($publication->getTextures()) > 0): */?>
+
+            <div class="form-group">
+                <label for="selectTextures">Фоновое изображение:</label>
+                <select id="selectTextures" class="form-control" data-role="select-dropdown" data-profile="minimal">
+                    <option id="originalImage" value="">Оригинальное изображение</option>
+                    <option id="none" value="">-</option>
+                </select>
+            </div>
+        <div id="backgroundDescription"></div>
+       <!-- --><?php /*endif; */?>
     </div>
 
     <?php
@@ -89,23 +130,23 @@ JS;
 
             <h5 id ="layer_title"> </h5>
 
-            <div id = "description" >
+            <div id = "description" sty>
             </div>
         </div>
     <?php
     else:  ?>
-        <p style="margin-left: 30px">
-        <?=$publication->description?>
+        <p style="margin-left: 30px; ">
+        <?= $publication->description?>
         </p>
     <?php endif; ?>
 
 </div>
 
-
 <?php
-if (strcmp($publication->drawings ,'') != 0): ?>
+if ((strcmp($publication->drawings ,'') != 0)
+    && sizeof($publication->getDrawings()) > 0): ?>
 
-    <p style="margin-top: 20px">
+    <p style="margin-top: 10px; display: flex; word-break: break-word">
         <?= $publication->description ?>
     </p>
 <?php endif; ?>

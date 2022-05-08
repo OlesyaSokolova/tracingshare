@@ -1,18 +1,25 @@
 function prepareView() {
 
-    //0.save settings for reset
-    //defaultSettings = settings;
     if(typeof drawings != "undefined"
         && drawings !== ''
         && drawings !== ""
+        && drawings !== "0"
         && drawings.drawings.length > 0) {
         defaultDrawings = JSON.parse(JSON.stringify(drawings));
 
+        preparedTextures = ''
+        if(typeof textures != "undefined"
+            && textures !== ''
+            && textures !== ""
+            && textures.textures.length > 0) {
+            preparedTextures = textures.textures
+        }
         //1. update settings from query (if exist)
         updateSettingsFromQuery(drawings);
 
         //2. put (updated) settings to url
         updateAllQueryParameters(drawings)
+        backgroundId = "originalImage";
 
         originalImage = new Image();
         originalImage.src = originalImageSrc;
@@ -73,9 +80,106 @@ function prepareView() {
             drawOriginalImage(originalImage)
         }
     }
+
+    addDropdownMenuForTextures();
+
+    function addDropdownMenuForTextures() {
+
+        var texturesSelectElement = document.getElementById("selectTextures");
+        if(typeof textures != "undefined"
+            && textures !== ''
+            && textures !== ""
+            && textures.textures.length > 0) {
+            preparedTextures = textures.textures
+            if (Array.isArray(preparedTextures)) {
+
+                var options = '';
+                for (let i = 0; i < preparedTextures.length; i++) {
+                    var currentId = "texture_" + i;
+                    options += '<option id=\'' + currentId + '\'>'
+                        + preparedTextures[i].layerParams.title
+                        + '</option>'
+                }
+                texturesSelectElement.insertAdjacentHTML('beforeend', options);
+            }
+        }
+            texturesSelectElement.onchange = function () {
+                backgroundId = texturesSelectElement.options[texturesSelectElement.selectedIndex].id;
+                var descriptionDiv = document.getElementById('backgroundDescription');
+                if(backgroundId === "originalImage") {
+                    var imageCtx = drawOriginalImage(originalImage)
+                    if (typeof drawings != "undefined"
+                        && drawings !== ''
+                        && drawings !== ""
+                        && drawings !== "0"
+                        && drawings.drawings.length > 0) {
+                        drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                        addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = imageCtx)
+                        descriptionDiv.innerHTML = ''
+                    }
+                }
+                else if (backgroundId === "none") {
+                    var emptyCanvas = document.getElementById('publicationCanvas');
+                    var emptyCtx = emptyCanvas.getContext('2d');
+                    emptyCtx.clearRect(0, 0, emptyCanvas.width, emptyCanvas.height);
+                    if (typeof drawings != "undefined"
+                        && drawings !== ''
+                        && drawings !== ""
+                        && drawings !== "0"
+                        && drawings.drawings.length > 0) {
+                        drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                        addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = emptyCtx)
+                        descriptionDiv.innerHTML = ''
+                    }
+                }
+                else {
+                    var index = parseInt((backgroundId).split('_')[1])
+                    var textureSrc = texturePathPrefix + preparedTextures[index].image;
+                    textureImage = new Image();
+                    textureImage.src = textureSrc;
+
+                    if (isImageOk(textureImage)) {
+                        var textureImageCtx = drawOriginalImage(textureImage)
+                        if (typeof drawings != "undefined"
+                            && drawings !== ''
+                            && drawings !== ""
+                            && drawings !== "0"
+                            && drawings.drawings.length > 0) {
+                            var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                            addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
+                        }
+                    }
+                    else {
+                        textureImage.onload = function () {
+                            var textureImageCtx = drawOriginalImage(textureImage)
+                            if (typeof drawings != "undefined"
+                                && drawings !== ''
+                                && drawings !== ""
+                                && drawings !== "0"
+                                && drawings.drawings.length > 0) {
+                                var drawingsImages = initDrawingsArray(jsonDrawings = drawings)
+                                addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
+                            }
+                        }
+                    }
+
+                    if(preparedTextures[index].layerParams.description.trim().length !== 0) {
+
+                        descriptionDiv.innerHTML = '<div style="border:1px solid black;\n' +
+                            '                border-radius: 10px;\n' +
+                            '                height: fit-content;\n' +
+                            '                text-align: center;\n' +
+                            '                margin-bottom: 10px"">' +
+                            preparedTextures[index].layerParams.description +
+                            '                </div>'
+                    }
+                }
+            }
+    }
 }
 
-function reloadSettings(defaultDrawings, drawingsImages) {
+
+function reloadSettings( defaultDrawings) {
     initLayersSettings(defaultDrawings)
     updateAllLayers(initDrawingsArray(defaultDrawings))
     updateAllQueryParameters(defaultDrawings)

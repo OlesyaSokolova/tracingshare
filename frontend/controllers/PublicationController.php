@@ -40,6 +40,21 @@ class PublicationController extends Controller
         ]);
     }
 
+    public function actionEditTextures($id)
+    {
+        $publication = Publication::findOne($id);
+        if (empty($publication)) {
+            throw new HttpException(404);
+        }
+
+        return $this->render('editTextures', [
+            'publication' => $publication,
+            /*'categoryId' => $categoryId,
+            'objectPrev' => $objectPrev,
+            'objectNext' => $objectNext,*/
+        ]);
+    }
+
     public function actionCreateLayer($id)
     {
         $publication = Publication::findOne($id);
@@ -73,13 +88,16 @@ class PublicationController extends Controller
         $newDescription = $data["newDescription"];
 
         $publication = Publication::findOne($id);
+        $previousDrawings = $publication->drawings;
+        $previousName = $publication->name;
+        $previousDescription = $publication->description;
+
         $publication->name = $newName;
         $publication->description = $newDescription;
 
         if (strcmp(json_encode($data["newDrawings"]), "") != 2) {
             $newDrawings = json_encode($data["newDrawings"], JSON_UNESCAPED_UNICODE);
-
-            $previousDrawingsJsonArray = json_decode($publication->drawings, true);
+            $previousDrawingsJsonArray = json_decode($previousDrawings, true);
             $publication->drawings = $newDrawings;
             if(!is_null($previousDrawingsJsonArray)) {
                 for ($i = 0; $i < sizeof($previousDrawingsJsonArray['drawings']); $i++) {
@@ -99,8 +117,13 @@ class PublicationController extends Controller
         if($publication->update(true, ["name", "description", "drawings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
-        else {
+        else if ((strcmp($publication->drawings ,$previousDrawings) == 0)
+        && (strcmp($publication->name ,$previousName) == 0)
+            && (strcmp($publication->description ,$previousDescription) == 0)){
             Yii::$app->session->setFlash('info', "Изменений нет.");
+        }
+        else {
+            Yii::$app->session->setFlash('info', "Произошла ошибка про сохранении данных.");
         }
     }
 
@@ -147,7 +170,6 @@ class PublicationController extends Controller
             }
         }
 
-
         if($publication->update(true, ["drawings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
@@ -155,7 +177,46 @@ class PublicationController extends Controller
             Yii::$app->session->setFlash('success', "Успешно сохранено. (Новых слоев нет)");
         }
         else {
-            Yii::$app->session->setFlash('info', "Произошла ошибка про сохранении данных. ". print_r($publication->errors, true));
+            Yii::$app->session->setFlash('error', "Произошла ошибка про сохранении данных. ");
+        }
+    }
+
+    public function actionSaveTextures($id)
+    {
+        $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
+        //print_r($data);
+        $publication = Publication::findOne($id);
+
+        if (strcmp(json_encode($data['newTextures']), "") != 2) {
+            $newTextures = json_encode($data['newTextures'], JSON_UNESCAPED_UNICODE);
+            $previousTextures = $publication->textures;
+            $previousTexturesJsonArray = json_decode($previousTextures, true);
+            $publication->textures = $newTextures;
+
+            if (!is_null($previousTexturesJsonArray)) {
+                for ($i = 0; $i < sizeof($previousTexturesJsonArray['textures']); $i++) {
+                    $fileName = $previousTexturesJsonArray['textures'][$i]['image'];
+                    if (strpos($newTextures, $fileName) == false) {
+                        $filePath = Publication::basePath() . '/'
+                            . Publication::PREFIX_PATH_TEXTURES . '/'
+                            . $fileName;
+                        if (file_exists($filePath)) {
+                            unlink($filePath);
+                        }
+                    }
+                }
+            }
+
+            if ($publication->update(true, ["textures"])) {
+                Yii::$app->session->setFlash('success', "Успешно сохранено.");
+            } else if (strcmp($publication->textures, $previousTextures) == 0) {
+                Yii::$app->session->setFlash('info', "Изменений нет.");
+            } else {
+                Yii::$app->session->setFlash('error', "Произошла ошибка про сохранении данных.");
+            }
+        }
+        else {
+            Yii::$app->session->setFlash('info', "Произошла ошибка про сохранении данных.");
         }
     }
 
@@ -196,10 +257,10 @@ class PublicationController extends Controller
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
                 $model->drawingsFiles = UploadedFile::getInstances($model, 'drawingsFiles');
-                if(is_null($model->drawingsFiles)) {
+                if(sizeof($model->drawingsFiles) > 0) {
                     if ($model->uploadDrawings()) {
                         $model->drawings = $model->updateDrawings();
-                        var_dump($model->drawings);
+                        //var_dump($model->drawings);
                         if($model->update(true, ["drawings"])) {
                             Yii::$app->session->setFlash('success', "Успешно сохранено.");
                             return $this->redirect(['publication/edit', 'id' => $model->id]);
@@ -215,6 +276,36 @@ class PublicationController extends Controller
         }
 
         return $this->render('uploadDrawings', [
+            'model' => $model
+        ]);
+    }
+
+    public function actionUploadTextures($id)
+    {
+        $model = Publication::findOne($id);
+
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post())) {
+                $model->texturesFiles = UploadedFile::getInstances($model, 'texturesFiles');
+                if(sizeof($model->texturesFiles) > 0) {
+                    if ($model->uploadTextures()) {
+                        $model->textures = $model->updateTextures();
+                        var_dump($model->textures);
+                        if($model->update(true, ["textures"])) {
+                            Yii::$app->session->setFlash('success', "Успешно сохранено.");
+                            return $this->redirect(['publication/edit-textures', 'id' => $model->id]);
+                        }
+                        Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.");
+                    }
+                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.");
+                }
+                else {
+                    Yii::$app->session->setFlash('error', "Файлы текстур отсутствуют.");
+                }
+            }
+        }
+
+        return $this->render('uploadTextures', [
             'model' => $model
         ]);
     }

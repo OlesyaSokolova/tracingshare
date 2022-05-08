@@ -1,6 +1,38 @@
 function updateAllLayers(drawingsImages) {
-    var originalImageCtx = drawOriginalImage(originalImage)
-    addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = originalImageCtx)
+
+    if(typeof backgroundId === 'undefined') {
+        var originalImageCtx = drawOriginalImage(originalImage)
+        addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = originalImageCtx)
+    }
+
+    else if (backgroundId === "originalImage") {
+        var originalImageContext = drawOriginalImage(originalImage)
+        addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = originalImageContext)
+    }
+    else if (backgroundId === "none") {
+        var emptyCanvas = document.getElementById('publicationCanvas');
+        var emptyCtx = emptyCanvas.getContext('2d');
+        emptyCtx.clearRect(0, 0, emptyCanvas.width, emptyCanvas.height);
+        addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = emptyCtx)
+    }
+    else {
+        var index = parseInt((backgroundId).split('_')[1])
+        var textureSrc = texturePathPrefix + preparedTextures[index].image;
+        textureImage = new Image();
+        textureImage.src = textureSrc;
+
+        if (isImageOk(textureImage)) {
+            var textureImageCtx = drawOriginalImage(textureImage)
+            addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
+
+        }
+        else {
+            textureImage.onload = function () {
+                var textureImageCtx = drawOriginalImage(textureImage)
+                addImagesToContext(imagesArray = drawingsImages, contextToDrawOn = textureImageCtx)
+            }
+        }
+    }
 }
 
 function drawImage(imageWithSettings, contextToDrawOn) {

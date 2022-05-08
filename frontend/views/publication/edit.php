@@ -15,7 +15,7 @@ if(!empty($publication)) {
     publicationId = $publication->id
     originalImageSrc = $originalImageSrc
     drawingPathPrefix =  $drawingPathPrefix
-    drawings = $publication->drawings
+    drawings = $publication->drawings 
    
     prepareEditablePublication()
 

@@ -24,20 +24,22 @@ class Publication extends ActiveRecord
     //const HTTP_PATH_STORAGE = 'http://localhost/tracingshare/storage/';
     const PREFIX_PATH_IMAGES = 'images';//folder with original images
     const PREFIX_PATH_DRAWINGS = 'drawings';//folder with drawings
+    const PREFIX_PATH_TEXTURES = 'textures';//folder with textures
     const PREFIX_PATH_THUMBNAILS = 'thumbnails';//folder with thumbnails
     const THUMBNAIL_W = 800;//пропорционально уменьшать картинки
     const THUMBNAIL_H = 500;
     const THUMBNAIL_PREFIX = 'thumbnail_';
     const DRAWING_PREFIX = 'drawing_';
+    const TEXTURE_PREFIX = 'texture_';
 
     const DEFAULT_ALPHA = "1";
     const DEFAULT_COLOR = "#000000";
     const DEFAULT_DESCRIPTION = " ";
     const PAGE_SIZE = 12;
 
-
     public $imageFile;
     public $drawingsFiles;
+    public $texturesFiles;
 
     public function rules()
     {
@@ -47,7 +49,8 @@ class Publication extends ActiveRecord
             ['name', 'string', 'max' => 100, 'message' => 'Максимальная длина: 32 символа'],
             ['description', 'string', 'max' => 32000, 'message' => 'Максимальная длина: 32000 символов'],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'message' => 'Ошибка при сохранении файла'],
-            [['drawingsFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'message' => 'Ошибка при сохранении одного из файлов', 'maxFiles' => 10],
+            [['drawingsFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png', 'message' => 'Ошибка при сохранении одного из файлов', 'maxFiles' => 10],
+            [['texturesFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'message' => 'Ошибка при сохранении одного из файлов', 'maxFiles' => 10],
         ];
     }
 
@@ -93,6 +96,30 @@ class Publication extends ActiveRecord
                     unlink($drawingPath);
                 }
                 $file->saveAs($drawingPath);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function uploadTextures()
+    {
+        if ($this->validate( "texturesFiles")) {
+            $texturesDir = self::basePath() . '/' . self::PREFIX_PATH_TEXTURES;
+
+            // Создаем директорию, если не существует
+            FileHelper::createDirectory($texturesDir);
+
+            foreach ($this->texturesFiles as $file) {
+                $baseName = explode('.', $this->image)[0];
+                $texturePrefix =  Publication::TEXTURE_PREFIX . $baseName . "_";
+                $filename = $texturePrefix . $file->baseName . '.' . $file->extension;
+                $texturePath = $texturesDir. '/' . $filename;
+                if (file_exists($texturePath)) {
+                    unlink($texturePath);
+                }
+                $file->saveAs($texturePath);
             }
             return true;
         } else {
@@ -147,6 +174,20 @@ class Publication extends ActiveRecord
         return json_decode($this->drawings, true);
     }
 
+    public function getTextures() {
+
+        $texturesArray = $this->getTexturesArray();
+        $textures = [];
+        if(isset($texturesArray['textures'])) {
+            $textures  = $texturesArray['textures'];
+        }
+        return $textures;
+    }
+    public function getTexturesArray()
+    {
+        return json_decode($this->textures, true);
+    }
+
     /**
      * Устанавливает путь до директории
      *
@@ -158,7 +199,7 @@ class Publication extends ActiveRecord
         $path = \Yii::getAlias('@storage');
 
         // Создаем директорию, если не существует
-        //FileHelper::createDirectory($path);
+        FileHelper::createDirectory($path);
 
         return $path;
     }
@@ -199,6 +240,30 @@ class Publication extends ActiveRecord
        return json_encode($drawingsArray);
     }
 
+    public function updateTextures()
+    {
+        $texturesArray = array();
+        if (strcmp($this->textures ,'') != 0) {
+            $texturesArray = $this->getTexturesArray();
+        }
+        if(!array_key_exists('textures', $texturesArray)) {
+            $texturesArray['textures'] = array();
+        }
+
+        foreach ($this->texturesFiles as $file) {
+            $baseName = explode('.', $this->image)[0];
+            $texturePrefix =  Publication::TEXTURE_PREFIX . $baseName . "_";
+            $filename = $texturePrefix .$file->baseName . '.' . $file->extension;
+            $newLayerInfo = array("image" => $filename,
+                "layerParams" => array(
+                    "title" => $file->baseName,
+                    "description" => self::DEFAULT_DESCRIPTION,
+                ));
+            array_push($texturesArray['textures'], $newLayerInfo);
+        }
+        return json_encode($texturesArray);
+    }
+
     public function deleteFilesFromStorage() {
 
         $originalImagePath = self::basePath() . '/' . self::PREFIX_PATH_IMAGES . '/' . $this->image;
@@ -216,6 +281,14 @@ class Publication extends ActiveRecord
                 $drawingPath = self::basePath(). '/' . self::PREFIX_PATH_DRAWINGS . '/' . $drawing['image'];
                 if (file_exists($drawingPath)) {
                     unlink($drawingPath);
+                }
+            }
+        }
+        if(sizeof($this->getTextures()) > 0) {
+            foreach ($this->getTextures() as $texture) {
+                $texturesPath = self::basePath(). '/' . self::PREFIX_PATH_TEXTURES . '/' . $texture['image'];
+                if (file_exists($texturesPath)) {
+                    unlink($texturesPath);
                 }
             }
         }
