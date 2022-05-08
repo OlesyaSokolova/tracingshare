@@ -29,7 +29,7 @@ JS;
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     if (Yii::$app->user->can('updateOwnPost',
             ['publication' => $publication]) || isset($userRoles['admin'])):?>
-        <button type="button" class="btn btn-outline-primary btn-rounded" id="save-button">Сохранить изменения</button>
+        <button type="button" class="btn btn-outline-primary btn-rounded" id="save-textures-button">Сохранить изменения</button>
     <?php endif; ?>
 
 <div class="d-flex justify-content-center">

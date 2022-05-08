@@ -65,12 +65,59 @@ function prepareEditableTextures() {
                     if (userAnswer === true) {
                         jsonTextures.textures.splice(i, 1);
                         //drawingsImages.splice(i, 1);
-                        var redirectToView = false;
+                        //var redirectToView = false;
                         initTexturesSettingsForEdit(jsonTextures)
-                        saveTextures(jsonTextures, redirectToView)
+                        //saveTextures(jsonTextures, redirectToView)
                     }
                 })
             }
+        }
+        var saveButton = document.getElementById("save-textures-button");
+        saveButton.addEventListener('click', function (event) {
+            var redirectToView = true
+            saveTextures(textures, redirectToView)
+        });
+
+        function saveTextures(textures, redirectToView) {
+            if(typeof textures != 'undefined' && textures !== '' && textures !== "") {
+                for (let i = 0; i < textures.textures.length; i++) {
+                    textures.textures[i].layerParams.title = document.getElementById("title_" + i).value;
+                    textures.textures[i].layerParams.description = document.getElementById('desc_' + i).value;
+                }
+            }
+            else
+            {
+                textures = ''
+            }
+            var newData = {
+                newTextures: textures,
+            };
+
+            const pathParts = window.location.pathname.split ('/');
+            const baseUrl = "/" + pathParts[1]
+                + "/" + pathParts[2]
+                + "/" + pathParts[3]
+                + "/" + pathParts[4]
+
+
+            $.ajax({
+                type: "POST",
+                url: baseUrl + "/publication/save-textures?id=" + publicationId,
+                data: {params: JSON.stringify(newData)},
+                success: function (data) {
+                    //alert(data)
+                    if(redirectToView) {
+                        location.href = window.location.origin + baseUrl + "/publication/view?id=" + publicationId
+                    }
+                    /*else {
+                        //document.location.reload();
+                        updateAllLayers(initDrawingsArray(textures));
+                    }*/
+                },
+                error: function (xhr, status, error) {
+                    alert("Произошла ошибка при сохранении данных:" + xhr);
+                }
+            });
         }
     }
 }

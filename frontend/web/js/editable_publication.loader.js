@@ -119,9 +119,9 @@ function prepareEditablePublication() {
                 if (userAnswer === true) {
                     jsonDrawings.drawings.splice(i, 1);
                     drawingsImages.splice(i, 1);
-                    var redirectToView = false;
+                    //var redirectToView = false;
                     initLayersSettingsForEdit(jsonDrawings)
-                    saveData(jsonDrawings, redirectToView)
+                    //saveData(jsonDrawings, redirectToView)
                 }
             })
         }

@@ -177,7 +177,46 @@ class PublicationController extends Controller
             Yii::$app->session->setFlash('success', "Успешно сохранено. (Новых слоев нет)");
         }
         else {
-            Yii::$app->session->setFlash('info', "Произошла ошибка про сохранении данных. ");
+            Yii::$app->session->setFlash('error', "Произошла ошибка про сохранении данных. ");
+        }
+    }
+
+    public function actionSaveTextures($id)
+    {
+        $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
+        //print_r($data);
+        $publication = Publication::findOne($id);
+
+        if (strcmp(json_encode($data['newTextures']), "") != 2) {
+            $newTextures = json_encode($data['newTextures'], JSON_UNESCAPED_UNICODE);
+            $previousTextures = $publication->textures;
+            $previousTexturesJsonArray = json_decode($previousTextures, true);
+            $publication->textures = $newTextures;
+
+            if (!is_null($previousTexturesJsonArray)) {
+                for ($i = 0; $i < sizeof($previousTexturesJsonArray['textures']); $i++) {
+                    $fileName = $previousTexturesJsonArray['textures'][$i]['image'];
+                    if (strpos($newTextures, $fileName) == false) {
+                        $filePath = Publication::basePath() . '/'
+                            . Publication::PREFIX_PATH_TEXTURES . '/'
+                            . $fileName;
+                        if (file_exists($filePath)) {
+                            unlink($filePath);
+                        }
+                    }
+                }
+            }
+
+            if ($publication->update(true, ["textures"])) {
+                Yii::$app->session->setFlash('success', "Успешно сохранено.");
+            } else if (strcmp($publication->textures, $previousTextures) == 0) {
+                Yii::$app->session->setFlash('info', "Изменений нет.");
+            } else {
+                Yii::$app->session->setFlash('error', "Произошла ошибка про сохранении данных.");
+            }
+        }
+        else {
+            Yii::$app->session->setFlash('info', "Произошла ошибка про сохранении данных.");
         }
     }
 
