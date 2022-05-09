@@ -1,5 +1,4 @@
 function prepareView() {
-
     if(typeof drawings != "undefined"
         && drawings !== ''
         && drawings !== ""
@@ -181,13 +180,35 @@ function prepareView() {
     var downloadZipButton = document.getElementById("download-zip-button");
     //https://gist.github.com/c4software/981661f1f826ad34c2a5dc11070add0f?permalink_comment_id=3517790#gistcomment-3517790
     downloadZipButton.addEventListener('click', function (event) {
-        const urls = [
-            'https://picsum.photos/200/300',
-            'https://picsum.photos/200'
+        var urls = [
+            originalImageSrc,
         ];
+
+        if(typeof textures != "undefined"
+            && textures !== ''
+            && textures !== ""
+            && textures.textures.length > 0) {
+            if (Array.isArray(textures.textures)) {
+                for (let i = 0; i < textures.textures.length; i++) {
+                    urls.push(texturePathPrefix + textures.textures[i].image)
+                }
+            }
+        }
+        if(typeof drawings != "undefined"
+            && drawings !== ''
+            && drawings !== ""
+            && drawings.drawings.length > 0) {
+            if (Array.isArray(drawings.drawings)) {
+                for (let i = 0; i < drawings.drawings.length; i++) {
+                    urls.push(drawingPathPrefix + drawings.drawings[i].image)
+                }
+            }
+        }
         const zip = new JSZip();
         let count = 0;
-        const zipFilename = "evidence.zip";
+        const originalImageFileName = originalImageSrc.split('/');
+        const filename = originalImageFileName[originalImageFileName.length - 1].split('.')[0];
+        const zipFilename = filename + ".zip";
         urls.forEach(async function (url) {
             const urlArr = url.split('/');
             const filename = urlArr[urlArr.length - 1];

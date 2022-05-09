@@ -3,10 +3,7 @@
 use frontend\assets\ViewAsset;
 use common\models\Publication;
 use yii\helpers\Html;
-?>
-<!--<script type="text/javascript" src="../../../../vendor/jszip-utils-master/dist/jszip-utils.js"></script>
---><?php
-/*$this->registerJsFile("../../../../vendor/jszip-utils-master/dist/jszip-utils.js");*/
+
 if(!empty($publication)) {
 
     $this->title = $publication->name;
