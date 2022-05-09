@@ -174,6 +174,9 @@ function prepareView() {
                             preparedTextures[index].layerParams.description +
                             '                </div>'
                     }
+                    else {
+                        descriptionDiv.innerHTML = ''
+                    }
                 }
             }
     }
