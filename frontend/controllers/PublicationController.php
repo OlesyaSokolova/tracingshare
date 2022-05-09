@@ -3,7 +3,12 @@
 namespace frontend\controllers;
 
 use common\models\Publication;
+use Exception;
+use Imagick;
+use Imagine\Image\Box;
 use Yii;
+use yii\helpers\FileHelper;
+use yii\imagine\Image;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\UploadedFile;
@@ -152,7 +157,11 @@ class PublicationController extends Controller
                 if (file_exists($filePath)) {
                     unlink($filePath);
                 }
-                file_put_contents($filePath, $imageToSave);
+                $originalImageSize = $publication->getOriginalImageSize();
+                $newImage = new Imagick();
+                $newImage->readImageBlob($imageToSave);
+                $newImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
+                file_put_contents($filePath, $newImage);
             }
         }
 
@@ -290,7 +299,7 @@ class PublicationController extends Controller
                 if(sizeof($model->texturesFiles) > 0) {
                     if ($model->uploadTextures()) {
                         $model->textures = $model->updateTextures();
-                        var_dump($model->textures);
+                       // var_dump($model->textures);
                         if($model->update(true, ["textures"])) {
                             Yii::$app->session->setFlash('success', "Успешно сохранено.");
                             return $this->redirect(['publication/edit-textures', 'id' => $model->id]);
@@ -308,5 +317,77 @@ class PublicationController extends Controller
         return $this->render('uploadTextures', [
             'model' => $model
         ]);
+    }
+
+    public function actionDownloadTiff($id)
+    {
+        //https://www.php.net/manual/en/imagick.writeimages.php
+        //1. find model and create empty tiff-result
+        $model = Publication::findOne($id);
+        $resultTiff = new Imagick();
+        $originalImagePath = Publication::basePath() . '/'
+            . Publication::PREFIX_PATH_IMAGES . '/'
+            . $model->image;
+        $originalImage = new Imagick();
+        $originalImage->readImage($originalImagePath);
+        $resultTiff->addImage($originalImage);
+
+        $originalImageSize = getimagesize($originalImagePath);
+
+        //3. add drawings (if exist) and write attributes about each drawing
+        if(sizeof($model->getDrawings()) > 0) {
+            foreach ($model->getDrawings() as $drawing) {
+                $drawingPath = Publication::basePath(). '/' . Publication::PREFIX_PATH_DRAWINGS . '/' . $drawing['image'];
+                $drawingImage = new Imagick();
+                $drawingImage->readImage($drawingPath);
+                $drawingImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
+                $resultTiff->addImage($drawingImage);
+            }
+        }
+
+        //4. add textures (if exist) and write attributes about each texture
+        if(sizeof($model->getTextures()) > 0) {
+            foreach ($model->getTextures() as $texture) {
+                $texturePath = Publication::basePath(). '/' . Publication::PREFIX_PATH_TEXTURES . '/' . $texture['image'];
+                $textureImage = new Imagick();
+                $textureImage->readImage($texturePath);
+                $textureImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
+                $resultTiff->addImage($textureImage);
+            }
+        }
+
+        try {
+            $tiffDir = Publication::basePath(). '/' . "tiff";
+            // Создаем директорию, если не существует
+            FileHelper::createDirectory($tiffDir);
+            $tiffFilename = explode('.', $model->image)[0] . ".tiff";
+            if (file_exists($tiffDir . '/' . $tiffFilename)) {
+                unlink($tiffDir . '/' . $tiffFilename);
+            }
+
+            $resultTiff->writeImages($tiffDir . '/' . $tiffFilename, true);
+
+            $tiffFilepath = $resultTiff->getImageFilename();
+
+            if (file_exists($tiffFilepath)) {
+                if (file_exists($tiffFilepath)) {
+                    header('Content-Description: File Transfer');
+                    header('Content-Type: application/octet-stream');
+                    header('Content-Disposition: attachment; filename="'.basename($tiffFilepath).'"');
+                    header('Expires: 0');
+                    header('Cache-Control: must-revalidate');
+                    header('Pragma: public');
+                    header('Content-Length: ' . filesize($tiffFilepath));
+                    register_shutdown_function('unlink', $tiffFilepath);
+                    ignore_user_abort(true);
+                    readfile($tiffFilepath);
+                    $resultTiff->clear();
+                    $resultTiff->destroy();
+                    exit;
+                }
+            }
+        } catch (\ImagickException $e) {
+            Yii::$app->session->setFlash('error', "При скачивании файла произошла ошибка: ". $e->getMessage());
+        }
     }
 }

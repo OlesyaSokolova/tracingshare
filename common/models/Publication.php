@@ -133,6 +133,11 @@ class Publication extends ActiveRecord
         //return 'exhibits';
     }
 
+    public function getOriginalImageSize() {
+        $originalImagePath = self::basePath() . '/' . self::PREFIX_PATH_IMAGES . '/' . $this->image;
+        return getimagesize($originalImagePath);
+
+    }
     public function generateThumbnail() {
         $thumbnailDir = self::basePath(). '/' . self::PREFIX_PATH_THUMBNAILS;
         $originalImagePath = self::basePath() . '/' . self::PREFIX_PATH_IMAGES . '/' . $this->image;
@@ -169,6 +174,7 @@ class Publication extends ActiveRecord
         }
         return $drawings;
     }
+
     public function getDrawingsArray()
     {
         return json_decode($this->drawings, true);
@@ -183,6 +189,7 @@ class Publication extends ActiveRecord
         }
         return $textures;
     }
+
     public function getTexturesArray()
     {
         return json_decode($this->textures, true);
@@ -210,6 +217,14 @@ class Publication extends ActiveRecord
 
             return $user->last_name . " " . $user->first_name . " " . $user->patronymic
                 . " (" . $user->email . ")";
+        }
+        else return "";
+    }
+
+    public function getAuthorEmail() {
+        if(($this->author_id) != null) {
+            $user = User::findIdentity($this->author_id);
+            return $user->email;
         }
         else return "";
     }

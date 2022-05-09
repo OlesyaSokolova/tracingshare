@@ -4,8 +4,6 @@ use frontend\assets\ViewAsset;
 use common\models\Publication;
 use yii\helpers\Html;
 
-
-
 if(!empty($publication)) {
 
     $this->title = $publication->name;
@@ -39,16 +37,23 @@ if(!empty($publication)) {
     $this->registerJs($script, yii\web\View::POS_READY);
 }
 ?>
-
 <h3><?=$this->title?></h3>
 
 <p>
-    <?php //endif;
-    if (strcmp($publication->drawings ,'') != 0): ?>
+    <?php
+    if (strcmp($publication->drawings ,'') != 0
+        && sizeof($publication->getDrawings()) > 0): ?>
     <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить авторские настройки</button>
+    <?php endif; ?>
+    <button type="button" class="btn btn-outline-primary btn-rounded" id="download-zip-button">Скачать (.zip)</button>
+    <?php echo Html::a(Yii::t('app', 'Скачать (.tiff)'),
+        ['/publication/download-tiff', 'id' => $publication->id],
+        ['class' => 'btn btn-outline-primary btn-rounded',
+            'name' => 'download-tiff-button',]); ?>
+<!--    <button type="button" class="btn btn-outline-primary btn-rounded" id="download-button">Скачать (.zip)</button>
+-->
 </p>
-    <?php endif;
-    $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+    <?php $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     if (Yii::$app->user->can('updateOwnPost',
         ['publication' => $publication]) || isset($userRoles['admin'])):?>
 
@@ -75,10 +80,13 @@ if(!empty($publication)) {
                 'name' => 'edit-textures-button',]) ?>
         <?php endif; ?>
 
+        <?php if (strcmp($publication->drawings ,'') != 0
+            && sizeof($publication->getDrawings()) > 0): ?>
         <?= Html::a(Yii::t('app', 'Редактировать демонстрационные' . '<br>' . 'настройки'),
             ['/publication/edit', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'edit-button',]) ?>
+        <?php endif; ?>
 
         <?= Html::a(Yii::t('app', 'Создать ' . '<br>' . 'новый слой'),
             ['/publication/create-layer', 'id' => $publication->id],

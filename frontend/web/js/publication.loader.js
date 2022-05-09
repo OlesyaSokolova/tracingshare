@@ -1,5 +1,4 @@
 function prepareView() {
-
     if(typeof drawings != "undefined"
         && drawings !== ''
         && drawings !== ""
@@ -59,17 +58,19 @@ function prepareView() {
             }
 
             var resetButton = document.getElementById("reset-button");
-            resetButton.addEventListener('click', function (event) {
-                reloadSettings(defaultDrawings, drawingsImages)
+            if(resetButton) {
+                resetButton.addEventListener('click', function (event) {
+                    reloadSettings(defaultDrawings, drawingsImages)
 
-                if (drawings.drawings.length !== 0) {
-                    var descriptionDiv = document.getElementById('description');
-                    var layerTitle = document.getElementById('layer_title');
-                    descriptionDiv.innerText = drawings.drawings[0].layerParams.description;
-                    document.getElementById('layer_' + 0).style.background = "#d6d5d5";
-                    layerTitle.innerText = drawings.drawings[0].layerParams.title
-                }
-            })
+                    if (drawings.drawings.length !== 0) {
+                        var descriptionDiv = document.getElementById('description');
+                        var layerTitle = document.getElementById('layer_title');
+                        descriptionDiv.innerText = drawings.drawings[0].layerParams.description;
+                        document.getElementById('layer_' + 0).style.background = "#d6d5d5";
+                        layerTitle.innerText = drawings.drawings[0].layerParams.title
+                    }
+                })
+            }
         }
     }
     else {
@@ -173,9 +174,61 @@ function prepareView() {
                             preparedTextures[index].layerParams.description +
                             '                </div>'
                     }
+                    else {
+                        descriptionDiv.innerHTML = ''
+                    }
                 }
             }
     }
+    var downloadZipButton = document.getElementById("download-zip-button");
+    //https://gist.github.com/c4software/981661f1f826ad34c2a5dc11070add0f?permalink_comment_id=3517790#gistcomment-3517790
+    downloadZipButton.addEventListener('click', function (event) {
+        var urls = [
+            originalImageSrc,
+        ];
+
+        if(typeof textures != "undefined"
+            && textures !== ''
+            && textures !== ""
+            && textures.textures.length > 0) {
+            if (Array.isArray(textures.textures)) {
+                for (let i = 0; i < textures.textures.length; i++) {
+                    urls.push(texturePathPrefix + textures.textures[i].image)
+                }
+            }
+        }
+        if(typeof drawings != "undefined"
+            && drawings !== ''
+            && drawings !== ""
+            && drawings.drawings.length > 0) {
+            if (Array.isArray(drawings.drawings)) {
+                for (let i = 0; i < drawings.drawings.length; i++) {
+                    urls.push(drawingPathPrefix + drawings.drawings[i].image)
+                }
+            }
+        }
+        const zip = new JSZip();
+        let count = 0;
+        const originalImageFileName = originalImageSrc.split('/');
+        const filename = originalImageFileName[originalImageFileName.length - 1].split('.')[0];
+        const zipFilename = filename + ".zip";
+        urls.forEach(async function (url) {
+            const urlArr = url.split('/');
+            const filename = urlArr[urlArr.length - 1];
+            try {
+                const file = await JSZipUtils.getBinaryContent(url)
+                zip.file(filename, file, {binary: true});
+                count++;
+                if (count === urls.length) {
+                    zip.generateAsync({type: 'blob'}).then(function (content) {
+                        saveAs(content, zipFilename);
+                    });
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        });
+    });
 }
 
 
