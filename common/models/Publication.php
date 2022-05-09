@@ -133,6 +133,11 @@ class Publication extends ActiveRecord
         //return 'exhibits';
     }
 
+    public function getOriginalImageSize() {
+        $originalImagePath = self::basePath() . '/' . self::PREFIX_PATH_IMAGES . '/' . $this->image;
+        return getimagesize($originalImagePath);
+
+    }
     public function generateThumbnail() {
         $thumbnailDir = self::basePath(). '/' . self::PREFIX_PATH_THUMBNAILS;
         $originalImagePath = self::basePath() . '/' . self::PREFIX_PATH_IMAGES . '/' . $this->image;

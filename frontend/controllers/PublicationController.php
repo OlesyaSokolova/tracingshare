@@ -157,7 +157,11 @@ class PublicationController extends Controller
                 if (file_exists($filePath)) {
                     unlink($filePath);
                 }
-                file_put_contents($filePath, $imageToSave);
+                $originalImageSize = $publication->getOriginalImageSize();
+                $newImage = new Imagick();
+                $newImage->readImageBlob($imageToSave);
+                $newImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
+                file_put_contents($filePath, $newImage);
             }
         }
 
@@ -295,7 +299,7 @@ class PublicationController extends Controller
                 if(sizeof($model->texturesFiles) > 0) {
                     if ($model->uploadTextures()) {
                         $model->textures = $model->updateTextures();
-                        var_dump($model->textures);
+                       // var_dump($model->textures);
                         if($model->update(true, ["textures"])) {
                             Yii::$app->session->setFlash('success', "Успешно сохранено.");
                             return $this->redirect(['publication/edit-textures', 'id' => $model->id]);
@@ -321,16 +325,11 @@ class PublicationController extends Controller
         //1. find model and create empty tiff-result
         $model = Publication::findOne($id);
         $resultTiff = new Imagick();
-        $metadata = array();
-        //2. add original image to tiff-result
-        // and write attributes about the image to tiff-result (not to original image!!)
         $originalImagePath = Publication::basePath() . '/'
             . Publication::PREFIX_PATH_IMAGES . '/'
             . $model->image;
         $originalImage = new Imagick();
         $originalImage->readImage($originalImagePath);
-        $metadata['title'] =  "\"". $model->name . "\"";
-        $metadata['author'] =  "\"".  $model->getAuthorName() . "\"";
         $resultTiff->addImage($originalImage);
 
         $originalImageSize = getimagesize($originalImagePath);
@@ -345,8 +344,6 @@ class PublicationController extends Controller
                 $resultTiff->addImage($drawingImage);
             }
         }
-        //3.1. add info about number of drawings to attributes of tiff-result
-        $metadata['drawings'] = sizeof($model->getDrawings());
 
         //4. add textures (if exist) and write attributes about each texture
         if(sizeof($model->getTextures()) > 0) {
@@ -358,8 +355,6 @@ class PublicationController extends Controller
                 $resultTiff->addImage($textureImage);
             }
         }
-        //4.1. add info about number of textures to attributes of tiff-result
-        $metadata['textures'] = sizeof($model->getTextures());
 
         try {
             $tiffDir = Publication::basePath(). '/' . "tiff";
@@ -370,36 +365,27 @@ class PublicationController extends Controller
                 unlink($tiffDir . '/' . $tiffFilename);
             }
 
-        $tiffFilepath = $resultTiff->getImageFilename();
+            $resultTiff->writeImages($tiffDir . '/' . $tiffFilename, true);
 
-        $resultTiff->writeImages($tiffDir . '/' . $tiffFilename, true);
+            $tiffFilepath = $resultTiff->getImageFilename();
 
-        foreach ($metadata as $key => $value) {
-            $output=null;
-            $retval=null;
-            //$tmp = '-'.$key.'='. "\"". $value . "\"";
-            $tmp = '-'.$key.'='.$value;
-            //$tmp = '-drawings=0';
-            //var_dump($tmp);
-            exec('exiftool -v2 '. $tmp . ' '. $tiffFilepath, $output, $retval);
-            echo "Returned with status $retval and output:\n";
-            print_r($output);
-        }
-        /*if (file_exists($tiffFilepath)) {
             if (file_exists($tiffFilepath)) {
-                header('Content-Description: File Transfer');
-                header('Content-Type: application/octet-stream');
-                header('Content-Disposition: attachment; filename="'.basename($tiffFilepath).'"');
-                header('Expires: 0');
-                header('Cache-Control: must-revalidate');
-                header('Pragma: public');
-                header('Content-Length: ' . filesize($tiffFilepath));
-                register_shutdown_function('unlink', $tiffFilepath);
-                ignore_user_abort(true);
-                //readfile($tiffFilepath);
-                exit;
+                if (file_exists($tiffFilepath)) {
+                    header('Content-Description: File Transfer');
+                    header('Content-Type: application/octet-stream');
+                    header('Content-Disposition: attachment; filename="'.basename($tiffFilepath).'"');
+                    header('Expires: 0');
+                    header('Cache-Control: must-revalidate');
+                    header('Pragma: public');
+                    header('Content-Length: ' . filesize($tiffFilepath));
+                    register_shutdown_function('unlink', $tiffFilepath);
+                    ignore_user_abort(true);
+                    readfile($tiffFilepath);
+                    $resultTiff->clear();
+                    $resultTiff->destroy();
+                    exit;
+                }
             }
-        }*/
         } catch (\ImagickException $e) {
             Yii::$app->session->setFlash('error', "При скачивании файла произошла ошибка: ". $e->getMessage());
         }
