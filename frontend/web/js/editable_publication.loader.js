@@ -121,6 +121,7 @@ function prepareEditablePublication() {
                     drawingsImages.splice(i, 1);
                     //var redirectToView = false;
                     initLayersSettingsForEdit(jsonDrawings)
+                    updateAllLayers(initDrawingsArray(jsonDrawings));
                     //saveData(jsonDrawings, redirectToView)
                 }
             })
