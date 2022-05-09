@@ -59,17 +59,19 @@ function prepareView() {
             }
 
             var resetButton = document.getElementById("reset-button");
-            resetButton.addEventListener('click', function (event) {
-                reloadSettings(defaultDrawings, drawingsImages)
+            if(resetButton) {
+                resetButton.addEventListener('click', function (event) {
+                    reloadSettings(defaultDrawings, drawingsImages)
 
-                if (drawings.drawings.length !== 0) {
-                    var descriptionDiv = document.getElementById('description');
-                    var layerTitle = document.getElementById('layer_title');
-                    descriptionDiv.innerText = drawings.drawings[0].layerParams.description;
-                    document.getElementById('layer_' + 0).style.background = "#d6d5d5";
-                    layerTitle.innerText = drawings.drawings[0].layerParams.title
-                }
-            })
+                    if (drawings.drawings.length !== 0) {
+                        var descriptionDiv = document.getElementById('description');
+                        var layerTitle = document.getElementById('layer_title');
+                        descriptionDiv.innerText = drawings.drawings[0].layerParams.description;
+                        document.getElementById('layer_' + 0).style.background = "#d6d5d5";
+                        layerTitle.innerText = drawings.drawings[0].layerParams.title
+                    }
+                })
+            }
         }
     }
     else {
@@ -176,12 +178,33 @@ function prepareView() {
                 }
             }
     }
-
-   /* var downloadButton = document.getElementById("save-button");
-    saveButton.addEventListener('click', function (event) {
-        var redirectToView = true
-        saveData(drawings, redirectToView)
-    });*/
+    var downloadZipButton = document.getElementById("download-zip-button");
+    //https://gist.github.com/c4software/981661f1f826ad34c2a5dc11070add0f?permalink_comment_id=3517790#gistcomment-3517790
+    downloadZipButton.addEventListener('click', function (event) {
+        const urls = [
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200'
+        ];
+        const zip = new JSZip();
+        let count = 0;
+        const zipFilename = "evidence.zip";
+        urls.forEach(async function (url) {
+            const urlArr = url.split('/');
+            const filename = urlArr[urlArr.length - 1];
+            try {
+                const file = await JSZipUtils.getBinaryContent(url)
+                zip.file(filename, file, {binary: true});
+                count++;
+                if (count === urls.length) {
+                    zip.generateAsync({type: 'blob'}).then(function (content) {
+                        saveAs(content, zipFilename);
+                    });
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        });
+    });
 }
 
 

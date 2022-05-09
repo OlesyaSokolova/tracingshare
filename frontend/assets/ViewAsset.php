@@ -26,6 +26,10 @@ class ViewAsset extends AssetBundle
         'js/edit_textures.js',
         'js/layer/create_layer_publication.loader.js',
         'js/layer/editor_utils.js',
+
+        'js/jszip/dist/jszip.js',
+        'js/jszip-utils/dist/jszip-utils.js',
+        'js/FileSaver.js-master/dist/FileSaver.js',
         ];
 
     public $depends = [

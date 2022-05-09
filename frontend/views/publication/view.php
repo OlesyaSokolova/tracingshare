@@ -3,9 +3,10 @@
 use frontend\assets\ViewAsset;
 use common\models\Publication;
 use yii\helpers\Html;
-
-
-
+?>
+<!--<script type="text/javascript" src="../../../../vendor/jszip-utils-master/dist/jszip-utils.js"></script>
+--><?php
+/*$this->registerJsFile("../../../../vendor/jszip-utils-master/dist/jszip-utils.js");*/
 if(!empty($publication)) {
 
     $this->title = $publication->name;
@@ -39,17 +40,16 @@ if(!empty($publication)) {
     $this->registerJs($script, yii\web\View::POS_READY);
 }
 ?>
-
 <h3><?=$this->title?></h3>
 
 <p>
     <?php
     if (strcmp($publication->drawings ,'') != 0
-        && sizeof($publication->getTextures()) > 0): ?>
+        && sizeof($publication->getDrawings()) > 0): ?>
     <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить авторские настройки</button>
-    <?php endif;
-
-    echo Html::a(Yii::t('app', 'Скачать (.tiff)'),
+    <?php endif; ?>
+    <button type="button" class="btn btn-outline-primary btn-rounded" id="download-zip-button">Скачать (.zip)</button>
+    <?php echo Html::a(Yii::t('app', 'Скачать (.tiff)'),
         ['/publication/download-tiff', 'id' => $publication->id],
         ['class' => 'btn btn-outline-primary btn-rounded',
             'name' => 'download-tiff-button',]); ?>
