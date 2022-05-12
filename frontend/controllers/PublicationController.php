@@ -146,6 +146,11 @@ class PublicationController extends Controller
 
             $layersUrls = $data['layersUrls'];
             $fileNames = $data['layersFilesNames'];
+
+            // Создаем директорию, если не существует
+            FileHelper::createDirectory(Publication::basePath() . '/'
+                . Publication::PREFIX_PATH_DRAWINGS);
+
             for($i = 0; $i < sizeof($layersUrls); $i++) {
                 $imageBase64 = $layersUrls[$i];
                 $img0 = str_replace('data:image/png;base64,', '', $imageBase64);
