@@ -11,7 +11,9 @@ use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
 
 AppAsset::register($this);
+
 ?>
+
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" class="h-100">
@@ -22,10 +24,11 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="d-flex flex-column h-100">
-<?php $this->beginBody() ?>
 
-<header>
+<body class="d-flex flex-column h-100">
+<?php $this->beginBody(); ?>
+
+<div class="wrap">
     <?php
     NavBar::begin([
         'brandLabel' => Yii::$app->name,
@@ -34,34 +37,55 @@ AppAsset::register($this);
             'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'About', 'url' => ['/site/about']],
-        ['label' => 'Contact', 'url' => ['/site/contact']],
-    ];
+
+    $menuItems = [];
+    $menuItems[] = ['label' => 'О проекте', 'url' => ['/site/about']];
+    $menuItems[] = ['label' => 'Авторы', 'url' => ['/author/list']];
+
+    $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+
+    if (isset($userRoles['author']) || isset($userRoles['admin'])) {
+        $menuItems[] = ['label' => 'Мои публикации', 'url' => ['/site/publications']];
+    }
+
+    if (isset($userRoles['admin'])) {
+        $menuItems[] = ['label' => 'Администрирование', 'url' => ['/site/admin']];
+    }
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav navbar-right'],
+        'items' => $menuItems
+    ]);
+
+    $authenticationItems = [];
+
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $authenticationItems[] = ['label' => 'Регистрация', 'url' => ['/site/signup']];
+        $authenticationItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
     } else {
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline'])
+        //$authenticationItems[] = ['label' => 'Мои публикации', 'url' => ['/gallery/publications']];
+        $authenticationItems[] = '<li>'
+            . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout']
+                'Выход (' . Yii::$app->user->identity->email . ')',
+                //'Выход',
+                ['class' => 'btn btn-light logout']
             )
             . Html::endForm()
             . '</li>';
     }
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav ml-auto'],
-        'items' => $menuItems,
+        'items' => $authenticationItems,
     ]);
     NavBar::end();
     ?>
-</header>
+
+</div>
+
 
 <main role="main" class="flex-shrink-0">
-    <div class="container">
+    <div class="container-fluid" style="padding-left: 200px; padding-right: 200px; padding-top: 30px">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
@@ -70,14 +94,21 @@ AppAsset::register($this);
     </div>
 </main>
 
-<footer class="footer mt-auto py-3 text-muted">
+<footer class="footer"  style="bottom: 0;
+width: 100%;
+text-align: center;
+vertical-align: bottom;
+
+position: relative;
+z-index: 1;
+
+margin:auto 0;">
     <div class="container">
-        <p class="float-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-        <p class="float-right"><?= Yii::powered() ?></p>
+        <p class="pull-left">Новосибирский Государственный Универститет, <?= date('Y') ?></p>
     </div>
 </footer>
 
 <?php $this->endBody() ?>
 </body>
 </html>
-<?php $this->endPage();
+<?php $this->endPage() ?>

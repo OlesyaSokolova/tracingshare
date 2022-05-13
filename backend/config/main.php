@@ -1,4 +1,5 @@
 <?php
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -8,6 +9,7 @@ $params = array_merge(
 
 return [
     'id' => 'app-backend',
+    'name'=>'Галерея изображений',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
@@ -37,14 +39,12 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
+
+      /* 'urlManager' => [
+            'enablePrettyUrl' => false,
             'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
-        */
+        ],*/
+
     ],
     'params' => $params,
 ];

@@ -11,7 +11,9 @@ use common\models\User;
  */
 class SignupForm extends Model
 {
-    public $username;
+    public $first_name;
+    public $last_name;
+    public $patronymic;
     public $email;
     public $password;
 
@@ -22,16 +24,14 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            ['username', 'trim'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
+            [['first_name', 'last_name', 'patronymic'], 'required', 'message' => 'Это поле не может быть пустым'],
+            [['first_name', 'last_name', 'patronymic'], 'string', 'min' => 2, 'max' => 32, 'message' => 'Максимальная длина: 32 символа'],
 
             ['email', 'trim'],
             ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['email', 'email', 'message' => 'Неправильный формат email.'],
+            ['email', 'string', 'max' => 32, 'message' => 'Максимальная длина: 32 символа'],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'Пользователь с таким email уже существует.'],
 
             ['password', 'required'],
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
@@ -48,15 +48,27 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
+
         $user = new User();
-        $user->username = $this->username;
+        $user->first_name = $this->first_name;
+        $user->last_name = $this->last_name;
+        $user->patronymic = $this->patronymic;
         $user->email = $this->email;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
+        $user_saved = $user->save();
+        if($user_saved) {
+            $auth = Yii::$app->authManager;
+            $authRole = $auth->getRole('author');
+            $auth->assign($authRole, $user->getId());
+            return $this->sendEmail($user);
+        }
+        return false;
 
-        return $user->save() && $this->sendEmail($user);
+
+
+       // return $user->save() && $this->sendEmail($user);
     }
 
     /**
@@ -74,7 +86,7 @@ class SignupForm extends Model
             )
             ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($this->email)
-            ->setSubject('Account registration at ' . Yii::$app->name)
+            ->setSubject('Подтверждение регистрации ' . Yii::$app->name)
             ->send();
     }
 }

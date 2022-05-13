@@ -18,8 +18,9 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
+
 <body class="d-flex flex-column h-100">
-<?php $this->beginBody() ?>
+<?php $this->beginBody(); ?>
 
 <main role="main">
     <div class="container">
@@ -29,5 +30,20 @@ AppAsset::register($this);
 
 <?php $this->endBody() ?>
 </body>
+<footer class="footer"  style="bottom: 0;
+width: 100%;
+text-align: center;
+vertical-align: bottom;
+
+position: relative;
+z-index: 1;
+
+margin:auto 0;">
+    <div class="container">
+        <p class="pull-left">Новосибирский Государственный Универститет, <?= date('Y') ?></p>
+    </div>
+</footer>
+
+<?php $this->endBody() ?>
 </html>
-<?php $this->endPage();
+<?php $this->endPage() ?>

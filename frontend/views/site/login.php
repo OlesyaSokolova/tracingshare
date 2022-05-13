@@ -7,35 +7,31 @@
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
 
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Вход';
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>Please fill out the following fields to login:</p>
-
-    <div class="row">
+<div class="site-signup" align="center">
+    <h3 style="text-align: center;"><?= Html::encode($this->title) ?></h3>
+    <div class="row row justify-content-center">
         <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+            <?php $form = ActiveForm::begin(['id' => 'form-login']) ?>
+            <?= $form->field($model, 'email')->label("Email:") ?>
+            <?=$form->field($model, 'password')->passwordInput()->label("Пароль:") ?>
+            <?= $form->field($model, 'rememberMe')->checkbox([
+                'template' => "<div class=\"offset-lg-1 col-lg-3 custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
+            ])->label("Запомнить меня"); ?>
 
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+            <div style="color:#999;margin:1em 0">
+                Если Вы забыли пароль, Вы можете его <?= Html::a('сбросить', ['site/request-password-reset']) ?>.
+            </div>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
-
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
-
-                <div style="color:#999;margin:1em 0">
-                    If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
-                    <br>
-                    Need new verification email? <?= Html::a('Resend', ['site/resend-verification-email']) ?>
+            <div class="form-group" style="text-align: center;">
+                <div class="offset-lg-1 col-lg-11">
+                    <?= Html::submitButton('Войти', ['class' => 'btn btn-outline-primary btn-rounded', 'name' => 'login-button']) ?>
                 </div>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
+            </div>
 
             <?php ActiveForm::end(); ?>
+
         </div>
     </div>
 </div>

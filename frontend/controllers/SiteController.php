@@ -2,10 +2,13 @@
 
 namespace frontend\controllers;
 
+use common\models\Publication;
+use common\models\UrlUtils;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\data\Pagination;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -15,6 +18,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\UploadedFile;
 
 /**
  * Site controller
@@ -75,7 +79,43 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $query = Publication::find()
+            ->orderBy(['id' => SORT_DESC]);
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count(),
+            'pageSize' => Publication::PAGE_SIZE]);
+        $publications = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+        foreach ($publications as &$publication) {
+            $publication->generateThumbnail();
+        }
+        return $this->render('index',[
+            'publications' => $publications,
+            'pages' => $pages,
+        ]);
+    }
+
+    public function actionPublications()
+    {
+        $query = Publication::find()
+            ->where(['author_id' => Yii::$app->user->getId()])
+            ->orderBy(['id' => SORT_DESC]);
+        $pages = new Pagination(['totalCount' => $query->count(),
+        'pageSize' => Publication::PAGE_SIZE]);
+        $publications = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+        return $this->render('publications',[
+            'publications' => $publications,
+            'pages' => $pages,
+        ]);
+    }
+
+    public function actionAdmin()
+    {
+        header("Location: ". UrlUtils::backendUrl()."/publication/index");
+        exit();
     }
 
     /**
@@ -155,7 +195,7 @@ class SiteController extends Controller
     {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+            Yii::$app->session->setFlash('success', 'Пожалуйста, проверьте почту и подтвердите регистрацию.');
             return $this->goHome();
         }
 
@@ -174,12 +214,12 @@ class SiteController extends Controller
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+                Yii::$app->session->setFlash('success', 'Проверьте свою почту для сброса пароля.');
 
                 return $this->goHome();
             }
 
-            Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
+            Yii::$app->session->setFlash('error', 'Произошла ошибка во время сброса пароля.');
         }
 
         return $this->render('requestPasswordResetToken', [
@@ -203,7 +243,7 @@ class SiteController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->session->setFlash('success', 'New password saved.');
+            Yii::$app->session->setFlash('success', 'Новый пароль установлен.');
 
             return $this->goHome();
         }
@@ -228,32 +268,11 @@ class SiteController extends Controller
             throw new BadRequestHttpException($e->getMessage());
         }
         if (($user = $model->verifyEmail()) && Yii::$app->user->login($user)) {
-            Yii::$app->session->setFlash('success', 'Your email has been confirmed!');
+            Yii::$app->session->setFlash('success', 'Регистрация успешно подтверждена.');
             return $this->goHome();
         }
 
-        Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');
+        Yii::$app->session->setFlash('error', 'Произошла ошибка во время подтверждения регистрации: неправильный токен.');
         return $this->goHome();
-    }
-
-    /**
-     * Resend verification email
-     *
-     * @return mixed
-     */
-    public function actionResendVerificationEmail()
-    {
-        $model = new ResendVerificationEmailForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-                return $this->goHome();
-            }
-            Yii::$app->session->setFlash('error', 'Sorry, we are unable to resend verification email for the provided email address.');
-        }
-
-        return $this->render('resendVerificationEmail', [
-            'model' => $model
-        ]);
     }
 }

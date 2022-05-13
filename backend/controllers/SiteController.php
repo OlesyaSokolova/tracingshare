@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\LoginForm;
+use common\models\UrlUtils;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -28,7 +29,7 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout', 'index', 'frontend'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -62,7 +63,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        header("Location: ". UrlUtils::backendUrl()."/publication/index");
+        exit();
     }
 
     /**
@@ -80,7 +82,13 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            $userRoles =  Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+            if(isset($userRoles['admin'])) {
+                return $this->goHome();
+            }
+            else {
+                return $this->actionLogout();
+            }
         }
 
         $model->password = '';
@@ -98,7 +106,12 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
+    }
+
+    public function actionFrontend()
+    {
+        header("Location: ". UrlUtils::frontendUrl());
+        exit();
     }
 }
