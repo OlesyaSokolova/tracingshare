@@ -83,6 +83,7 @@ class UserController extends Controller
     }
     public function actionUpdate($id)
     {
+        if(Yii::$app->user->can('updateUserInfo')) {
         $user = $this->findModel($id);
         $model = new UpdateUserForm($user);
         if ($model->load(Yii::$app->request->post()) && $model->update()) {
@@ -95,6 +96,8 @@ class UserController extends Controller
         return $this->render('update', [
             'model' => $model,
         ]);
+        }
+        else return $this->redirect(['error']);
     }
 
     /**
@@ -106,9 +109,11 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-        //where author_id = user_id -> admin_id
-        return $this->redirect(['index']);
+        if(Yii::$app->user->can('updateUserInfo')) {
+            $this->findModel($id)->delete();
+            return $this->redirect(['index']);
+        }
+        else return $this->redirect(['error']);
     }
 
     /**
