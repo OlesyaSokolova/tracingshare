@@ -29,9 +29,8 @@ JS;
 <p>
 
     <?php
-    $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
-    if (Yii::$app->user->can('updateOwnPost',
-            ['publication' => $publication]) || isset($userRoles['admin'])):?>
+    if (Yii::$app->user->can('updatePost',
+            ['publication' => $publication])):?>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="save-button">Сохранить <br> изменения</button>
 
         <?= Html::a(Yii::t('app', 'Загрузить' . '<br>' . ' слои прорисовок'),
