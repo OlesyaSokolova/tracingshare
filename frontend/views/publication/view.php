@@ -14,19 +14,19 @@ if(!empty($publication)) {
 
     if(strcmp($publication->drawings ,'') == 0) {
         $script = "originalImageSrc = $originalImageSrc
-drawingPathPrefix =  $drawingPathPrefix
-texturePathPrefix = $texturePathPrefix
-textures = $publication->textures 
-prepareView()";
+        drawingPathPrefix =  $drawingPathPrefix
+        texturePathPrefix = $texturePathPrefix
+        textures = $publication->textures 
+        prepareView()";
     }
     else
     {
         $script = "originalImageSrc = $originalImageSrc
-drawingPathPrefix =  $drawingPathPrefix
-texturePathPrefix = $texturePathPrefix
-drawings = $publication->drawings
-textures = $publication->textures  
-prepareView()";
+        drawingPathPrefix =  $drawingPathPrefix
+        texturePathPrefix = $texturePathPrefix
+        drawings = $publication->drawings
+        textures = $publication->textures  
+        prepareView()";
     }
 
     ViewAsset::register($this);
