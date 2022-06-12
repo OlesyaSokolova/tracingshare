@@ -13,24 +13,20 @@ if(!empty($publication)) {
     //$settings = json_encode(array("drawings"=>$publication->drawings, "textures"=>$publication->textures));
 
     if(strcmp($publication->drawings ,'') == 0) {
-        $script = <<< JS
-        originalImageSrc = $originalImageSrc
-        drawingPathPrefix =  $drawingPathPrefix
-        texturePathPrefix = $texturePathPrefix
-        textures = $publication->textures 
-        prepareView()
-        JS;
+        $script = "originalImageSrc = $originalImageSrc
+drawingPathPrefix =  $drawingPathPrefix
+texturePathPrefix = $texturePathPrefix
+textures = $publication->textures 
+prepareView()";
     }
     else
     {
-        $script = <<< JS
-        originalImageSrc = $originalImageSrc
-        drawingPathPrefix =  $drawingPathPrefix
-        texturePathPrefix = $texturePathPrefix
-        drawings = $publication->drawings
-        textures = $publication->textures  
-        prepareView()
-        JS;
+        $script = "originalImageSrc = $originalImageSrc
+drawingPathPrefix =  $drawingPathPrefix
+texturePathPrefix = $texturePathPrefix
+drawings = $publication->drawings
+textures = $publication->textures  
+prepareView()";
     }
 
     ViewAsset::register($this);
