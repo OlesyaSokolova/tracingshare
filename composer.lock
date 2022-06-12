@@ -483,7 +483,7 @@
                 "php": ">=7.0.0",
                 "symfony/polyfill-iconv": "^1.0",
                 "symfony/polyfill-intl-idn": "^1.10",
-                "symfony/polyfill-mbstring": "^1.0"
+                "symfony/polyfill-mbstring": "1.23.0"
             },
             "require-dev": {
                 "mockery/mockery": "^1.0",
