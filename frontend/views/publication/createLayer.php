@@ -17,29 +17,25 @@ if(!empty($publication)) {
     $texturePathPrefix = "\"" . Publication::getStorageHttpPath() . Publication::PREFIX_PATH_TEXTURES . '/' . "\"";
 
     if(strcmp($publication->drawings ,'') == 0) {
-        $script = <<< JS
-        publicationId = $publication->id
-        publicationId = $publication->id
-        originalImageSrc = $originalImageSrc
-        drawingPathPrefix =  $drawingPathPrefix
-        texturePathPrefix = $texturePathPrefix
-        prefix = $drawingPrefix
-        textures = $publication->textures 
-        prepareLayersToDraw()
-        JS;
+        $script = "publicationId = $publication->id
+publicationId = $publication->id
+originalImageSrc = $originalImageSrc
+drawingPathPrefix =  $drawingPathPrefix
+texturePathPrefix = $texturePathPrefix
+prefix = $drawingPrefix
+textures = $publication->textures 
+prepareLayersToDraw()";
     }
     else
     {
-        $script = <<< JS
-        publicationId = $publication->id
-        originalImageSrc = $originalImageSrc
-        drawingPathPrefix =  $drawingPathPrefix
-        texturePathPrefix = $texturePathPrefix
-        prefix = $drawingPrefix
-        drawings = $publication->drawings
-        textures = $publication->textures  
-        prepareLayersToDraw()
-        JS;
+        $script = "publicationId = $publication->id
+originalImageSrc = $originalImageSrc
+drawingPathPrefix =  $drawingPathPrefix
+texturePathPrefix = $texturePathPrefix
+prefix = $drawingPrefix
+drawings = $publication->drawings
+textures = $publication->textures  
+prepareLayersToDraw()";
     }
 
     ViewAsset::register($this);

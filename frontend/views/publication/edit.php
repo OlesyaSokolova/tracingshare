@@ -37,7 +37,7 @@ JS;
         <?= Html::a(Yii::t('app', 'Загрузить' . '<br>' . ' слои прорисовок'),
             ['/publication/upload-drawings', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'upload-drawings-button',]) ?>
+                'name' => 'upload-drawings-button']) ?>
 
     <?php endif; ?>
 <?php
@@ -80,7 +80,7 @@ if (strcmp($publication->drawings ,'') != 0
                 <?= Html::a(Yii::t('app', 'Создать новый слой'),
                     ['/publication/create-layer', 'id' => $publication->id],
                     ['class' => 'btn btn-outline-primary btn-rounded', 'style' => 'margin-bottom: 10px',
-                        'name' => 'create-layer-button'],) ?>
+                        'name' => 'create-layer-button']) ?>
                 <?php
                 if (strcmp($publication->drawings ,'') != 0
                     && sizeof($publication->getDrawings()) > 0

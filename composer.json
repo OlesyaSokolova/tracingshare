@@ -14,8 +14,8 @@
     },
     "minimum-stability": "stable",
     "require": {
-      "php": ">=7.4.0",
-      "yiisoft/yii2": "~2.0.14",
+      "php": ">=7.0.0",
+      "yiisoft/yii2": "2.0.44",
       "yiisoft/yii2-bootstrap4": "~2.0.0",
       "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "yiisoft/yii2-imagine": "*",
@@ -31,13 +31,15 @@
         "codeception/module-asserts": "^1.0",
         "codeception/module-yii2": "^1.0",
         "codeception/module-filesystem": "^1.0",
-        "codeception/verify": "~0.5.0 || ~1.1.0",
-        "symfony/browser-kit": ">=2.7 <=4.2.4"
+        "codeception/verify": "1.0.0"
     },
     "config": {
         "process-timeout": 1800,
         "fxp-asset": {
             "enabled": false
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
         }
     },
     "repositories": [
