@@ -165,7 +165,7 @@ class PublicationController extends Controller
                 $originalImageSize = $publication->getOriginalImageSize();
                 $newImage = new Imagick();
                 $newImage->readImageBlob($imageToSave);
-                $newImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
+                //$newImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
                 file_put_contents($filePath, $newImage);
             }
         }
