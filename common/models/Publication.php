@@ -90,7 +90,7 @@ class Publication extends ActiveRecord
             FileHelper::createDirectory($drawingsDir);
 
             $this->newDrawingsFilenames = array();
-            $drawingsNumber = sizeof($this->getDrawingsArray());
+            $drawingsNumber = sizeof($this->getDrawings());
             foreach ($this->drawingsFiles as $file) {
                 $baseName = explode('.', $this->image)[0];
                 $index = $drawingsNumber;
@@ -119,7 +119,7 @@ class Publication extends ActiveRecord
             FileHelper::createDirectory($texturesDir);
 
             $this->newTexturesFilenames = array();
-            $texturesNumber = sizeof($this->getTexturesArray());
+            $texturesNumber = sizeof($this->getTextures());
             foreach ($this->texturesFiles as $file) {
                 $baseName = explode('.', $this->image)[0];
                 $index = $texturesNumber;

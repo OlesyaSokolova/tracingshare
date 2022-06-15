@@ -268,7 +268,6 @@ class PublicationController extends Controller
     public function actionUploadDrawings($id)
     {
         $model = Publication::findOne($id);
-
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
                 $model->drawingsFiles = UploadedFile::getInstances($model, 'drawingsFiles');
