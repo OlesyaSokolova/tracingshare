@@ -51,33 +51,9 @@ function redrawLayer(context, newAlpha) {
         console.log("after: " + imageData[i + 3])
     }
     context.putImageData(imageData, 0, 0);
-    //context.putImageData(imageData, 0, 0);
-
-    /*context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-    context.globalCompositeOperation = "source-in";
-    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-    context.globalCompositeOperation = "source-over";*/
-    //context.fillStyle = "rgba(255, 255, 255, 100)";
-    //context.putImageData(imageData, 0, 0);
-    //context.restore();
 
     return context;
 }
-
-/*function drawOriginalImageLayerThumbnail(elementId, originalImage) {
-
-    var canvas = document.getElementById(elementId)
-    var ratio = originalImage.width/originalImage.height
-    var constWidth = 150
-    var correspondingHeight = constWidth/ratio
-    canvas.width = constWidth
-    canvas.height = correspondingHeight
-
-    originalImageCtx = canvas.getContext('2d');
-    originalImageCtx.drawImage(originalImage, 0, 0,canvas.width,  canvas.height);
-
-    return originalImageCtx
-}*/
 
 function createCanvasToDrawOn(canvasId, width, height, x, y) {
 
@@ -92,20 +68,6 @@ function createCanvasToDrawOn(canvasId, width, height, x, y) {
 
     return canvas;
 }
-
-/*function drawNewLayerThumbnail(elementId, width, height) {
-    var canvas = document.getElementById(elementId)
-    var ratio = width/height
-    var constWidth = 150
-    var correspondingHeight = constWidth/ratio
-    canvas.width = constWidth
-    canvas.height = correspondingHeight
-
-    originalImageCtx = canvas.getContext('2d');
-    originalImageCtx.drawImage(new Image(), 0, 0,canvas.width,  canvas.height);
-
-    return originalImageCtx
-}*/
 
 function drawExistingLayerThumbnail(elementId, layerImage, color, width, height) {
 

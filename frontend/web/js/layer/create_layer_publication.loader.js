@@ -555,11 +555,8 @@ function prepareLayersToDraw() {
 
                     changeImageColor(contextToSave, canvas.width, canvas.height)
 
-
-                    //alert(index)
                     var imageDataUrl = canvasToSave.toDataURL("image/png")
 
-                    //layersUrls.push({"id": index, "data": imageDataUrl});
                     layersUrls.push(imageDataUrl);
 
 
@@ -569,11 +566,14 @@ function prepareLayersToDraw() {
                         layersNames.push(imageName)
                         existingLayersNumber++;
 
-                        //var index = parseInt((canvasToSave.id).split('_')[1]);
+                        var index = parseInt((canvasToSave.id).split('_')[1]);
+                        var divId = "thumbnail_div_" + index;
+                        var titleValue =  document.getElementById(divId).textContent.split(':')[0].trimStart()
+
                         var newLayerInfo = {
                             image: imageName,
                             layerParams: {
-                                title: "Новый слой",
+                                title: titleValue,
                                 alpha: tmp.context.globalAlpha,
                                 //color: colorToHEXString(currentColor),
                                 color: tmp.context.strokeStyle,
