@@ -180,7 +180,7 @@ prepareLayersToDraw()";
     margin-bottom: 10px;
     background: #d6d5d5">
         <?php $canvasId = "thumbnail_" . $idCounter;
-        echo '<label for="'. $canvasId. '">Новый слой: </label>';
+        echo '<label for="'. $canvasId. '">Новый слой '. ($idCounter + 1). ': </label>';
         /*echo '<canvas id="'.$canvasId.'" > </canvas>';*/?>
         <!--<canvas id="newLayerThumbnail">
         </canvas>-->

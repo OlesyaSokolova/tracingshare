@@ -165,7 +165,7 @@ class PublicationController extends Controller
                 $originalImageSize = $publication->getOriginalImageSize();
                 $newImage = new Imagick();
                 $newImage->readImageBlob($imageToSave);
-                $newImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
+                //$newImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
                 file_put_contents($filePath, $newImage);
             }
         }
@@ -243,7 +243,8 @@ class PublicationController extends Controller
                 $model->author_id = Yii::$app->user->getId();
                     $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
                     if(!is_null($model->imageFile)) {
-                    $model->image = $model->imageFile->baseName . '.' . $model->imageFile->extension;
+                    $newName = md5(uniqid($model->id));
+                    $model->image = $newName . '.' . $model->imageFile->extension;
                     if($model->save()) {
                         if ($model->uploadOriginalImage()) {
                             Yii::$app->session->setFlash('success', "Успешно сохранено.");
@@ -267,7 +268,6 @@ class PublicationController extends Controller
     public function actionUploadDrawings($id)
     {
         $model = Publication::findOne($id);
-
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
                 $model->drawingsFiles = UploadedFile::getInstances($model, 'drawingsFiles');

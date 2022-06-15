@@ -111,10 +111,10 @@ function prepareEditablePublication() {
 
         for (let i = 0; i < layersNumber; i++) {
             var delBtnId = "del_btn_" + i;
-            var titleId = "title_" + i;
             var deleteLayerButton = document.getElementById(delBtnId);
-            var layerTitle = document.getElementById(titleId).value;
             deleteLayerButton.addEventListener('click', function (event) {
+                var titleId = "title_" + i;
+                var layerTitle = document.getElementById(titleId).value;
                 var userAnswer = confirm("Вы действительно хотите удалить слой \" " + layerTitle +"\"?");
                 if (userAnswer === true) {
                     jsonDrawings.drawings.splice(i, 1);

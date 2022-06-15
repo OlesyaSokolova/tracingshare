@@ -547,6 +547,7 @@ function prepareLayersToDraw() {
                         bi = parseInt((b.id).split('_')[1]);
                         return ai - bi;
                 })
+                var existingLayersNumber = currentDrawings.drawings.length;
                 for(let i = 0; i < mutableCanvasesAndContexts.length; i++) {
                     var tmp = mutableCanvasesAndContexts[i];
                     var contextToSave = tmp.context;
@@ -554,22 +555,25 @@ function prepareLayersToDraw() {
 
                     changeImageColor(contextToSave, canvas.width, canvas.height)
 
-                    var index = parseInt((canvasToSave.id).split('_')[1]);
-                    //alert(index)
                     var imageDataUrl = canvasToSave.toDataURL("image/png")
 
-                    //layersUrls.push({"id": index, "data": imageDataUrl});
                     layersUrls.push(imageDataUrl);
 
-                    if (i >= currentDrawings.drawings.length) {
+
+                    if (i >= existingLayersNumber) {
                         //create new layer
-                        var imageName = generateRandomImageTitle(prefix, currentDrawings.drawings.length + 1);
+                        var imageName = prefix + existingLayersNumber + ".png";
                         layersNames.push(imageName)
+                        existingLayersNumber++;
+
+                        var index = parseInt((canvasToSave.id).split('_')[1]);
+                        var divId = "thumbnail_div_" + index;
+                        var titleValue =  document.getElementById(divId).textContent.split(':')[0].trimStart()
 
                         var newLayerInfo = {
                             image: imageName,
                             layerParams: {
-                                title: "Новый слой",
+                                title: titleValue,
                                 alpha: tmp.context.globalAlpha,
                                 //color: colorToHEXString(currentColor),
                                 color: tmp.context.strokeStyle,

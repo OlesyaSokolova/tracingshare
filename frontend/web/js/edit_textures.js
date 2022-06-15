@@ -57,10 +57,10 @@ function prepareEditableTextures() {
 
             for (let i = 0; i < texturesNumber; i++) {
                 var delBtnId = "del_btn_" + i;
-                var titleId = "title_" + i;
                 var deleteLayerButton = document.getElementById(delBtnId);
-                var textureTitle = document.getElementById(titleId).value;
                 deleteLayerButton.addEventListener('click', function (event) {
+                    var titleId = "title_" + i;
+                    var textureTitle = document.getElementById(titleId).value;
                     var userAnswer = confirm("Вы действительно хотите удалить текстуру \" " + textureTitle + "\"?");
                     if (userAnswer === true) {
                         jsonTextures.textures.splice(i, 1);
