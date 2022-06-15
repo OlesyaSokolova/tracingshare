@@ -243,7 +243,8 @@ class PublicationController extends Controller
                 $model->author_id = Yii::$app->user->getId();
                     $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
                     if(!is_null($model->imageFile)) {
-                    $model->image = $model->imageFile->baseName . '.' . $model->imageFile->extension;
+                    $newName = md5(uniqid($model->id));
+                    $model->image = $newName . '.' . $model->imageFile->extension;
                     if($model->save()) {
                         if ($model->uploadOriginalImage()) {
                             Yii::$app->session->setFlash('success', "Успешно сохранено.");

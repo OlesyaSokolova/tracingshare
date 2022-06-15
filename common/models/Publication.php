@@ -41,6 +41,9 @@ class Publication extends ActiveRecord
     public $drawingsFiles;
     public $texturesFiles;
 
+    public $newDrawingsFilenames;
+    public $newTexturesFilenames;
+
     public function rules()
     {
         return [
@@ -56,12 +59,11 @@ class Publication extends ActiveRecord
 
     public function uploadOriginalImage()
     {
-       //$pathToSave = self::FULL_PATH_STORAGE . self::PREFIX_PATH_IMAGES ;
        $imageDir = self::basePath() . '/' . self::PREFIX_PATH_IMAGES;
         // Создаем директорию, если не существует
         FileHelper::createDirectory($imageDir);
         if ($this->validate(["imageFile"])) {
-            $filePath = $imageDir . '/'. $this->imageFile->baseName . '.' . $this->imageFile->extension;
+            $filePath = $imageDir . '/'. $this->image;
             if (file_exists($filePath)) {
                 unlink($filePath);
 
@@ -87,15 +89,20 @@ class Publication extends ActiveRecord
             // Создаем директорию, если не существует
             FileHelper::createDirectory($drawingsDir);
 
+            $this->newDrawingsFilenames = array();
+            $drawingsNumber = sizeof($this->getDrawingsArray());
             foreach ($this->drawingsFiles as $file) {
                 $baseName = explode('.', $this->image)[0];
+                $index = $drawingsNumber;
                 $drawingPrefix =  Publication::DRAWING_PREFIX . $baseName . "_";
-                $filename = $drawingPrefix .$file->baseName . '.' . $file->extension;
+                $filename = $drawingPrefix . $index . '.' . $file->extension;
+                $this->newDrawingsFilenames[$file->baseName] = $filename;
                 $drawingPath = $drawingsDir. '/' . $filename;
                 if (file_exists($drawingPath)) {
                     unlink($drawingPath);
                 }
                 $file->saveAs($drawingPath);
+                $drawingsNumber++;
             }
             return true;
         } else {
@@ -111,15 +118,20 @@ class Publication extends ActiveRecord
             // Создаем директорию, если не существует
             FileHelper::createDirectory($texturesDir);
 
+            $this->newTexturesFilenames = array();
+            $texturesNumber = sizeof($this->getTexturesArray());
             foreach ($this->texturesFiles as $file) {
                 $baseName = explode('.', $this->image)[0];
+                $index = $texturesNumber;
                 $texturePrefix =  Publication::TEXTURE_PREFIX . $baseName . "_";
-                $filename = $texturePrefix . $file->baseName . '.' . $file->extension;
+                $filename = $texturePrefix . $index . '.' . $file->extension;
+                $this->newTexturesFilenames[$file->baseName] = $filename;
                 $texturePath = $texturesDir. '/' . $filename;
                 if (file_exists($texturePath)) {
                     unlink($texturePath);
                 }
                 $file->saveAs($texturePath);
+                $texturesNumber++;
             }
             return true;
         } else {
@@ -136,8 +148,8 @@ class Publication extends ActiveRecord
     public function getOriginalImageSize() {
         $originalImagePath = self::basePath() . '/' . self::PREFIX_PATH_IMAGES . '/' . $this->image;
         return getimagesize($originalImagePath);
-
     }
+
     public function generateThumbnail() {
         $thumbnailDir = self::basePath(). '/' . self::PREFIX_PATH_THUMBNAILS;
         $originalImagePath = self::basePath() . '/' . self::PREFIX_PATH_IMAGES . '/' . $this->image;
@@ -239,13 +251,12 @@ class Publication extends ActiveRecord
             $drawingsArray['drawings'] = array();
         }
 
-        foreach ($this->drawingsFiles as $file) {
-            $baseName = explode('.', $this->image)[0];
-            $drawingPrefix =  Publication::DRAWING_PREFIX . $baseName . "_";
-            $filename = $drawingPrefix .$file->baseName . '.' . $file->extension;
-            $newLayerInfo = array("image" => $filename,
+        foreach ($this->newDrawingsFilenames as $baseFilename => $generatedFilename) {
+            //$drawingPrefix =  Publication::DRAWING_PREFIX . $baseName . "_";
+            //$filename = $drawingPrefix .$file->baseName . '.' . $file->extension;
+            $newLayerInfo = array("image" => $generatedFilename,
                "layerParams" => array(
-                    "title" => $file->baseName,
+                    "title" => $baseFilename,
                     "alpha" => self::DEFAULT_ALPHA,
                     "color" => self::DEFAULT_COLOR,
                     "description" => self::DEFAULT_DESCRIPTION,
@@ -265,13 +276,11 @@ class Publication extends ActiveRecord
             $texturesArray['textures'] = array();
         }
 
-        foreach ($this->texturesFiles as $file) {
-            $baseName = explode('.', $this->image)[0];
-            $texturePrefix =  Publication::TEXTURE_PREFIX . $baseName . "_";
-            $filename = $texturePrefix .$file->baseName . '.' . $file->extension;
-            $newLayerInfo = array("image" => $filename,
+        foreach ($this->newTexturesFilenames as $baseFilename => $generatedFilename) {
+            //$textureTitle = explode('.', $this->image)[0];
+            $newLayerInfo = array("image" => $generatedFilename,
                 "layerParams" => array(
-                    "title" => $file->baseName,
+                    "title" => $baseFilename,
                     "description" => self::DEFAULT_DESCRIPTION,
                 ));
             array_push($texturesArray['textures'], $newLayerInfo);
