@@ -69,7 +69,7 @@ prepareLayersToDraw()";
                        style="margin-bottom: 10px; padding-left: 30px"
                        data-toggle="tooltip" data-placement="left" title="Удалить слой">
                 <!--<span class="media-body">Удалить слой</span>-->
-                <img src="<?=Yii::$app->urlManager->hostInfo."/icons/delete.png" ?>" width="50"/>
+                <img src="<?=Yii::$app->urlManager->hostInfo."/frontend/web/icons/delete.png" ?>" width="50"/>
             </button>
 
 <!--            <button type="button" class="btn btn-outline-primary btn-rounded" id="clear-layer-button" style="margin-bottom: 10px">Очистить слой</button>
@@ -77,7 +77,7 @@ prepareLayersToDraw()";
                        class="btn btn-outline-primary btn-rounded d-flex list-group-item-action"
                        style="margin-bottom: 10px; padding-left: 30px"
                        data-toggle="tooltip" data-placement="left" title="Очистить слой">
-                <img src="<?=Yii::$app->urlManager->hostInfo."/icons/clear.png" ?>" width="50"/>
+                <img src="<?=Yii::$app->urlManager->hostInfo."/frontend/web/icons/clear.png" ?>" width="50"/>
             </button>
 
             <button type="button" id="brush-btn"
@@ -85,7 +85,7 @@ prepareLayersToDraw()";
                     style="margin-bottom: 10px; padding-left: 30px"
                     data-toggle="tooltip" data-placement="left" title="Кисть">
            <!-- <span class="media-body">Кисть</span>-->
-                <img src="<?= Yii::$app->urlManager->hostInfo."/icons/brush.png" ?>" width="50"/>
+                <img src="<?= Yii::$app->urlManager->hostInfo."/frontend/web/icons/brush.png" ?>" width="50"/>
             </button>
 
             <button type="button" id="eraser-btn"
@@ -93,7 +93,7 @@ prepareLayersToDraw()";
                     style="margin-bottom: 10px; padding-left: 30px"
                     data-toggle="tooltip" data-placement="left" title="Ластик">
             <!-- <span class="media-body">Ластик</span>-->
-                <img src="<?=Yii::$app->urlManager->hostInfo."/icons/eraser.png" ?>" width="50"/>
+                <img src="<?=Yii::$app->urlManager->hostInfo."/frontend/web/icons/eraser.png" ?>" width="50"/>
             </button>
 
             <button type="button" id="filler-btn"
@@ -101,7 +101,7 @@ prepareLayersToDraw()";
                     style="margin-bottom: 10px; padding-left: 30px"
                     data-toggle="tooltip" data-placement="left" title="Заливка">
                <!-- <span class="media-body">Заливка</span>-->
-                <img src="<?= Yii::$app->urlManager->hostInfo."/icons/fill.png" ?>" width="50"/>
+                <img src="<?= Yii::$app->urlManager->hostInfo."/frontend/web/icons/fill.png" ?>" width="50"/>
             </button>
 
             <label for="brushColor" id="change-color-btn">Цвет</label>
@@ -109,7 +109,7 @@ prepareLayersToDraw()";
             <br>
 
             <label for="thickness" id="change-thickness-btn" style="margin-right: 10px">Толщина кисти/ластика: </label>
-            <img src="<?= Yii::$app->urlManager->hostInfo."/icons/line.png" ?>"
+            <img src="<?= Yii::$app->urlManager->hostInfo."/frontend/web/icons/line.png" ?>"
                  style="padding-left: 20px"
                  width="100px"
                 height="2px"/>
@@ -122,7 +122,7 @@ prepareLayersToDraw()";
                    step='1' min='1' max='10' value='5''">
             <br>
             <br>
-            <img src="<?= Yii::$app->urlManager->hostInfo."/icons/line.png" ?>"
+            <img src="<?= Yii::$app->urlManager->hostInfo."/frontend/web/icons/line.png" ?>"
                  style="padding-left: 20px"
             width="100px"
             height="12px"/>
