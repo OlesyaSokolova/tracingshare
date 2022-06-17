@@ -3,12 +3,10 @@
 /** @var yii\bootstrap4\ActiveForm $form */
 /** @var \common\models\Publication $model */
 
-use common\models\Publication;
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
 
 $this->title = 'Загрузка слоев прорисовок';
-echo sizeof($model->getTextures());
 ?>
 <div class="publication-upload-drawings">
     <h3 style="text-align: center;"><?= Html::encode($this->title) ?></h3>
