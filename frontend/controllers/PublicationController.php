@@ -32,6 +32,10 @@ class PublicationController extends Controller
 
     public function actionEdit($id)
     {
+        if(Yii::$app->user->isGuest)
+        {
+            return $this->redirect(['site/login']);
+        }
         $publication = Publication::findOne($id);
         if (empty($publication)) {
             throw new HttpException(404);
@@ -47,6 +51,10 @@ class PublicationController extends Controller
 
     public function actionEditTextures($id)
     {
+        if(Yii::$app->user->isGuest)
+        {
+            return $this->redirect(['site/login']);
+        }
         $publication = Publication::findOne($id);
         if (empty($publication)) {
             throw new HttpException(404);
@@ -62,6 +70,11 @@ class PublicationController extends Controller
 
     public function actionCreateLayer($id)
     {
+        if(Yii::$app->user->isGuest)
+        {
+            return $this->redirect(['site/login']);
+        }
+
         $publication = Publication::findOne($id);
         /*if (empty($publication)) {
             throw new HttpException(404);
@@ -236,6 +249,10 @@ class PublicationController extends Controller
 
     public function actionUploadOriginalImage()
     {
+        if(Yii::$app->user->isGuest)
+        {
+            return $this->redirect(['site/login']);
+        }
         $model = new Publication();
 
         if (Yii::$app->request->isPost) {
@@ -267,6 +284,10 @@ class PublicationController extends Controller
 
     public function actionUploadDrawings($id)
     {
+        if(Yii::$app->user->isGuest)
+        {
+            return $this->redirect(['site/login']);
+        }
         $model = Publication::findOne($id);
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
@@ -296,6 +317,10 @@ class PublicationController extends Controller
 
     public function actionUploadTextures($id)
     {
+        if(Yii::$app->user->isGuest)
+        {
+            return $this->redirect(['site/login']);
+        }
         $model = Publication::findOne($id);
 
         if (Yii::$app->request->isPost) {

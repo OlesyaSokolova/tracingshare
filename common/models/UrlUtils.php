@@ -14,11 +14,11 @@ class UrlUtils
 
     public static function frontendUrl()
     {
-        return Yii::$app->urlManager->hostInfo."/frontend/web/index.php";
+        return self::getFirstPartOfUrl()."/frontend/web/index.php";
     }
 
     public static function backendUrl()
     {
-        return Yii::$app->urlManager->hostInfo."/backend/web/index.php";
+        return self::getFirstPartOfUrl()."/backend/web/index.php";
     }
 }

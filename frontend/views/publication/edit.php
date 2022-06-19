@@ -1,8 +1,10 @@
 <?php
 
+use common\models\UrlUtils;
 use frontend\assets\ViewAsset;
 use common\models\Publication;
 use yii\helpers\Html;
+
 
 if(!empty($publication)) {
 
