@@ -122,7 +122,7 @@ prepareLayersToDraw()";
                    step='1' min='1' max='10' value='5''">
             <br>
             <br>
-            <img src="<?= Yii::$app->urlManager->hostInfo."/frontend/web/icons/line.png" ?>"
+            <img src="<?= UrlUtils::getFirstPartOfUrl()."/frontend/web/icons/line.png" ?>"
                  style="padding-left: 20px"
             width="100px"
             height="12px"/>
