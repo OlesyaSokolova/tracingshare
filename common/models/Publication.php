@@ -319,6 +319,6 @@ class Publication extends ActiveRecord
     }
 
     public static function getStorageHttpPath() {
-        return Yii::$app->urlManager->hostInfo ."/storage/";
+        return UrlUtils::getFirstPartOfUrl() ."/storage/";
     }
 }
