@@ -84,7 +84,7 @@ if(!empty($publication)) {
                 'name' => 'edit-button',]) ?>
         <?php endif; ?>
 
-        <?= Html::a(Yii::t('app', 'Создать ' . '<br>' . 'новый слой'),
+        <?= Html::a(Yii::t('app', 'Перейти в графический ' . '<br>' . 'редактор слоев'),
             ['/publication/create-layer', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'create-layer-button',]) ?>

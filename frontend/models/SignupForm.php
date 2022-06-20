@@ -24,7 +24,7 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            [['first_name', 'last_name', 'patronymic'], 'required', 'message' => 'Это поле не может быть пустым'],
+            [['first_name', 'last_name'], 'required', 'message' => 'Это поле не может быть пустым'],
             [['first_name', 'last_name', 'patronymic'], 'string', 'min' => 2, 'max' => 32, 'message' => 'Максимальная длина: 32 символа'],
 
             ['email', 'trim'],
