@@ -16,8 +16,8 @@ $this->title = 'Регистрация';
 
             <?php $form = ActiveForm::begin(['id' => 'form-signup']) ?>
             <?= $form->field($model, 'email')->label("Email:") ?>
-            <?= $form->field($model, 'first_name')->label("Имя:") ?>
             <?= $form->field($model, 'last_name')->label("Фамилия:") ?>
+            <?= $form->field($model, 'first_name')->label("Имя:") ?>
             <?= $form->field($model, 'patronymic')->label("Отчество:") ?>
             <?= $form->field($model, 'password')->passwordInput()->label("Пароль:") ?>
             <div class="form-group" style="text-align: center;">
