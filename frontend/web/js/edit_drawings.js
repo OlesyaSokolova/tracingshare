@@ -129,6 +129,29 @@ function prepareEditablePublication() {
         }
     }
 
+    function initChangeFileButtons(jsonDrawings) {
+        var layersNumber = jsonDrawings.drawings.length;
+
+        for (let i = 0; i < layersNumber; i++) {
+            var delBtnId = "del_btn_" + i;
+            var deleteLayerButton = document.getElementById(delBtnId);
+            deleteLayerButton.addEventListener('click', function (event) {
+                var titleId = "title_" + i;
+                var layerTitle = document.getElementById(titleId).value;
+                var userAnswer = confirm("Вы действительно хотите удалить слой \" " + layerTitle +"\"?");
+                if (userAnswer === true) {
+                    jsonDrawings.drawings.splice(i, 1);
+                    drawingsImages.splice(i, 1);
+                    var redirectToView = false;
+                    saveData(jsonDrawings, redirectToView)
+                    initLayersSettingsForEdit(jsonDrawings)
+                    updateAllLayers(initDrawingsArray(jsonDrawings));
+
+                }
+            })
+        }
+    }
+
     function initLayersSettingsForEdit(jsonDrawings) {
 
         var jsonArrayDrawings = jsonDrawings.drawings
@@ -147,22 +170,32 @@ function prepareEditablePublication() {
                     '                border-radius: 10px;\n' +
                     '                padding-left: 10px;\n' +
                     '                padding-right: 10px;\n' +
+                    '                padding-top: 10px;\n' +
                     '                width: 700px;\n' +
                     '                text-align: left;\n' +
                     '                margin-bottom: 10px">';
 
                 var titleId = "title_" + i;
                 var delBtnId = "del_btn_" + i;
+                var changeFileBtnId = "chng_file_btn_" + i;
                 var alphaId = "alpha_" + i;
                 var colorId = "color_" + i;
                 var descId = "desc_" + i;
 
                 layerInfo +=
                     '<label for=\'' + titleId + '\'>Название: </label>'
+
                     + '<button type="button" id=\'' + delBtnId  + '\' ' +
                     'class="btn btn-outline-danger btn-sm" ' +
                     'style="float: right; margin-bottom: 10px"' +
                     '>Удалить</button>'
+
+                    + '<button type="button" id=\'' + changeFileBtnId  + '\' ' +
+                    'class="btn btn-outline-primary btn-sm" ' +
+                    'style="float: right; margin-bottom: 10px; margin-right: 10px"' +
+                    '>Загрузить другой файл</button>'
+
+
                     + '<input type="text" id=\'' + titleId + '\' class="form-control" value=\'' + (jsonArrayDrawings[i].layerParams.title) + '\'/>'
                     + '<br>'
 
@@ -186,6 +219,7 @@ function prepareEditablePublication() {
             var layersEditForm = document.getElementById("editForm");
             layersEditForm.innerHTML = layerInfo
             initDeleteButtons(jsonDrawings)
+            initChangeFileButtons(jsonDrawings)
         }
     }
 
