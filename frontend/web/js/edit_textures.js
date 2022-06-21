@@ -64,11 +64,10 @@ function prepareEditableTextures() {
                     var userAnswer = confirm("Вы действительно хотите удалить текстуру \" " + textureTitle + "\"?");
                     if (userAnswer === true) {
                         jsonTextures.textures.splice(i, 1);
-                        //drawingsImages.splice(i, 1);
-                        //var redirectToView = false;
+                        var redirectToView = false;
                         initTexturesSettingsForEdit(jsonTextures)
                         initDeleteButtons(jsonTextures)
-                        //saveTextures(jsonTextures, redirectToView)
+                        saveTextures(jsonTextures, redirectToView)
                     }
                 })
             }
@@ -98,6 +97,7 @@ function prepareEditableTextures() {
             const baseUrl = "/" + pathParts[1]
                 + "/" + pathParts[2]
                 + "/" + pathParts[3]
+                //+ "/" + pathParts[4]
 
 
             $.ajax({
@@ -109,10 +109,10 @@ function prepareEditableTextures() {
                     if(redirectToView) {
                         location.href = window.location.origin + baseUrl + "/publication/view?id=" + publicationId
                     }
-                    /*else {
+                    else {
                         //document.location.reload();
                         updateAllLayers(initDrawingsArray(textures));
-                    }*/
+                    }
                 },
                 error: function (xhr, status, error) {
                     alert("Произошла ошибка при сохранении данных:" + xhr);

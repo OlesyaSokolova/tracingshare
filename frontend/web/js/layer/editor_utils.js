@@ -131,3 +131,22 @@ function colorToHEXString(color) {
         return "#" + red + green + blue;
 }
 
+function generateNewName(prefix, drawings) {
+    var newLayerIndex = 0;
+    if(drawings.length > 0) {
+        drawings.sort((a, b) => {
+            var aiString = ((a.image).split('_')[2]).split('.')[0]
+            let ai = parseInt(aiString)
+            var biString = ((b.image).split('_')[2]).split('.')[0]
+            bi = parseInt(biString);
+            return ai - bi;
+        })
+
+        var lastDrawing = drawings[drawings.length - 1].image;
+        var newLayerIndexString = ((lastDrawing).split('_')[2]).split('.')[0]
+        newLayerIndex = parseInt(newLayerIndexString) + 1;
+    }
+
+    return prefix + newLayerIndex + ".png";
+}
+

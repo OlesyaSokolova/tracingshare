@@ -138,7 +138,7 @@ class PublicationController extends Controller
         else if ((strcmp($publication->drawings ,$previousDrawings) == 0)
         && (strcmp($publication->name ,$previousName) == 0)
             && (strcmp($publication->description ,$previousDescription) == 0)){
-            Yii::$app->session->setFlash('info', "Изменений нет.");
+            Yii::$app->session->setFlash('info', "Изменений нет (изменения уже сохранены).");
         }
         else {
             Yii::$app->session->setFlash('info', "Произошла ошибка про сохранении данных.");
@@ -237,7 +237,7 @@ class PublicationController extends Controller
             if ($publication->update(true, ["textures"])) {
                 Yii::$app->session->setFlash('success', "Успешно сохранено.");
             } else if (strcmp($publication->textures, $previousTextures) == 0) {
-                Yii::$app->session->setFlash('info', "Изменений нет.");
+                Yii::$app->session->setFlash('info', "Изменений нет (изменения уже сохранены).");
             } else {
                 Yii::$app->session->setFlash('error', "Произошла ошибка про сохранении данных.");
             }

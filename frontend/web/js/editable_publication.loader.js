@@ -83,6 +83,7 @@ function prepareEditablePublication() {
         const baseUrl = "/" + pathParts[1]
             + "/" + pathParts[2]
             + "/" + pathParts[3]
+            //+ "/" + pathParts[4]
 
 
         $.ajax({
@@ -118,10 +119,10 @@ function prepareEditablePublication() {
                 if (userAnswer === true) {
                     jsonDrawings.drawings.splice(i, 1);
                     drawingsImages.splice(i, 1);
-                    //var redirectToView = false;
+                    var redirectToView = false;
                     initLayersSettingsForEdit(jsonDrawings)
                     updateAllLayers(initDrawingsArray(jsonDrawings));
-                    //saveData(jsonDrawings, redirectToView)
+                    saveData(jsonDrawings, redirectToView)
                 }
             })
         }
