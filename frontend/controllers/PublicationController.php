@@ -295,7 +295,7 @@ class PublicationController extends Controller
                         //var_dump($model->drawings);
                         if($model->update(true, ["drawings"])) {
                             Yii::$app->session->setFlash('success', "Успешно сохранено.");
-                            return $this->redirect(['publication/edit', 'id' => $model->id]);
+                            return $this->redirect(['publication/edit-drawings', 'id' => $model->id]);
                         }
                         Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
                     }
