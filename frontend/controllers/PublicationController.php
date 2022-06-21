@@ -3,12 +3,9 @@
 namespace frontend\controllers;
 
 use common\models\Publication;
-use Exception;
 use Imagick;
-use Imagine\Image\Box;
 use Yii;
 use yii\helpers\FileHelper;
-use yii\imagine\Image;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\UploadedFile;
@@ -24,9 +21,50 @@ class PublicationController extends Controller
 
         return $this->render('view', [
             'publication' => $publication,
-            /*'categoryId' => $categoryId,
-            'objectPrev' => $objectPrev,
-            'objectNext' => $objectNext,*/
+        ]);
+    }
+
+    public function actionEdit($id)
+    {
+        $publication = Publication::findOne($id);
+        if (empty($publication)) {
+            throw new HttpException(404);
+        }
+
+        if(Yii::$app->user->isGuest)
+        {
+            return $this->redirect(['site/login']);
+        }
+
+        if (Yii::$app->request->isPost) {
+            if ($publication->load(Yii::$app->request->post())) {
+                $publication->author_id = Yii::$app->user->getId();
+                $publication->imageFile = UploadedFile::getInstance($publication, 'imageFile');
+                if(!is_null($publication->imageFile)) {
+                   //replace original file
+                    $originalImagePath = Publication::basePath() . '/' . Publication::PREFIX_PATH_IMAGES . '/' . $publication->image;
+                    if (file_exists($originalImagePath)) {
+                        unlink($originalImagePath);
+                    }
+                    $newName = explode('.', $publication->image)[0];
+                    $publication->image = $newName . '.' . $publication->imageFile->extension;
+                    if($publication->save()) {
+                        if ($publication->uploadOriginalImage()) {
+                            Yii::$app->session->setFlash('success', "Успешно сохранено.");
+                            return $this->redirect(['publication/view', 'id' => $publication->id]);
+                        }
+                    }
+                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($publication->errors, true));
+                }
+                else {
+                    Yii::$app->session->setFlash('error', "Файл отсутствует.");
+                    $publication->save();
+                }
+            }
+        }
+
+        return $this->render('edit', [
+            'model' => $publication
         ]);
     }
 
@@ -59,9 +97,6 @@ class PublicationController extends Controller
 
         return $this->render('editTextures', [
             'publication' => $publication,
-            /*'categoryId' => $categoryId,
-            'objectPrev' => $objectPrev,
-            'objectNext' => $objectNext,*/
         ]);
     }
 
@@ -73,15 +108,12 @@ class PublicationController extends Controller
         }
 
         $publication = Publication::findOne($id);
-        /*if (empty($publication)) {
+        if (empty($publication)) {
             throw new HttpException(404);
-        }*/
+        }
 
         return $this->render('createLayer', [
             'publication' => $publication,
-            /*'categoryId' => $categoryId,
-            'objectPrev' => $objectPrev,
-            'objectNext' => $objectNext,*/
         ]);
     }
 
