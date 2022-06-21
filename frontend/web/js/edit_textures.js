@@ -65,9 +65,9 @@ function prepareEditableTextures() {
                     if (userAnswer === true) {
                         jsonTextures.textures.splice(i, 1);
                         var redirectToView = false;
+                        saveTextures(jsonTextures, redirectToView)
                         initTexturesSettingsForEdit(jsonTextures)
                         initDeleteButtons(jsonTextures)
-                        saveTextures(jsonTextures, redirectToView)
                     }
                 })
             }

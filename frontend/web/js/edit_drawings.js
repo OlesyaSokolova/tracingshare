@@ -120,9 +120,10 @@ function prepareEditablePublication() {
                     jsonDrawings.drawings.splice(i, 1);
                     drawingsImages.splice(i, 1);
                     var redirectToView = false;
+                    saveData(jsonDrawings, redirectToView)
                     initLayersSettingsForEdit(jsonDrawings)
                     updateAllLayers(initDrawingsArray(jsonDrawings));
-                    saveData(jsonDrawings, redirectToView)
+
                 }
             })
         }
