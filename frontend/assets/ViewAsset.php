@@ -21,7 +21,7 @@ class ViewAsset extends AssetBundle
     public $js = [
         'js/query_utils.js',
         'js/canvas_utils.js',
-        'js/publication.loader.js',
+        'js/view_publication.js',
         'js/edit_drawings.js',
         'js/edit_textures.js',
         'js/layer/create_layer.js',
