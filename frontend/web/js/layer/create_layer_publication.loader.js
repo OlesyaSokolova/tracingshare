@@ -562,7 +562,8 @@ function prepareLayersToDraw() {
 
                     if (i >= existingLayersNumber) {
                         //create new layer
-                        var imageName = prefix + existingLayersNumber + ".png";
+                        //var imageName = prefix + (existingLayersNumber) + ".png";
+                        var imageName = generateNewName(prefix, currentDrawings.drawings);
                         layersNames.push(imageName)
                         existingLayersNumber++;
 
@@ -598,6 +599,7 @@ function prepareLayersToDraw() {
                 const baseUrl = "/" + pathParts[1]
                     + "/" + pathParts[2]
                     + "/" + pathParts[3]
+                    + "/" + pathParts[4]
 
                 $.ajax({
                     type: "POST",
