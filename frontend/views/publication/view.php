@@ -141,6 +141,7 @@ if(!empty($publication)) {
         </div>
 
         <div id=layer_info style="border:1px solid black;
+            display: inline-block;
                 border-radius: 10px;
                 width: 700px;
                 padding-bottom: 20px;
@@ -150,18 +151,17 @@ if(!empty($publication)) {
 
             <h5 id ="layer_title"> </h5>
 
-            <div id = "description" sty>
+            <div id = "description">
             </div>
         </div>
     <?php
     else:  ?>
-        <p style="margin-left: 30px; ">
+        <div style="margin-left: 30px; display: inline-block ">
         <?= $publication->description?>
-        </p>
+        </div>
     <?php endif; ?>
 
 </div>
-
 <?php
 if ((strcmp($publication->drawings ,'') != 0)
     && sizeof($publication->getDrawings()) > 0): ?>
@@ -174,15 +174,3 @@ if ((strcmp($publication->drawings ,'') != 0)
 <p>
     Автор:  <?= $publication->getAuthorName() ?>
 </p>
-
-<!--<div id="rt_popover" style="width: 200px"><div id="rt_popover">1 : <input type='range' id='0' class='alpha-value' step='0.05' min='-1' max='1' value='0.5'><button value="0" class="btn menu-object cp-button" data-menu="layer_pallete" data-html="true" data-container="#rt_popover"data-toggle="popover" data-placement="bottom"><i class="fas fa-palette"></i></button><br>2 : <input type='range' id='1' class='alpha-value' step='0.05' min='-1' max='1' value='0.6'><button value="1" class="btn menu-object cp-button" data-menu="layer_pallete" data-html="true" data-container="#rt_popover"data-toggle="popover" data-placement="bottom"><i class="fas fa-palette"></i></button><br>3 : <input type='range' id='2' class='alpha-value' step='0.05' min='-1' max='1' value='0.8656377'><button value="2" class="btn menu-object cp-button" data-menu="layer_pallete" data-html="true" data-container="#rt_popover"data-toggle="popover" data-placement="bottom"><i class="fas fa-palette"></i></button><br></div></div>
---><?php /*if ($categoryId): */?><!--
-    <div class="clearfix">
-        <?php /*if ($objectPrev): */?>
-            <?php /*= Html::a('<i class="fas fa-backward"></i> ' . $objectPrev->name, ['/object/view', 'categoryId' => $categoryId, 'id' => $objectPrev->link], ['class' => 'pull-left btn btn-default']) */?>
-        <?php /*endif; */?>
-        <?php /*if ($objectNext): */?>
-            <?php /*= Html::a($objectNext->name . ' <i class="fas fa-forward"></i>', ['/object/view', 'categoryId' => $categoryId, 'id' => $objectNext->link], ['class' => 'pull-right btn btn-default']) */?>
-        <?php /*endif; */?>
-    </div>
---><?php /*endif; */?>
