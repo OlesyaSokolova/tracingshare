@@ -36,6 +36,10 @@ class PublicationController extends Controller
             return $this->redirect(['site/login']);
         }
 
+        $previousImage = $publication->image;
+        $previousName = $publication->name;
+        $previousDescription = $publication->description;
+
         if (Yii::$app->request->isPost) {
             if ($publication->load(Yii::$app->request->post())) {
                 $publication->author_id = Yii::$app->user->getId();
@@ -48,17 +52,31 @@ class PublicationController extends Controller
                     }
                     $newName = explode('.', $publication->image)[0];
                     $publication->image = $newName . '.' . $publication->imageFile->extension;
-                    if($publication->save()) {
+                    if($publication->update(true, ["name", "description", "image"])) {
                         if ($publication->uploadOriginalImage()) {
                             Yii::$app->session->setFlash('success', "Успешно сохранено.");
                             return $this->redirect(['publication/view', 'id' => $publication->id]);
                         }
                     }
+                    else if ((strcmp($publication->description ,$previousDescription) == 0)
+                        && (strcmp($publication->name ,$previousName) == 0)) {
+                        Yii::$app->session->setFlash('info', "Изменений нет.");
+                        return $this->redirect(['publication/view', 'id' => $publication->id]);
+                    }
                     Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($publication->errors, true));
                 }
                 else {
-                    Yii::$app->session->setFlash('error', "Файл отсутствует.");
-                    $publication->save();
+                    $publication->image = $previousImage;
+                    if($publication->update(true, ["name", "description"])) {
+                    Yii::$app->session->setFlash('success', "Успешно сохранено.");
+                    return $this->redirect(['publication/view', 'id' => $publication->id]);
+                    }
+                    else if ((strcmp($publication->description ,$previousDescription) == 0)
+                        && (strcmp($publication->name ,$previousName) == 0)) {
+                        Yii::$app->session->setFlash('info', "Изменений нет.");
+                        return $this->redirect(['publication/view', 'id' => $publication->id]);
+                    }
+                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($publication->errors, true));
                 }
             }
         }
