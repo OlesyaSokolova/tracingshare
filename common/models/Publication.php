@@ -288,34 +288,44 @@ class Publication extends ActiveRecord
         return json_encode($texturesArray);
     }
 
-    public function deleteFilesFromStorage() {
-
-        $originalImagePath = self::basePath() . '/' . self::PREFIX_PATH_IMAGES . '/' . $this->image;
-        if (file_exists($originalImagePath)) {
-            unlink($originalImagePath);
-        }
-
+    public function deleteThumbnail() {
         $thumbnailPath = self::basePath(). '/' . self::PREFIX_PATH_THUMBNAILS . '/' . self::THUMBNAIL_PREFIX . $this->image;
         if (file_exists($thumbnailPath)) {
             unlink($thumbnailPath);
         }
+    }
 
-        if(sizeof($this->getDrawings()) > 0) {
-            foreach ($this->getDrawings() as $drawing) {
-                $drawingPath = self::basePath(). '/' . self::PREFIX_PATH_DRAWINGS . '/' . $drawing['image'];
-                if (file_exists($drawingPath)) {
-                    unlink($drawingPath);
-                }
+    public function deleteOriginalImage() {
+        $originalImagePath = self::basePath() . '/' . self::PREFIX_PATH_IMAGES . '/' . $this->image;
+        if (file_exists($originalImagePath)) {
+            unlink($originalImagePath);
+        }
+    }
+
+    public function deleteDrawings() {
+        foreach ($this->getDrawings() as $drawing) {
+            $drawingPath = self::basePath(). '/' . self::PREFIX_PATH_DRAWINGS . '/' . $drawing['image'];
+            if (file_exists($drawingPath)) {
+                unlink($drawingPath);
             }
         }
-        if(sizeof($this->getTextures()) > 0) {
-            foreach ($this->getTextures() as $texture) {
-                $texturesPath = self::basePath(). '/' . self::PREFIX_PATH_TEXTURES . '/' . $texture['image'];
-                if (file_exists($texturesPath)) {
-                    unlink($texturesPath);
-                }
+    }
+
+    public function deleteTextures() {
+        foreach ($this->getTextures() as $texture) {
+            $texturesPath = self::basePath(). '/' . self::PREFIX_PATH_TEXTURES . '/' . $texture['image'];
+            if (file_exists($texturesPath)) {
+                unlink($texturesPath);
             }
         }
+    }
+
+    public function deleteFilesFromStorage() {
+
+        self::deleteOriginalImage();
+        self::deleteThumbnail();
+        self::deleteDrawings();
+        self::deleteTextures();
     }
 
     public static function getStorageHttpPath() {

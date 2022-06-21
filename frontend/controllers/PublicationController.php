@@ -45,11 +45,10 @@ class PublicationController extends Controller
                 $publication->author_id = Yii::$app->user->getId();
                 $publication->imageFile = UploadedFile::getInstance($publication, 'imageFile');
                 if(!is_null($publication->imageFile)) {
-                   //replace original file
-                    $originalImagePath = Publication::basePath() . '/' . Publication::PREFIX_PATH_IMAGES . '/' . $publication->image;
-                    if (file_exists($originalImagePath)) {
-                        unlink($originalImagePath);
-                    }
+                   //replace original file and thumbnail
+                    $publication->deleteOriginalImage();
+                    $publication->deleteThumbnail();
+
                     $newName = explode('.', $publication->image)[0];
                     $publication->image = $newName . '.' . $publication->imageFile->extension;
                     if($publication->update(true, ["name", "description", "image"])) {
