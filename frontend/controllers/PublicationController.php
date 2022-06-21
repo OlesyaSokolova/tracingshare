@@ -30,7 +30,7 @@ class PublicationController extends Controller
         ]);
     }
 
-    public function actionEdit($id)
+    public function actionEditDrawings($id)
     {
         if(Yii::$app->user->isGuest)
         {
@@ -41,11 +41,8 @@ class PublicationController extends Controller
             throw new HttpException(404);
         }
 
-        return $this->render('edit', [
+        return $this->render('editDrawings', [
             'publication' => $publication,
-            /*'categoryId' => $categoryId,
-            'objectPrev' => $objectPrev,
-            'objectNext' => $objectNext,*/
         ]);
     }
 

@@ -2,7 +2,9 @@
 
 use frontend\assets\ViewAsset;
 use common\models\Publication;
+use yii\bootstrap4\Dropdown;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 if(!empty($publication)) {
 
@@ -50,51 +52,65 @@ if(!empty($publication)) {
 -->
 </p>
     <?php $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
-    if (Yii::$app->user->can('updateOwnPost',
-        ['publication' => $publication]) || isset($userRoles['admin'])):?>
+    if (Yii::$app->user->can('updatePost',
+        ['publication' => $publication])):
 
-        <?= Html::a(Yii::t('app', 'Удалить' . '<br>' . 'публикацию'),
-            ['/publication/delete', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-danger btn-rounded',
-                'name' => 'delete-button',]) ?>
+        echo Html::a(Yii::t('app', 'Удалить' . '<br>' .'публикацию'),
+        ['/publication/delete', 'id' => $publication->id],
+        ['class' => 'btn btn-outline-danger btn-rounded',
+        'name' => 'create-layer-button',]) ?>
 
-        <?= Html::a(Yii::t('app', 'Загрузить слои ' . '<br>' . 'прорисовок'),
-            ['/publication/upload-drawings', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'upload-drawings-button',]) ?>
+        <div class="dropdown" style="display: inline-block">
+                <a style="margin-right: 1px" class="btn btn-outline-primary btn-rounded dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Редактировать<br>прорисовки
+                </a>
+                <?php
+                $items = [];
+                $items[] = ['label' => 'Загрузить новые', 'url' => Url::to(['/publication/upload-drawings?id='.$publication->id])];
 
-        <?= Html::a(Yii::t('app', 'Загрузить ' . '<br>' . 'текстуры'),
-            ['/publication/upload-textures', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'upload-textures-button',]) ?>
+                if (strcmp($publication->drawings ,'') != 0
+                    && sizeof($publication->getDrawings()) > 0):
+                    $items[] = ['label' => 'Изменить существующие', 'url' => Url::to(['/publication/edit-drawings?id='.$publication->id])];
+/*                    $items[] = ['label' => 'Редактировать демонстрационные настройки', 'url' => Url::to(['/publication/edit?id='.$publication->id])];*/
+                endif;
+                $items[] = ['label' => 'Перейти в графический редактор слоев', 'url' => Url::to(['/publication/create-layer?id='.$publication->id])];
+                echo Dropdown::widget([
+                    'items' => $items
+                ]);
+                ?>
+        </div>
 
-        <?php if (strcmp($publication->textures ,'') != 0
-        && sizeof($publication->getTextures()) > 0): ?>
-        <?= Html::a(Yii::t('app', 'Редактировать ' . '<br>' . 'текстуры'),
-            ['/publication/edit-textures', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'edit-textures-button',]) ?>
+        <div class="dropdown" style="display: inline-block">
+                <a class="btn btn-outline-primary btn-rounded dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Редактировать<br>текстуры
+                </a>
+                <?php
+                $items = [];
+                $items[] = ['label' => 'Загрузить новые', 'url' => Url::to(['/publication/upload-textures?id='.$publication->id])];
+
+                if (strcmp($publication->textures ,'') != 0
+                    && sizeof($publication->getTextures()) > 0):
+                    $items[] = ['label' => 'Изменить существующие', 'url' => Url::to(['/publication/edit-textures?id='.$publication->id])];
+                endif;
+                echo Dropdown::widget([
+                    'items' => $items
+                ]);
+                ?>
+        </div>
         <?php endif; ?>
 
-        <?php if (strcmp($publication->drawings ,'') != 0
-            && sizeof($publication->getDrawings()) > 0): ?>
-        <?= Html::a(Yii::t('app', 'Редактировать демонстрационные' . '<br>' . 'настройки'),
-            ['/publication/edit', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'edit-button',]) ?>
-        <?php endif; ?>
-
-        <?= Html::a(Yii::t('app', 'Перейти в графический ' . '<br>' . 'редактор слоев'),
+        <?= /*Html::a(Yii::t('app', 'Перейти в графический ' . '<br>' . 'редактор слоев'),
             ['/publication/create-layer', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'create-layer-button',]) ?>
-        <br>
-        <br>
-    <?php
-    else:
-        echo '<br>';
-    endif; ?>
+                'name' => 'create-layer-button',]);*/
 
+        Html::a(Yii::t('app', 'Редактировать' . '<br>' .'основную информацию'),
+            ['/publication/edit', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'create-layer-button',])
+        ?>
+        <br>
+        <br>
 <div class="box" style="display: flex">
     <div class="container-publication" data-state="static">
         <div class="canvas-publication">

@@ -8,7 +8,7 @@ use yii\helpers\Html;
 
 if(!empty($publication)) {
 
-    $this->title = "Редактирование: ".$publication->name;
+    $this->title = "Редактирование прорисовок: ".$publication->name;
     $originalImageSrc = "\"" . Publication::getStorageHttpPath().Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
     $drawingPathPrefix = "\"" . Publication::getStorageHttpPath(). Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
 
@@ -32,14 +32,14 @@ JS;
 
     <?php
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
-    if (Yii::$app->user->can('updateOwnPost',
-            ['publication' => $publication]) || isset($userRoles['admin'])):?>
+    if (Yii::$app->user->can('updatePost',
+            ['publication' => $publication])):?>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="save-button">Сохранить <br> изменения</button>
 
-        <?= Html::a(Yii::t('app', 'Загрузить' . '<br>' . ' слои прорисовок'),
+        <!--Html::a(Yii::t('app', 'Загрузить' . '<br>' . ' слои прорисовок'),
             ['/publication/upload-drawings', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'upload-drawings-button']) ?>
+                'name' => 'upload-drawings-button'])-->
 
     <?php endif; ?>
 <?php
@@ -84,10 +84,10 @@ if (strcmp($publication->drawings ,'') != 0
 
    <!-- --><?php /*if (strcmp($publication->settings ,'') != 0): */?>
             <div id="layers" class = "layers-class" style="padding-left: 20px; ">
-                <?= Html::a(Yii::t('app', 'Создать новый слой'),
+                <!--Html::a(Yii::t('app', 'Создать новый слой'),
                     ['/publication/create-layer', 'id' => $publication->id],
                     ['class' => 'btn btn-outline-primary btn-rounded', 'style' => 'margin-bottom: 10px',
-                        'name' => 'create-layer-button']) ?>
+                        'name' => 'create-layer-button']) -->
                 <?php
                 if (strcmp($publication->drawings ,'') != 0
                     && sizeof($publication->getDrawings()) > 0
