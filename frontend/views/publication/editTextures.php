@@ -29,17 +29,18 @@ JS;
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     if (Yii::$app->user->can('updatePost',
             ['publication' => $publication])):?>
+
+        <?= Html::a(Yii::t('app', 'Отмена'),
+            ['/publication/view', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'exit-button',]) ?>
+
         <button type="button" class="btn btn-outline-primary btn-rounded" id="save-textures-button">Сохранить изменения</button>
 
        <!-- Html::a(Yii::t('app', 'Добавить (загрузить) текстуры'),
             ['/publication/upload-textures', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'upload-textures-button',]) -->
-
-        <?= Html::a(Yii::t('app', 'Отмена'),
-            ['/publication/view', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'exit-button',]) ?>
     <br><br>
     <?php endif; ?>
 

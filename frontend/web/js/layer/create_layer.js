@@ -607,7 +607,7 @@ function prepareLayersToDraw() {
                     url: baseUrl + "/publication/save-layers?id=" + publicationId,
                     data: {params: JSON.stringify(newData)},
                     success: function (data) {
-                        location.href = window.location.origin + baseUrl + "/publication/edit-drawings?id=" + publicationId
+                        location.href = window.location.origin + baseUrl + "/publication/view?id=" + publicationId
                     },
                     error: function (xhr, status, error) {
                         alert("Произошла ошибка при сохранении данных: " + status + " " + error);

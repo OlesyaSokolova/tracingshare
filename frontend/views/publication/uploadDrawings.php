@@ -16,6 +16,11 @@ $this->title = 'Загрузка слоев прорисовок';
             <?php $form = ActiveForm::begin(['id' => 'form-upload-drawings', 'options' => ['enctype' => 'multipart/form-data']]) ?>
             <?= $form->field($model, 'drawingsFiles[]')->fileInput(['multiple' => true, 'accept' => 'image/*'])->label("Максимальное моличество файлов: 10") ?>
             <div class="form-group" style="text-align: center;">
+                <?= Html::a(Yii::t('app', 'Отмена'),
+                    ['/publication/view', 'id' => $model->id],
+                    ['class' => 'btn btn-outline-primary btn-rounded',
+                        'name' => 'exit-button',]) ?>
+
                 <?= Html::submitButton('Сохранить', ['class' => 'btn btn-outline-primary btn-rounded', 'name' => 'upload-drawings-button']) ?>
             </div>
             <?php ActiveForm::end(); ?>

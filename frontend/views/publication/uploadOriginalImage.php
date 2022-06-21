@@ -33,6 +33,10 @@ $this->title = 'Создание публикации';
                 <br>
                 <div>Прорисовки могут быть добавлены после создания публикации</div>
                 <br>
+                <?= Html::a(Yii::t('app', 'Отмена'),
+                    ['/publication/view', 'id' => $model->id],
+                    ['class' => 'btn btn-outline-primary btn-rounded',
+                        'name' => 'exit-button',]) ?>
                 <?= Html::submitButton('Сохранить', ['class' => 'btn btn-outline-primary btn-rounded', 'name' => 'upload-original-image-button']) ?>
             </div>
             <?php ActiveForm::end(); ?>

@@ -30,6 +30,10 @@ $this->title = 'Редактирование публикации';
             <?= $form->field($model, 'imageFile')->fileInput()->label("Новое изображение:") ?>
 
             <div class="form-group" style="text-align: center;">
+                <?= Html::a(Yii::t('app', 'Отмена'),
+                    ['/publication/view', 'id' => $model->id],
+                    ['class' => 'btn btn-outline-primary btn-rounded',
+                        'name' => 'exit-button',]) ?>
                 <?= Html::submitButton('Сохранить', ['class' => 'btn btn-outline-primary btn-rounded', 'name' => 'edit-publication-button']) ?>
             </div>
             <?php ActiveForm::end(); ?>
