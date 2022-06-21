@@ -417,10 +417,16 @@ function prepareLayersToDraw() {
         createLayerButton.addEventListener(
             'click', function (event) {
                 var layersThumbnailsContainer = document.getElementById("thumbnails-layers");
-                layersCounter++;
-                    var divId = "thumbnail_div_" + layersCounter;
-                    var thumbnailId = "thumbnail_" + layersCounter;
-                    var alphaId = "alpha_" + layersCounter;
+                    layersCounter++;
+                    mutableCanvasesAndContexts.sort((a, b) => {
+                        let ai = parseInt((a.id).split('_')[1])
+                        bi = parseInt((b.id).split('_')[1]);
+                        return ai - bi;
+                    })
+                    var lastMutableLayerId = mutableCanvasesAndContexts[mutableCanvasesAndContexts.length - 1].id;
+                    var newId = parseInt(lastMutableLayerId.split('_')[1]) + 1;
+                    var divId = "thumbnail_div_" + newId;
+                    var alphaId = "alpha_" + newId;
                     var currentLayerElement = '<div id=\'' + divId + '\' class = "bordered_div" style="border:1px solid black;\n' +
                         '            border-radius: 10px;\n' +
                         '            padding-left: 20px;\n' +
@@ -430,7 +436,7 @@ function prepareLayersToDraw() {
                         '            height: fit-content;\n' +
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
-                    currentLayerElement += ("Новый слой " + (layersCounter + 1)) + ':<br>'
+                    currentLayerElement += ("Новый слой " + (newId + 1) + ':<br>')
                        /* + '<canvas id=\'' + thumbnailId + '\'></canvas>'*/
                         + '<br>'
                         + '<label for=\'' + alphaId + '\'>Прозрачность: </label><br>'
@@ -441,7 +447,7 @@ function prepareLayersToDraw() {
 
                 //create empty canvas
                 var canvasesContainer = document.getElementById("canvases");
-                var createdLayerId = "layer_" + (layersCounter) + "_canvas";
+                var createdLayerId = "layer_" + (newId) + "_canvas";
                 var createdCanvas = '<canvas id=\'' + createdLayerId + '\'></canvas>'
                 canvasesContainer.insertAdjacentHTML('beforeend', createdCanvas);
 
