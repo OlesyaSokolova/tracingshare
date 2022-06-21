@@ -34,9 +34,7 @@ function prepareLayersToDraw() {
    /*     var newLayerThumbnailId = "thumbnail_" + (drawingsImages.length);
         drawNewLayerThumbnail(newLayerThumbnailId, originalImage.width, originalImage.height);
 */
-
-        var layersCounter = drawingsImages.length
-        //create array of contexts and canvases for layers to draw on:
+            //create array of contexts and canvases for layers to draw on:
         var mutableCanvasesAndContexts = [];
         var backgroundElement = document.getElementById(backgroundCanvasId);
         const backgroundX = backgroundElement.offsetLeft, backgroundY = backgroundElement.offsetTop;
@@ -417,7 +415,6 @@ function prepareLayersToDraw() {
         createLayerButton.addEventListener(
             'click', function (event) {
                 var layersThumbnailsContainer = document.getElementById("thumbnails-layers");
-                    layersCounter++;
                     mutableCanvasesAndContexts.sort((a, b) => {
                         let ai = parseInt((a.id).split('_')[1])
                         bi = parseInt((b.id).split('_')[1]);
@@ -521,8 +518,6 @@ function prepareLayersToDraw() {
                         if (typeof currentDrawings.drawings[index] != 'undefined') {
                             currentDrawings.drawings.splice(index, 1)
                         }
-
-                        layersCounter--;
 
                         if (mutableCanvasesAndContexts.length !== 0) {
                             canvas = mutableCanvasesAndContexts[0].canvas;
