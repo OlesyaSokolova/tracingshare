@@ -47,7 +47,7 @@ if (strcmp($publication->drawings ,'') != 0
     && sizeof($publication->getDrawings()) > 0
 ): ?>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить последние <br> сохраненные настройки слоев</button>
-        <?= Html::a(Yii::t('app', 'Перейти в графический ' . '<br>' . 'редактор слоев'),
+        <?= Html::a(Yii::t('app', 'Перейти ' . '<br>' . ' в графический редактор'),
         ['/publication/create-layer', 'id' => $publication->id],
         ['class' => 'btn btn-outline-primary btn-rounded',
             'name' => 'create-layer-button',]) ?>

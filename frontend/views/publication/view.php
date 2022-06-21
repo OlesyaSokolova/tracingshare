@@ -73,7 +73,7 @@ if(!empty($publication)) {
                     $items[] = ['label' => 'Изменить существующие', 'url' => Url::to(['/publication/edit-drawings?id='.$publication->id])];
 /*                    $items[] = ['label' => 'Редактировать демонстрационные настройки', 'url' => Url::to(['/publication/edit?id='.$publication->id])];*/
                 endif;
-                $items[] = ['label' => 'Перейти в графический редактор слоев', 'url' => Url::to(['/publication/create-layer?id='.$publication->id])];
+                $items[] = ['label' => 'Перейти в графический редактор', 'url' => Url::to(['/publication/create-layer?id='.$publication->id])];
                 echo Dropdown::widget([
                     'items' => $items
                 ]);
