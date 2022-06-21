@@ -6,7 +6,7 @@ use yii\helpers\Html;
 
 if(!empty($publication)) {
 
-    $this->title = "Текстуры публикации: \"".$publication->name . "\"";
+    $this->title = "Редактирование текстур: \"".$publication->name . "\"";
     $texturesPathPrefix = "\"" . Publication::getStorageHttpPath(). Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
 
     $script = <<< JS

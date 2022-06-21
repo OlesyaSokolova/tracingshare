@@ -70,12 +70,12 @@ function prepareEditablePublication() {
         {
             drawings = ''
         }
-        mainDescription = document.getElementById('mainDesc').value;
+        //mainDescription = document.getElementById('mainDesc').value;
         name = document.getElementById('name').value;
         var newData = {
             //id: parseInt(publicationId),
             newName: name,
-            newDescription: mainDescription,
+            //newDescription: mainDescription,
             newDrawings: drawings,
         };
 

@@ -100,15 +100,15 @@ class PublicationController extends Controller
         //$id = $data["id"];
 
         $newName = $data["newName"];
-        $newDescription = $data["newDescription"];
+        //$newDescription = $data["newDescription"];
 
         $publication = Publication::findOne($id);
         $previousDrawings = $publication->drawings;
         $previousName = $publication->name;
-        $previousDescription = $publication->description;
+        //$previousDescription = $publication->description;
 
         $publication->name = $newName;
-        $publication->description = $newDescription;
+        //$publication->description = $newDescription;
 
         if (strcmp(json_encode($data["newDrawings"]), "") != 2) {
             $newDrawings = json_encode($data["newDrawings"], JSON_UNESCAPED_UNICODE);
@@ -133,8 +133,8 @@ class PublicationController extends Controller
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
         else if ((strcmp($publication->drawings ,$previousDrawings) == 0)
-        && (strcmp($publication->name ,$previousName) == 0)
-            && (strcmp($publication->description ,$previousDescription) == 0)){
+        && (strcmp($publication->name ,$previousName) == 0)) {
+           // && (strcmp($publication->description ,$previousDescription) == 0)){
             Yii::$app->session->setFlash('info', "Изменений нет (изменения уже сохранены).");
         }
         else {

@@ -73,12 +73,12 @@ if (strcmp($publication->drawings ,'') != 0
             </canvas>
         </div>
 
-         <form style="padding-top: 20px">
+         <!--<form style="padding-top: 20px">
                 <div class="form-group">
                     <label for="mainDesc">Основное описание:</label>
-                    <textarea class="form-control" id="mainDesc" rows="10" ><?=$publication->description?></textarea>
+                    <textarea class="form-control" id="mainDesc" rows="10" ><?/*=$publication->description*/?></textarea>
                 </div>
-            </form>
+            </form>-->
     </div>
 
 
