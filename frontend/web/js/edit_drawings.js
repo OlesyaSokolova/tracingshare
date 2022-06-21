@@ -133,21 +133,20 @@ function prepareEditablePublication() {
         var layersNumber = jsonDrawings.drawings.length;
 
         for (let i = 0; i < layersNumber; i++) {
-            var delBtnId = "del_btn_" + i;
-            var deleteLayerButton = document.getElementById(delBtnId);
-            deleteLayerButton.addEventListener('click', function (event) {
-                var titleId = "title_" + i;
-                var layerTitle = document.getElementById(titleId).value;
-                var userAnswer = confirm("Вы действительно хотите удалить слой \" " + layerTitle +"\"?");
-                if (userAnswer === true) {
-                    jsonDrawings.drawings.splice(i, 1);
-                    drawingsImages.splice(i, 1);
-                    var redirectToView = false;
-                    saveData(jsonDrawings, redirectToView)
-                    initLayersSettingsForEdit(jsonDrawings)
-                    updateAllLayers(initDrawingsArray(jsonDrawings));
+            var changeFileBtnId = "chng_file_btn_" + i;
+            var inputFileId = "input_file_" + i;
+            var changeFileButton = document.getElementById(changeFileBtnId);
+            changeFileButton.addEventListener('click', function (event) {
+                $('#' + inputFileId).trigger('click');
+                /*var titleId = "title_" + i;
+                //change file at drawings
+                jsonDrawings.drawings.splice(i, 1);
+                drawingsImages.splice(i, 1);
+                var redirectToView = false;
+                saveData(jsonDrawings, redirectToView)
+                initLayersSettingsForEdit(jsonDrawings)
+                updateAllLayers(initDrawingsArray(jsonDrawings));*/
 
-                }
             })
         }
     }
@@ -178,6 +177,7 @@ function prepareEditablePublication() {
                 var titleId = "title_" + i;
                 var delBtnId = "del_btn_" + i;
                 var changeFileBtnId = "chng_file_btn_" + i;
+                var inputFileId = "input_file_" + i;
                 var alphaId = "alpha_" + i;
                 var colorId = "color_" + i;
                 var descId = "desc_" + i;
@@ -194,7 +194,7 @@ function prepareEditablePublication() {
                     'class="btn btn-outline-primary btn-sm" ' +
                     'style="float: right; margin-bottom: 10px; margin-right: 10px"' +
                     '>Загрузить другой файл</button>'
-
+                    + '<input type="file" id=\'' + inputFileId + '\' style="display:none"/>'
 
                     + '<input type="text" id=\'' + titleId + '\' class="form-control" value=\'' + (jsonArrayDrawings[i].layerParams.title) + '\'/>'
                     + '<br>'
