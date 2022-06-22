@@ -37,16 +37,16 @@ JS;
 
         <button type="button" class="btn btn-outline-primary btn-rounded" id="save-textures-button">Сохранить изменения</button>
 
-        <?= Html::a(Yii::t('app', 'Добавить (загрузить) текстуры'),
+       <!-- Html::a(Yii::t('app', 'Добавить (загрузить) текстуры'),
             ['/publication/upload-textures', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'upload-textures-button',]) ?>
+                'name' => 'upload-textures-button',])-->
     <br><br>
     <?php endif; ?>
 
+<div class="d-flex justify-content-center" id="resultMessage" style="color: grey"></div>
+<br>
 <div class="d-flex justify-content-center">
-        <div id="resultMessage"></div>
-
         <div id="editTexturesForm">
         </div>
 </div>
