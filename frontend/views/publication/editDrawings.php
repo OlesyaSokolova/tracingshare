@@ -96,11 +96,11 @@ if (strcmp($publication->drawings ,'') != 0
 
    <!-- --><?php /*if (strcmp($publication->settings ,'') != 0): */?>
             <div id="layers" class = "layers-class" style="padding-left: 20px; ">
-                <!--Html::a(Yii::t('app', 'Создать новый слой'),
+                <?=Html::a(Yii::t('app', 'Создать новый слой'),
                     ['/publication/create-layer', 'id' => $publication->id],
                     ['class' => 'btn btn-outline-primary btn-rounded', 'style' => 'margin-bottom: 10px',
-                        'name' => 'create-layer-button']) -->
-                <?php
+                        'name' => 'create-layer-button']);
+
                 if (strcmp($publication->drawings ,'') != 0
                     && sizeof($publication->getDrawings()) > 0
                 ): ?>

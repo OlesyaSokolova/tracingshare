@@ -158,10 +158,10 @@ class PublicationController extends Controller
                     $error  = "Only image files are allowed (jpg, gif, png)";
                 }
             }
-            if ( empty( $error ) == false) {
-               echo json_encode( array( "error" => 0, "message" => "Upload success!" ) );
+            if ( empty( $error )) {
+                echo json_encode( array( "error" => 0, "message" => "File uploaded successfully!" ) );
             }
-            else {
+           else {
                 echo json_encode( array( "error" => 1, "message" => $error ) );
             }
             exit();

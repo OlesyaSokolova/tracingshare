@@ -168,11 +168,15 @@ function prepareEditablePublication() {
                                 var response  = this.response || this.responseText;
                                 /** Do Something with the reponse **/
                                 response  = $.parseJSON( response );
-                                if ( response && response.message ) {
+                                if(response['error'] === 0) {
+                                    location.reload()
+                                }
+                                else {
                                     window.alert( response.message );
                                 }
+
                             }
-                            location.reload()
+
                         }
                         // now send the formData to server
                         xhr.send( formData );
