@@ -4,7 +4,7 @@ function prepareEditablePublication() {
     const baseUrl = "/" + pathParts[1]
         + "/" + pathParts[2]
         + "/" + pathParts[3]
-        // + "/" + pathParts[4]
+        //+ "/" + pathParts[4]
 
     if(typeof drawings != "undefined"
         && drawings !== ''
