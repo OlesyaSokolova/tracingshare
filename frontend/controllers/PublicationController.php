@@ -251,7 +251,7 @@ class PublicationController extends Controller
         ]);
     }
 
-    public function actionCreateLayer($id)
+    public function actionDraw($id)
     {
         if(Yii::$app->user->isGuest)
         {
@@ -263,7 +263,7 @@ class PublicationController extends Controller
             throw new HttpException(404);
         }
 
-        return $this->render('createLayer', [
+        return $this->render('draw', [
             'publication' => $publication,
         ]);
     }

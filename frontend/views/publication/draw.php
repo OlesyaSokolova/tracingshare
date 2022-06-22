@@ -18,24 +18,24 @@ if(!empty($publication)) {
 
     if(strcmp($publication->drawings ,'') == 0) {
         $script = "publicationId = $publication->id
-publicationId = $publication->id
-originalImageSrc = $originalImageSrc
-drawingPathPrefix =  $drawingPathPrefix
-texturePathPrefix = $texturePathPrefix
-prefix = $drawingPrefix
-textures = $publication->textures 
-prepareLayersToDraw()";
+        publicationId = $publication->id
+        originalImageSrc = $originalImageSrc
+        drawingPathPrefix =  $drawingPathPrefix
+        texturePathPrefix = $texturePathPrefix
+        prefix = $drawingPrefix
+        textures = $publication->textures 
+        prepareLayersToDraw()";
     }
     else
     {
         $script = "publicationId = $publication->id
-originalImageSrc = $originalImageSrc
-drawingPathPrefix =  $drawingPathPrefix
-texturePathPrefix = $texturePathPrefix
-prefix = $drawingPrefix
-drawings = $publication->drawings
-textures = $publication->textures  
-prepareLayersToDraw()";
+        originalImageSrc = $originalImageSrc
+        drawingPathPrefix =  $drawingPathPrefix
+        texturePathPrefix = $texturePathPrefix
+        prefix = $drawingPrefix
+        drawings = $publication->drawings
+        textures = $publication->textures  
+        prepareLayersToDraw()";
     }
 
     ViewAsset::register($this);
@@ -49,12 +49,14 @@ prepareLayersToDraw()";
     <?php $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     if (Yii::$app->user->can('updateOwnPost',
             ['publication' => $publication]) || isset($userRoles['admin'])):?>
-        <button type="button" class="btn btn-outline-primary btn-rounded" id="save-layer-button">Сохранить</button>
 
         <?= Html::a(Yii::t('app', 'Выйти из редактора'),
             ['/publication/view', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
                 'name' => 'exit-button',]) ?>
+
+        <button type="button" class="btn btn-outline-primary btn-rounded" id="save-layer-button">Сохранить</button>
+
 
     <?php endif; ?>
 </p>

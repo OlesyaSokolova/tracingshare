@@ -56,9 +56,9 @@ if (strcmp($publication->drawings ,'') != 0
 ): ?>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить последние <br> сохраненные настройки слоев</button>
         <?= Html::a(Yii::t('app', 'Перейти ' . '<br>' . ' в графический редактор'),
-        ['/publication/create-layer', 'id' => $publication->id],
+        ['/publication/draw', 'id' => $publication->id],
         ['class' => 'btn btn-outline-primary btn-rounded',
-            'name' => 'create-layer-button',]) ?>
+            'name' => 'draw-button',]) ?>
 </p>
 
 <?php endif; ?>
@@ -93,9 +93,9 @@ if (strcmp($publication->drawings ,'') != 0
    <!-- --><?php /*if (strcmp($publication->settings ,'') != 0): */?>
             <div id="layers" class = "layers-class" style="padding-left: 20px; ">
                 <?=Html::a(Yii::t('app', 'Создать новый слой'),
-                    ['/publication/create-layer', 'id' => $publication->id],
+                    ['/publication/draw', 'id' => $publication->id],
                     ['class' => 'btn btn-outline-primary btn-rounded', 'style' => 'margin-bottom: 10px',
-                        'name' => 'create-layer-button']);
+                        'name' => 'draw-button']);
 
                 if (strcmp($publication->drawings ,'') != 0
                     && sizeof($publication->getDrawings()) > 0
