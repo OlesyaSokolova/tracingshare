@@ -118,28 +118,28 @@ class PublicationController extends Controller
             if ( $code !== UPLOAD_ERR_OK ) {
                 switch( $code ) {
                     case UPLOAD_ERR_INI_SIZE:
-                        $error  = 'Error '.$code.': The uploaded file exceeds the <a href="http://www.php.net/manual/en/ini.core.php#ini.upload-max-filesize" target="_blank" rel="nofollow"><span class="function-string">upload_max_filesize</span></a> directive in php.ini';
+                        $error  = 'Error: The uploaded file exceeds the upload_max_filesize directive in php.ini';
                         break;
                     case UPLOAD_ERR_FORM_SIZE:
-                        $error  = 'Error '.$code.': The uploaded file exceeds the <span class="const-string">MAX_FILE_SIZE</span> directive that was specified in the HTML form';
+                        $error  = 'Error: The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form';
                         break;
                     case UPLOAD_ERR_PARTIAL:
-                        $error  = 'Error '.$code.': The uploaded file was only partially uploaded';
+                        $error  = 'Error: The uploaded file was only partially uploaded';
                         break;
                     case UPLOAD_ERR_NO_FILE:
-                        $error  = 'Error '.$code.': No file was uploaded';
+                        $error  = 'Error: No file was uploaded';
                         break;
                     case UPLOAD_ERR_NO_TMP_DIR:
-                        $error  = 'Error '.$code.': Missing a temporary folder';
+                        $error  = 'Error: Missing a temporary folder';
                         break;
                     case UPLOAD_ERR_CANT_WRITE:
-                        $error  = 'Error '.$code.': Failed to write file to disk';
+                        $error  = 'Error: Failed to write file to disk';
                         break;
                     case UPLOAD_ERR_EXTENSION:
-                        $error  = 'Error '.$code.': A PHP extension stopped the file upload';
+                        $error  = 'Error: A PHP extension stopped the file upload';
                         break;
                     default:
-                        $error  = 'Error '.$code.': Unknown upload error';
+                        $error  = 'Error: Unknown upload error';
                         break;
                 }
             }
@@ -159,11 +159,11 @@ class PublicationController extends Controller
                     $error  = "Only image files are allowed (jpg, gif, png)";
                 }
             }
-            if ( empty( $error )) {
-                echo json_encode( array( "error" => 0, "message" => "File uploaded successfully!" ) );
+            if (empty( $error)) {
+                echo json_encode(array("error" => 0, "message" => "File uploaded successfully!"));
             }
            else {
-                echo json_encode( array( "error" => 1, "message" => $error ) );
+                echo json_encode(array("error" => 1,"message" => $error));
             }
             exit();
         }
