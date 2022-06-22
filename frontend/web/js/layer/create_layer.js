@@ -4,7 +4,7 @@ function prepareLayersToDraw() {
     const baseUrl = "/" + pathParts[1]
         + "/" + pathParts[2]
         + "/" + pathParts[3]
-        // + "/" + pathParts[4]
+        //+ "/" + pathParts[4]
 
     var currentDrawings = {
         drawings: Array()
@@ -70,9 +70,9 @@ function prepareLayersToDraw() {
             }
         }
         //create thumbnails for existing layers
-        //window.onload = (event) => {
+        window.onload = (event) => {
             drawExistingLayersThumbnails(drawingsImages);
-        //};
+        };
 
         const newLayerCanvasId = "layer_" + (drawingsImages.length) + "_canvas";
         var newLayerCanvas = createCanvasToDrawOn(newLayerCanvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
