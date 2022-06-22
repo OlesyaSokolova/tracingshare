@@ -107,9 +107,6 @@ function prepareEditableTextures() {
 
                         //https://stackoverflow.com/a/17328113
                         var file = inputElement.files[0]
-                        titleElement.value = (file['name']).substr(0, (file['name']).lastIndexOf('.'));
-                        saveTextures(jsonTextures, redirectToView)
-
                         var formData = new FormData();
                         formData.append('photo-img', file); // append the file to form data
 
@@ -133,7 +130,8 @@ function prepareEditableTextures() {
                                     var response = this.response || this.responseText;
                                     response = $.parseJSON(response);
                                     if (response['error'] === 0) {
-                                        location.reload()
+                                        var messageElement = document.getElementById('resultMessage');
+                                        messageElement.innerHTML = "Для текстуры \"" + titleElement.value + "\" успешно загружен новый файл: " + file['name'];
                                     } else {
                                         window.alert(response.message);
                                     }
