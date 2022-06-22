@@ -12,7 +12,7 @@ use yii\web\UploadedFile;
 
 class PublicationController extends Controller
 {
-    public $enableCsrfValidation = false;
+    //public $enableCsrfValidation = false;
 
     public function actionView($id)
     {

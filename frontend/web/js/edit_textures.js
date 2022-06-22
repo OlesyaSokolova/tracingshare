@@ -125,6 +125,8 @@ function prepareEditableTextures() {
                         }
                         if (xhr) {
                             xhr.open("POST", baseUrl + "/publication/update-texture-file?filename=" + filename, true);
+                            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr("content"));
+
                             xhr.onreadystatechange = function () {
                                 if (this.readyState === 4 && this.status === 200) {
                                     var response = this.response || this.responseText;

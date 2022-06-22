@@ -145,6 +145,7 @@ function prepareEditablePublication() {
                     //https://stackoverflow.com/a/17328113
                     var file = inputElement.files[0]
                     var formData  = new FormData();
+                    //var csrfToken = $('meta[name="csrf-token"]').attr("content");
                     formData.append( 'photo-img', file ); // append the file to form data
 
                     var xhr = false;
@@ -163,6 +164,7 @@ function prepareEditablePublication() {
                     }
                     if ( xhr ) {
                         xhr.open( "POST", baseUrl + "/publication/update-drawing-file?filename=" + filename, true );
+                        xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr("content"));
                         xhr.onreadystatechange  = function() {
                             if ( this.readyState === 4 && this.status === 200 ) {
                                 var response  = this.response || this.responseText;
