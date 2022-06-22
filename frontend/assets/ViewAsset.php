@@ -19,13 +19,17 @@ class ViewAsset extends AssetBundle
     public $baseUrl = '@web';
 
     public $js = [
-        'js/query_utils.js',
-        'js/canvas_utils.js',
         'js/view_publication.js',
-        'js/edit_drawings.js',
-        'js/edit_textures.js',
-        'js/layer/drawing.js',
-        'js/layer/drawing_utils.js',
+
+        'js/utils/query_utils.js',
+        'js/utils/canvas_utils.js',
+        'js/utils/drawing_utils.js',
+
+        'js/edit/edit_drawings.js',
+        'js/edit/edit_textures.js',
+
+        'js/draw/drawing.js',
+
 
         'js/jszip/dist/jszip.js',
         'js/jszip-utils/dist/jszip-utils.js',
