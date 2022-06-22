@@ -53,7 +53,7 @@ if(!empty($publication)) {
 </p>
     <?php  $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     if (Yii::$app->user->can('updateOwnPost',
-            ['publication' => $publication]) || isset($userRoles['admin'])):?>
+            ['publication' => $publication]) || isset($userRoles['admin'])):
 
         echo Html::a(Yii::t('app', 'Удалить' . '<br>' .'публикацию'),
         ['/publication/delete', 'id' => $publication->id],

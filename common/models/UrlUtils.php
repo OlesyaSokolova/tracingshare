@@ -7,8 +7,8 @@ use Yii;
 class UrlUtils
 {
    public static function getFirstPartOfUrl() {
-        $projectFolder = basename(Yii::getAlias('@root'));
-        return Yii::$app->urlManager->hostInfo . "/". $projectFolder;
+        //$projectFolder = basename(Yii::getAlias('@root'));
+        //return Yii::$app->urlManager->hostInfo . "/". $projectFolder;
         //return Yii::$app->urlManager->hostInfo;
     }
 
