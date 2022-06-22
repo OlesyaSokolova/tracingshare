@@ -97,18 +97,12 @@ if(!empty($publication)) {
                 ]);
                 ?>
         </div>
+        <?= Html::a(Yii::t('app', 'Редактировать' . '<br>' .'основную информацию'),
+        ['/publication/edit', 'id' => $publication->id],
+        ['class' => 'btn btn-outline-primary btn-rounded',
+        'name' => 'create-layer-button',]) ?>
         <?php endif; ?>
 
-        <?= /*Html::a(Yii::t('app', 'Перейти в графический ' . '<br>' . 'редактор слоев'),
-            ['/publication/create-layer', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'create-layer-button',]);*/
-
-        Html::a(Yii::t('app', 'Редактировать' . '<br>' .'основную информацию'),
-            ['/publication/edit', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'create-layer-button',])
-        ?>
         <br>
         <br>
 <div class="box" style="display: flex">
