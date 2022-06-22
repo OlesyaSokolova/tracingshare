@@ -122,7 +122,6 @@ function prepareEditablePublication() {
                     saveData(jsonDrawings, redirectToView)
                     initLayersSettingsForEdit(jsonDrawings)
                     updateAllLayers(initDrawingsArray(jsonDrawings));
-
                 }
             })
         }
@@ -140,6 +139,8 @@ function prepareEditablePublication() {
                 inputElement.addEventListener("change", handleFiles, false);
 
                 async function handleFiles() {
+                    var redirectToView = false;
+                    saveData(jsonDrawings, redirectToView)
                     var data = new FormData()
                     var file = inputElement.files[0]
                     //data.append('newFile', file, file.name)
