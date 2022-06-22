@@ -32,8 +32,8 @@ JS;
 
     <?php
     $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
-    if (Yii::$app->user->can('updatePost',
-            ['publication' => $publication])):?>
+    if (Yii::$app->user->can('updateOwnPost',
+            ['publication' => $publication]) || isset($userRoles['admin'])):?>
 
         <?= Html::a(Yii::t('app', 'Отмена'),
             ['/publication/view', 'id' => $publication->id],

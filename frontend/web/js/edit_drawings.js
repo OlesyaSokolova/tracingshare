@@ -1,4 +1,11 @@
 function prepareEditablePublication() {
+
+    const pathParts = window.location.pathname.split ('/');
+    const baseUrl = "/" + pathParts[1]
+        + "/" + pathParts[2]
+        + "/" + pathParts[3]
+        // + "/" + pathParts[4]
+
     if(typeof drawings != "undefined"
         && drawings !== ''
         && drawings !== ""
@@ -56,12 +63,6 @@ function prepareEditablePublication() {
         var redirectToView = true
         saveData(drawings, redirectToView)
     });
-
-    const pathParts = window.location.pathname.split ('/');
-    const baseUrl = "/" + pathParts[1]
-        + "/" + pathParts[2]
-        + "/" + pathParts[3]
-        + "/" + pathParts[4]
 
     function saveData(drawings, redirectToView) {
         if(typeof drawings != 'undefined' && drawings !== '' && drawings !== "") {

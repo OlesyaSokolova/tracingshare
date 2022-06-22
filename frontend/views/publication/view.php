@@ -51,9 +51,9 @@ if(!empty($publication)) {
 <!--    <button type="button" class="btn btn-outline-primary btn-rounded" id="download-button">Скачать (.zip)</button>
 -->
 </p>
-    <?php $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
-    if (Yii::$app->user->can('updatePost',
-        ['publication' => $publication])):
+    <?php  $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+    if (Yii::$app->user->can('updateOwnPost',
+            ['publication' => $publication]) || isset($userRoles['admin'])):?>
 
         echo Html::a(Yii::t('app', 'Удалить' . '<br>' .'публикацию'),
         ['/publication/delete', 'id' => $publication->id],
