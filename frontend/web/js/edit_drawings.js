@@ -57,6 +57,12 @@ function prepareEditablePublication() {
         saveData(drawings, redirectToView)
     });
 
+    const pathParts = window.location.pathname.split ('/');
+    const baseUrl = "/" + pathParts[1]
+        + "/" + pathParts[2]
+        + "/" + pathParts[3]
+        + "/" + pathParts[4]
+
     function saveData(drawings, redirectToView) {
         if(typeof drawings != 'undefined' && drawings !== '' && drawings !== "") {
             for (let i = 0; i < drawings.drawings.length; i++) {
@@ -78,13 +84,6 @@ function prepareEditablePublication() {
             //newDescription: mainDescription,
             newDrawings: drawings,
         };
-
-        const pathParts = window.location.pathname.split ('/');
-        const baseUrl = "/" + pathParts[1]
-            + "/" + pathParts[2]
-            + "/" + pathParts[3]
-            + "/" + pathParts[4]
-
 
         $.ajax({
             type: "POST",
@@ -130,16 +129,55 @@ function prepareEditablePublication() {
     }
 
     function initChangeFileButtons(jsonDrawings) {
-        var layersNumber = jsonDrawings.drawings.length;
+        var drawingsJson = jsonDrawings.drawings;
+        var layersNumber = drawingsJson.length;
 
         for (let i = 0; i < layersNumber; i++) {
             (function(e) {
                 var inputFileId = "input_file_" + i;
+                var filename = drawingsJson[i].image;
                 var inputElement = document.getElementById(inputFileId);
                 inputElement.addEventListener("change", handleFiles, false);
-                function handleFiles() {
-                    const fileList = this.files; /* now you can work with the file list */
-                    alert(fileList.length + inputFileId)
+
+                async function handleFiles() {
+                    var data = new FormData()
+                    var file = inputElement.files[0]
+                    //data.append('newFile', file, file.name)
+                    var formData  = new FormData();
+                    formData.append( 'photo-img', file ); // append the file to form data
+
+                    var xhr = false;
+                    if ( typeof XMLHttpRequest !== 'undefined' ) {
+                        xhr = new XMLHttpRequest();
+                    }
+                    else {
+                        var versions  = [ "MSXML2.XmlHttp.5.0", "MSXML2.XmlHttp.4.0", "MSXML2.XmlHttp.3.0", "MSXML2.XmlHttp.2.0", "Microsoft.XmlHttp" ];
+                        for( var i = 0, len = versions.length; i < len; i++ ) {
+                            try {
+                                xhr = new ActiveXObject( versions[i] );
+                                break;
+                            }
+                            catch(e) {}
+                        }
+                    }
+                    if ( xhr ) {
+                        // replace test.php with your own upload script url
+                        xhr.open( "POST", baseUrl + "/publication/update-drawing-file?filename=" + filename, true );
+                        xhr.onreadystatechange  = function() {
+                            if ( this.readyState === 4 && this.status == 200 ) {
+                                var response  = this.response || this.responseText;
+
+                                /** Do Something with the reponse **/
+                                response  = $.parseJSON( response );
+                                if ( response && response.message ) {
+                                    window.alert( response.message );
+                                }
+
+                            }
+                        }
+                        // now send the formData to server
+                        xhr.send( formData );
+                    }
                 }
             })(i);
         }
