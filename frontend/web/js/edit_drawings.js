@@ -141,7 +141,8 @@ function prepareEditablePublication() {
                 async function handleFiles() {
                     var redirectToView = false;
                     saveData(jsonDrawings, redirectToView)
-                    var data = new FormData()
+
+                    //https://stackoverflow.com/a/17328113
                     var file = inputElement.files[0]
                     //data.append('newFile', file, file.name)
                     var formData  = new FormData();

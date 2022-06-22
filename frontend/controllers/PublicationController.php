@@ -105,6 +105,7 @@ class PublicationController extends Controller
 
     public function actionUpdateDrawingFile($filename)
     {
+        //https://stackoverflow.com/a/17328113
         if ( isset( $_FILES["photo-img"] ) ) {
             $error  = false;
             $image  = $_FILES["photo-img"];
