@@ -169,6 +169,72 @@ class PublicationController extends Controller
         }
     }
 
+    public function actionUpdateTextureFile($filename)
+    {
+        //https://stackoverflow.com/a/17328113
+        if ( isset( $_FILES["photo-img"] ) ) {
+            $error  = false;
+            $image  = $_FILES["photo-img"];
+            $code   = (int)$image["error"];
+            $valid  = array( IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF );
+            $filePath = Publication::basePath() . '/'
+                . Publication::PREFIX_PATH_TEXTURES . '/'
+                . $filename;
+
+            if ( $code !== UPLOAD_ERR_OK ) {
+                switch( $code ) {
+                    case UPLOAD_ERR_INI_SIZE:
+                        $error  = 'Error: The uploaded file exceeds the upload_max_filesize directive in php.ini';
+                        break;
+                    case UPLOAD_ERR_FORM_SIZE:
+                        $error  = 'Error: The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form';
+                        break;
+                    case UPLOAD_ERR_PARTIAL:
+                        $error  = 'Error: The uploaded file was only partially uploaded';
+                        break;
+                    case UPLOAD_ERR_NO_FILE:
+                        $error  = 'Error: No file was uploaded';
+                        break;
+                    case UPLOAD_ERR_NO_TMP_DIR:
+                        $error  = 'Error: Missing a temporary folder';
+                        break;
+                    case UPLOAD_ERR_CANT_WRITE:
+                        $error  = 'Error: Failed to write file to disk';
+                        break;
+                    case UPLOAD_ERR_EXTENSION:
+                        $error  = 'Error: A PHP extension stopped the file upload';
+                        break;
+                    default:
+                        $error  = 'Error: Unknown upload error';
+                        break;
+                }
+            }
+            else {
+                $iminfo = @getimagesize( $image["tmp_name"] );
+                if ( $iminfo && is_array( $iminfo ) ) {
+                    if ( isset( $iminfo[2] ) && in_array( $iminfo[2], $valid ) && is_readable( $image["tmp_name"] ) ) {
+                        if ( !move_uploaded_file( $image["tmp_name"], $filePath ) ) {
+                            $error  = "Error while moving uploaded file";
+                        }
+                    }
+                    else {
+                        $error  = "Invalid format or image is not readable";
+                    }
+                }
+                else {
+                    $error  = "Only image files are allowed (jpg, gif, png)";
+                }
+            }
+            if (empty( $error)) {
+                echo json_encode(array("error" => 0, "message" => "File uploaded successfully!"));
+            }
+            else {
+                echo json_encode(array("error" => 1,"message" => $error));
+            }
+            exit();
+        }
+    }
+
     public function actionEditTextures($id)
     {
         if(Yii::$app->user->isGuest)

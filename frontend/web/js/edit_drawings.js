@@ -164,7 +164,7 @@ function prepareEditablePublication() {
                     if ( xhr ) {
                         xhr.open( "POST", baseUrl + "/publication/update-drawing-file?filename=" + filename, true );
                         xhr.onreadystatechange  = function() {
-                            if ( this.readyState === 4 && this.status == 200 ) {
+                            if ( this.readyState === 4 && this.status === 200 ) {
                                 var response  = this.response || this.responseText;
                                 response  = $.parseJSON( response );
                                 if(response['error'] === 0) {
