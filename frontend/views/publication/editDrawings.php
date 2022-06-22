@@ -44,11 +44,10 @@ JS;
 
         <button type="button" class="btn btn-outline-primary btn-rounded" id="save-button">Сохранить <br> изменения</button>
 
-
-        <!--Html::a(Yii::t('app', 'Загрузить' . '<br>' . ' слои прорисовок'),
+      <?= Html::a(Yii::t('app', 'Загрузить' . '<br>' . ' слои прорисовок'),
             ['/publication/upload-drawings', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'upload-drawings-button'])-->
+                'name' => 'upload-drawings-button']); ?>
 
     <?php endif; ?>
 <?php

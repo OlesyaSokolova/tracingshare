@@ -144,7 +144,6 @@ function prepareEditablePublication() {
 
                     //https://stackoverflow.com/a/17328113
                     var file = inputElement.files[0]
-                    //data.append('newFile', file, file.name)
                     var formData  = new FormData();
                     formData.append( 'photo-img', file ); // append the file to form data
 
@@ -163,12 +162,10 @@ function prepareEditablePublication() {
                         }
                     }
                     if ( xhr ) {
-                        // replace test.php with your own upload script url
                         xhr.open( "POST", baseUrl + "/publication/update-drawing-file?filename=" + filename, true );
                         xhr.onreadystatechange  = function() {
                             if ( this.readyState === 4 && this.status == 200 ) {
                                 var response  = this.response || this.responseText;
-                                /** Do Something with the reponse **/
                                 response  = $.parseJSON( response );
                                 if(response['error'] === 0) {
                                     location.reload()
@@ -176,9 +173,7 @@ function prepareEditablePublication() {
                                 else {
                                     window.alert( response.message );
                                 }
-
                             }
-
                         }
                         // now send the formData to server
                         xhr.send( formData );
