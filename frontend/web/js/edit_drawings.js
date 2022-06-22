@@ -1,4 +1,11 @@
 function prepareEditablePublication() {
+
+    const pathParts = window.location.pathname.split ('/');
+    const baseUrl = "/" + pathParts[1]
+        + "/" + pathParts[2]
+        + "/" + pathParts[3]
+        // + "/" + pathParts[4]
+
     if(typeof drawings != "undefined"
         && drawings !== ''
         && drawings !== ""
@@ -70,21 +77,14 @@ function prepareEditablePublication() {
         {
             drawings = ''
         }
-        mainDescription = document.getElementById('mainDesc').value;
+        //mainDescription = document.getElementById('mainDesc').value;
         name = document.getElementById('name').value;
         var newData = {
             //id: parseInt(publicationId),
             newName: name,
-            newDescription: mainDescription,
+            //newDescription: mainDescription,
             newDrawings: drawings,
         };
-
-        const pathParts = window.location.pathname.split ('/');
-        const baseUrl = "/" + pathParts[1]
-            + "/" + pathParts[2]
-            + "/" + pathParts[3]
-            //+ "/" + pathParts[4]
-
 
         $.ajax({
             type: "POST",
@@ -120,11 +120,69 @@ function prepareEditablePublication() {
                     jsonDrawings.drawings.splice(i, 1);
                     drawingsImages.splice(i, 1);
                     var redirectToView = false;
+                    saveData(jsonDrawings, redirectToView)
                     initLayersSettingsForEdit(jsonDrawings)
                     updateAllLayers(initDrawingsArray(jsonDrawings));
-                    saveData(jsonDrawings, redirectToView)
                 }
             })
+        }
+    }
+
+    function initChangeFileButtons(jsonDrawings) {
+        var drawingsJson = jsonDrawings.drawings;
+        var layersNumber = drawingsJson.length;
+
+        for (let i = 0; i < layersNumber; i++) {
+            (function(e) {
+                var inputFileId = "input_file_" + i;
+                var filename = drawingsJson[i].image;
+                var inputElement = document.getElementById(inputFileId);
+                inputElement.addEventListener("change", handleFiles, false);
+
+                async function handleFiles() {
+                    var redirectToView = false;
+                    saveData(jsonDrawings, redirectToView)
+
+                    //https://stackoverflow.com/a/17328113
+                    var file = inputElement.files[0]
+                    var formData  = new FormData();
+                    //var csrfToken = $('meta[name="csrf-token"]').attr("content");
+                    formData.append( 'photo-img', file ); // append the file to form data
+
+                    var xhr = false;
+                    if ( typeof XMLHttpRequest !== 'undefined' ) {
+                        xhr = new XMLHttpRequest();
+                    }
+                    else {
+                        var versions  = [ "MSXML2.XmlHttp.5.0", "MSXML2.XmlHttp.4.0", "MSXML2.XmlHttp.3.0", "MSXML2.XmlHttp.2.0", "Microsoft.XmlHttp" ];
+                        for( var i = 0, len = versions.length; i < len; i++ ) {
+                            try {
+                                xhr = new ActiveXObject( versions[i] );
+                                break;
+                            }
+                            catch(e) {}
+                        }
+                    }
+                    if ( xhr ) {
+                        xhr.open( "POST", baseUrl + "/publication/update-drawing-file?filename=" + filename, true );
+                        xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr("content"));
+                        xhr.onreadystatechange  = function() {
+                            if ( this.readyState === 4 && this.status === 200 ) {
+                                var response  = this.response || this.responseText;
+                                response  = $.parseJSON( response );
+                                if(response['error'] === 0) {
+                                    location.reload()
+                                }
+                                else {
+                                    window.alert( response.message );
+                                }
+                            }
+                        }
+                        // now send the formData to server
+                        xhr.send( formData );
+                    }
+                }
+            })(i);
         }
     }
 
@@ -146,22 +204,34 @@ function prepareEditablePublication() {
                     '                border-radius: 10px;\n' +
                     '                padding-left: 10px;\n' +
                     '                padding-right: 10px;\n' +
+                    '                padding-top: 10px;\n' +
                     '                width: 700px;\n' +
                     '                text-align: left;\n' +
                     '                margin-bottom: 10px">';
 
                 var titleId = "title_" + i;
                 var delBtnId = "del_btn_" + i;
+                var changeFileBtnId = "chng_file_btn_" + i;
+                var inputFileId = "input_file_" + i;
                 var alphaId = "alpha_" + i;
                 var colorId = "color_" + i;
                 var descId = "desc_" + i;
 
                 layerInfo +=
                     '<label for=\'' + titleId + '\'>Название: </label>'
+
                     + '<button type="button" id=\'' + delBtnId  + '\' ' +
                     'class="btn btn-outline-danger btn-sm" ' +
                     'style="float: right; margin-bottom: 10px"' +
                     '>Удалить</button>'
+
+                    + '<button type="button" id=\'' + changeFileBtnId  + '\' ' +
+                    'class="btn btn-outline-primary btn-sm" ' +
+                    'style="float: right; margin-bottom: 10px; margin-right: 10px" ' +
+                    'onclick="$(\'#\' + \'' + inputFileId + '\').trigger(\'click\');"' +
+                    '>Загрузить другой файл</button>'
+                    + '<input type="file" id=\'' + inputFileId + '\' style="display:none"/>'
+
                     + '<input type="text" id=\'' + titleId + '\' class="form-control" value=\'' + (jsonArrayDrawings[i].layerParams.title) + '\'/>'
                     + '<br>'
 
@@ -185,6 +255,7 @@ function prepareEditablePublication() {
             var layersEditForm = document.getElementById("editForm");
             layersEditForm.innerHTML = layerInfo
             initDeleteButtons(jsonDrawings)
+            initChangeFileButtons(jsonDrawings)
         }
     }
 

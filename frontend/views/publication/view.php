@@ -2,7 +2,9 @@
 
 use frontend\assets\ViewAsset;
 use common\models\Publication;
+use yii\bootstrap4\Dropdown;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 if(!empty($publication)) {
 
@@ -49,52 +51,66 @@ if(!empty($publication)) {
 <!--    <button type="button" class="btn btn-outline-primary btn-rounded" id="download-button">Скачать (.zip)</button>
 -->
 </p>
-    <?php $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+    <?php  $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     if (Yii::$app->user->can('updateOwnPost',
-        ['publication' => $publication]) || isset($userRoles['admin'])):?>
+            ['publication' => $publication]) || isset($userRoles['admin'])):
 
-        <?= Html::a(Yii::t('app', 'Удалить' . '<br>' . 'публикацию'),
-            ['/publication/delete', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-danger btn-rounded',
-                'name' => 'delete-button',]) ?>
+        echo Html::a(Yii::t('app', 'Удалить' . '<br>' .'публикацию'),
+        ['/publication/delete', 'id' => $publication->id],
+        ['class' => 'btn btn-outline-danger btn-rounded',
+        'name' => 'create-layer-button',]) ?>
 
-        <?= Html::a(Yii::t('app', 'Загрузить слои ' . '<br>' . 'прорисовок'),
-            ['/publication/upload-drawings', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'upload-drawings-button',]) ?>
+        <div class="dropdown" style="display: inline-block">
+                <a style="margin-right: 1px" class="btn btn-outline-primary btn-rounded dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Редактировать<br>прорисовки
+                </a>
+                <?php
+                $items = [];
+                $items[] = ['label' => 'Загрузить новые', 'url' => Url::to(['/publication/upload-drawings?id='.$publication->id])];
 
-        <?= Html::a(Yii::t('app', 'Загрузить ' . '<br>' . 'текстуры'),
-            ['/publication/upload-textures', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'upload-textures-button',]) ?>
+                if (strcmp($publication->drawings ,'') != 0
+                    && sizeof($publication->getDrawings()) > 0):
+                    $items[] = ['label' => 'Изменить существующие', 'url' => Url::to(['/publication/edit-drawings?id='.$publication->id])];
+/*                    $items[] = ['label' => 'Редактировать демонстрационные настройки', 'url' => Url::to(['/publication/edit?id='.$publication->id])];*/
+                endif;
+                $items[] = ['label' => 'Перейти в графический редактор', 'url' => Url::to(['/publication/create-layer?id='.$publication->id])];
+                echo Dropdown::widget([
+                    'items' => $items
+                ]);
+                ?>
+        </div>
 
-        <?php if (strcmp($publication->textures ,'') != 0
-        && sizeof($publication->getTextures()) > 0): ?>
-        <?= Html::a(Yii::t('app', 'Редактировать ' . '<br>' . 'текстуры'),
-            ['/publication/edit-textures', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'edit-textures-button',]) ?>
+        <div class="dropdown" style="display: inline-block">
+                <a class="btn btn-outline-primary btn-rounded dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Редактировать<br>текстуры
+                </a>
+                <?php
+                $items = [];
+                $items[] = ['label' => 'Загрузить новые', 'url' => Url::to(['/publication/upload-textures?id='.$publication->id])];
+
+                if (strcmp($publication->textures ,'') != 0
+                    && sizeof($publication->getTextures()) > 0):
+                    $items[] = ['label' => 'Изменить существующие', 'url' => Url::to(['/publication/edit-textures?id='.$publication->id])];
+                endif;
+                echo Dropdown::widget([
+                    'items' => $items
+                ]);
+                ?>
+        </div>
         <?php endif; ?>
 
-        <?php if (strcmp($publication->drawings ,'') != 0
-            && sizeof($publication->getDrawings()) > 0): ?>
-        <?= Html::a(Yii::t('app', 'Редактировать демонстрационные' . '<br>' . 'настройки'),
-            ['/publication/edit', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'edit-button',]) ?>
-        <?php endif; ?>
-
-        <?= Html::a(Yii::t('app', 'Перейти в графический ' . '<br>' . 'редактор слоев'),
+        <?= /*Html::a(Yii::t('app', 'Перейти в графический ' . '<br>' . 'редактор слоев'),
             ['/publication/create-layer', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'create-layer-button',]) ?>
-        <br>
-        <br>
-    <?php
-    else:
-        echo '<br>';
-    endif; ?>
+                'name' => 'create-layer-button',]);*/
 
+        Html::a(Yii::t('app', 'Редактировать' . '<br>' .'основную информацию'),
+            ['/publication/edit', 'id' => $publication->id],
+            ['class' => 'btn btn-outline-primary btn-rounded',
+                'name' => 'create-layer-button',])
+        ?>
+        <br>
+        <br>
 <div class="box" style="display: flex">
     <div class="container-publication" data-state="static">
         <div class="canvas-publication">
@@ -125,6 +141,7 @@ if(!empty($publication)) {
         </div>
 
         <div id=layer_info style="border:1px solid black;
+            display: inline-block;
                 border-radius: 10px;
                 width: 700px;
                 padding-bottom: 20px;
@@ -134,18 +151,17 @@ if(!empty($publication)) {
 
             <h5 id ="layer_title"> </h5>
 
-            <div id = "description" sty>
+            <div id = "description">
             </div>
         </div>
     <?php
     else:  ?>
-        <p style="margin-left: 30px; ">
+        <div style="margin-left: 30px; display: inline-block ">
         <?= $publication->description?>
-        </p>
+        </div>
     <?php endif; ?>
 
 </div>
-
 <?php
 if ((strcmp($publication->drawings ,'') != 0)
     && sizeof($publication->getDrawings()) > 0): ?>
@@ -158,15 +174,3 @@ if ((strcmp($publication->drawings ,'') != 0)
 <p>
     Автор:  <?= $publication->getAuthorName() ?>
 </p>
-
-<!--<div id="rt_popover" style="width: 200px"><div id="rt_popover">1 : <input type='range' id='0' class='alpha-value' step='0.05' min='-1' max='1' value='0.5'><button value="0" class="btn menu-object cp-button" data-menu="layer_pallete" data-html="true" data-container="#rt_popover"data-toggle="popover" data-placement="bottom"><i class="fas fa-palette"></i></button><br>2 : <input type='range' id='1' class='alpha-value' step='0.05' min='-1' max='1' value='0.6'><button value="1" class="btn menu-object cp-button" data-menu="layer_pallete" data-html="true" data-container="#rt_popover"data-toggle="popover" data-placement="bottom"><i class="fas fa-palette"></i></button><br>3 : <input type='range' id='2' class='alpha-value' step='0.05' min='-1' max='1' value='0.8656377'><button value="2" class="btn menu-object cp-button" data-menu="layer_pallete" data-html="true" data-container="#rt_popover"data-toggle="popover" data-placement="bottom"><i class="fas fa-palette"></i></button><br></div></div>
---><?php /*if ($categoryId): */?><!--
-    <div class="clearfix">
-        <?php /*if ($objectPrev): */?>
-            <?php /*= Html::a('<i class="fas fa-backward"></i> ' . $objectPrev->name, ['/object/view', 'categoryId' => $categoryId, 'id' => $objectPrev->link], ['class' => 'pull-left btn btn-default']) */?>
-        <?php /*endif; */?>
-        <?php /*if ($objectNext): */?>
-            <?php /*= Html::a($objectNext->name . ' <i class="fas fa-forward"></i>', ['/object/view', 'categoryId' => $categoryId, 'id' => $objectNext->link], ['class' => 'pull-right btn btn-default']) */?>
-        <?php /*endif; */?>
-    </div>
---><?php /*endif; */?>

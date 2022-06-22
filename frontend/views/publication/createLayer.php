@@ -46,8 +46,7 @@ prepareLayersToDraw()";
 <h3><?=$this->title?>
 </h3>
 <p>
-    <?php
-    $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+    <?php $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
     if (Yii::$app->user->can('updateOwnPost',
             ['publication' => $publication]) || isset($userRoles['admin'])):?>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="save-layer-button">Сохранить</button>

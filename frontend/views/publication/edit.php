@@ -1,104 +1,42 @@
 <?php
+/** @var yii\web\View $this */
+/** @var yii\bootstrap4\ActiveForm $form */
+/** @var \common\models\Publication $model */
 
-use common\models\UrlUtils;
-use frontend\assets\ViewAsset;
-use common\models\Publication;
-use yii\helpers\Html;
+use yii\bootstrap4\Html;
+use yii\bootstrap4\ActiveForm;
+use mihaildev\ckeditor\CKEditor;
 
+$this->title = 'Редактирование публикации';
+?>
+<div class="publication-upload-original-image">
+    <h3 style="text-align: center;"><?= Html::encode($this->title) ?></h3>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
 
-if(!empty($publication)) {
+            <?php $form = ActiveForm::begin(['id' => 'form-upload-original-image', 'options' => ['enctype' => 'multipart/form-data']]) ?>
+            <?= $form->field($model, 'name')->label("Название:") ?>
+            <?= $form->field($model, 'description')->textarea(['rows' => '8'])->label("Описание:")->widget(CKEditor::className(),
+                [
+                    'editorOptions' => [
+                        'preset' => 'full',
+                        'inline' => false,
+                    ],
+                    'options' => [
+                        'allowedContent' => true,
+                    ],
 
-    $this->title = "Редактирование: ".$publication->name;
-    $originalImageSrc = "\"" . Publication::getStorageHttpPath().Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
-    $drawingPathPrefix = "\"" . Publication::getStorageHttpPath(). Publication::PREFIX_PATH_DRAWINGS . '/' . "\"";
+                ]) ?>
+            <?= $form->field($model, 'imageFile')->fileInput()->label("Новое изображение:") ?>
 
-    $script = <<< JS
-    
-    publicationId = $publication->id
-    originalImageSrc = $originalImageSrc
-    drawingPathPrefix =  $drawingPathPrefix
-    drawings = $publication->drawings 
-   
-    prepareEditablePublication()
-
-JS;
-
-    ViewAsset::register($this);
-    $this->registerJs($script, yii\web\View::POS_READY);
-} ?>
-
-<h3><?=$this->title?></h3>
-<p>
-
-    <?php
-    $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
-    if (Yii::$app->user->can('updateOwnPost',
-            ['publication' => $publication]) || isset($userRoles['admin'])):?>
-        <button type="button" class="btn btn-outline-primary btn-rounded" id="save-button">Сохранить <br> изменения</button>
-
-        <?= Html::a(Yii::t('app', 'Загрузить' . '<br>' . ' слои прорисовок'),
-            ['/publication/upload-drawings', 'id' => $publication->id],
-            ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'upload-drawings-button']) ?>
-
-    <?php endif; ?>
-<?php
-if (strcmp($publication->drawings ,'') != 0
-    && sizeof($publication->getDrawings()) > 0
-): ?>
-        <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить последние <br> сохраненные настройки слоев</button>
-        <?= Html::a(Yii::t('app', 'Перейти в графический ' . '<br>' . 'редактор слоев'),
-        ['/publication/create-layer', 'id' => $publication->id],
-        ['class' => 'btn btn-outline-primary btn-rounded',
-            'name' => 'create-layer-button',]) ?>
-</p>
-
-<?php endif; ?>
-<form>
-    <div class="form-group">
-        <label for="name">Название экспоната: </label>
-        <input type="text" style="size: auto" class="form-control" id="name" value="<?=$publication->name?>">
-    </div>
-</form>
-
-
-
-<div class="box" style="
-    display: flex
-">
-
-    <div class="container-publication" data-state="static">
-        <div class="canvas-publication">
-            <canvas id="publicationCanvas">
-            </canvas>
-        </div>
-
-         <form style="padding-top: 20px">
-                <div class="form-group">
-                    <label for="mainDesc">Основное описание:</label>
-                    <textarea class="form-control" id="mainDesc" rows="10" ><?=$publication->description?></textarea>
-                </div>
-            </form>
-    </div>
-
-
-   <!-- --><?php /*if (strcmp($publication->settings ,'') != 0): */?>
-            <div id="layers" class = "layers-class" style="padding-left: 20px; ">
-                <?= Html::a(Yii::t('app', 'Создать новый слой'),
-                    ['/publication/create-layer', 'id' => $publication->id],
-                    ['class' => 'btn btn-outline-primary btn-rounded', 'style' => 'margin-bottom: 10px',
-                        'name' => 'create-layer-button']) ?>
-                <?php
-                if (strcmp($publication->drawings ,'') != 0
-                    && sizeof($publication->getDrawings()) > 0
-                ): ?>
-                    <div id="editForm" style="overflow-y: scroll; height: 700px">
-                    </div>
-                <?php endif; ?>
-
+            <div class="form-group" style="text-align: center;">
+                <?= Html::a(Yii::t('app', 'Отмена'),
+                    ['/publication/view', 'id' => $model->id],
+                    ['class' => 'btn btn-outline-primary btn-rounded',
+                        'name' => 'exit-button',]) ?>
+                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-outline-primary btn-rounded', 'name' => 'edit-publication-button']) ?>
             </div>
-
-    <?php /*endif; */?>
-
+            <?php ActiveForm::end(); ?>
+        </div>
+    </div>
 </div>
-

@@ -1,5 +1,10 @@
 function prepareEditableTextures() {
 
+    const pathParts = window.location.pathname.split ('/');
+    const baseUrl = "/" + pathParts[1]
+        + "/" + pathParts[2]
+        + "/" + pathParts[3]
+        //+ "/" + pathParts[4]
 
     if(typeof textures != "undefined"
         && textures !== ''
@@ -8,7 +13,7 @@ function prepareEditableTextures() {
 
         initTexturesSettingsForEdit(textures);
         initDeleteButtons(textures)
-
+        initChangeFileButtons(textures)
 
         function initTexturesSettingsForEdit(textures) {
 
@@ -17,9 +22,10 @@ function prepareEditableTextures() {
             for (let i = 0; i < jsonTextures.length; i++) {
                 var textureId = "texture_" + i;
                 textureInfo += '<div className="form-group" id=\'' + textureId + '\' style="border:1px solid black;\n' +
-                    '                border-radius: 10px;\n' +
+                    '                 border-radius: 10px;\n' +
                     '                padding-left: 10px;\n' +
                     '                padding-right: 10px;\n' +
+                    '                padding-top: 10px;\n' +
                     '                width: 700px;\n' +
                     '                text-align: left;\n' +
                     '                margin-bottom: 10px">';
@@ -27,13 +33,24 @@ function prepareEditableTextures() {
                 var titleId = "title_" + i;
                 var delBtnId = "del_btn_" + i;
                 var descId = "desc_" + i;
+                var changeFileBtnId = "chng_file_btn_" + i;
+                var inputFileId = "input_file_" + i;
 
                 textureInfo +=
                     '<label for=\'' + titleId + '\'>Название: </label>'
+
                     + '<button type="button" id=\'' + delBtnId + '\' ' +
                     'class="btn btn-outline-danger btn-sm" ' +
                     'style="float: right; margin-bottom: 10px"' +
                     '>Удалить</button>'
+
+                    + '<button type="button" id=\'' + changeFileBtnId  + '\' ' +
+                    'class="btn btn-outline-primary btn-sm" ' +
+                    'style="float: right; margin-bottom: 10px; margin-right: 10px" ' +
+                    'onclick="$(\'#\' + \'' + inputFileId + '\').trigger(\'click\');"' +
+                    '>Загрузить другой файл</button>'
+                    + '<input type="file" id=\'' + inputFileId + '\' style="display:none"/>'
+
                     + '<input type="text" id=\'' + titleId + '\' class="form-control" value=\'' + (jsonTextures[i].layerParams.title) + '\'/>'
                     + '<br>'
 
@@ -49,7 +66,6 @@ function prepareEditableTextures() {
             textureInfo += '</form>';
             var layersEditForm = document.getElementById("editTexturesForm");
             layersEditForm.innerHTML = textureInfo
-
         }
 
         function initDeleteButtons(jsonTextures) {
@@ -65,13 +81,72 @@ function prepareEditableTextures() {
                     if (userAnswer === true) {
                         jsonTextures.textures.splice(i, 1);
                         var redirectToView = false;
+                        saveTextures(jsonTextures, redirectToView)
                         initTexturesSettingsForEdit(jsonTextures)
                         initDeleteButtons(jsonTextures)
-                        saveTextures(jsonTextures, redirectToView)
                     }
                 })
             }
         }
+
+        function initChangeFileButtons(jsonTextures) {
+            var texturesJson = jsonTextures.textures;
+            var layersNumber = texturesJson.length;
+
+            for (let i = 0; i < layersNumber; i++) {
+                (function (e) {
+                    var inputFileId = "input_file_" + i;
+                    var filename = texturesJson[i].image;
+                    var inputElement = document.getElementById(inputFileId);
+                    var titleId = "title_" + i;
+                    var titleElement = document.getElementById(titleId);
+                    inputElement.addEventListener("change", handleFiles, false);
+
+                    async function handleFiles() {
+                        var redirectToView = false;
+
+                        //https://stackoverflow.com/a/17328113
+                        var file = inputElement.files[0]
+                        var formData = new FormData();
+                        formData.append('photo-img', file); // append the file to form data
+
+                        var xhr = false;
+                        if (typeof XMLHttpRequest !== 'undefined') {
+                            xhr = new XMLHttpRequest();
+                        } else {
+                            var versions = ["MSXML2.XmlHttp.5.0", "MSXML2.XmlHttp.4.0", "MSXML2.XmlHttp.3.0", "MSXML2.XmlHttp.2.0", "Microsoft.XmlHttp"];
+                            for (var i = 0, len = versions.length; i < len; i++) {
+                                try {
+                                    xhr = new ActiveXObject(versions[i]);
+                                    break;
+                                } catch (e) {
+                                }
+                            }
+                        }
+                        if (xhr) {
+                            xhr.open("POST", baseUrl + "/publication/update-texture-file?filename=" + filename, true);
+                            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr("content"));
+
+                            xhr.onreadystatechange = function () {
+                                if (this.readyState === 4 && this.status === 200) {
+                                    var response = this.response || this.responseText;
+                                    response = $.parseJSON(response);
+                                    if (response['error'] === 0) {
+                                        var messageElement = document.getElementById('resultMessage');
+                                        messageElement.innerHTML = "Для текстуры \"" + titleElement.value + "\" успешно загружен новый файл: " + file['name'];
+                                    } else {
+                                        window.alert(response.message);
+                                    }
+                                }
+                            }
+                            // now send the formData to server
+                            xhr.send(formData);
+                        }
+                    }
+                })(i);
+            }
+        }
+
         var saveButton = document.getElementById("save-textures-button");
         saveButton.addEventListener('click', function (event) {
             var redirectToView = true
@@ -93,13 +168,6 @@ function prepareEditableTextures() {
                 newTextures: textures,
             };
 
-            const pathParts = window.location.pathname.split ('/');
-            const baseUrl = "/" + pathParts[1]
-                + "/" + pathParts[2]
-                + "/" + pathParts[3]
-                //+ "/" + pathParts[4]
-
-
             $.ajax({
                 type: "POST",
                 url: baseUrl + "/publication/save-textures?id=" + publicationId,
@@ -111,7 +179,7 @@ function prepareEditableTextures() {
                     }
                     else {
                         //document.location.reload();
-                        updateAllLayers(initDrawingsArray(textures));
+                        initTexturesSettingsForEdit(textures);
                     }
                 },
                 error: function (xhr, status, error) {

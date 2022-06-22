@@ -3,18 +3,17 @@
 namespace frontend\controllers;
 
 use common\models\Publication;
-use Exception;
 use Imagick;
-use Imagine\Image\Box;
 use Yii;
 use yii\helpers\FileHelper;
-use yii\imagine\Image;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\UploadedFile;
 
 class PublicationController extends Controller
 {
+    //public $enableCsrfValidation = false;
+
     public function actionView($id)
     {
         $publication = Publication::findOne($id);
@@ -24,13 +23,71 @@ class PublicationController extends Controller
 
         return $this->render('view', [
             'publication' => $publication,
-            /*'categoryId' => $categoryId,
-            'objectPrev' => $objectPrev,
-            'objectNext' => $objectNext,*/
         ]);
     }
 
     public function actionEdit($id)
+    {
+        $publication = Publication::findOne($id);
+        if (empty($publication)) {
+            throw new HttpException(404);
+        }
+
+        if(Yii::$app->user->isGuest)
+        {
+            return $this->redirect(['site/login']);
+        }
+
+        $previousImage = $publication->image;
+        $previousName = $publication->name;
+        $previousDescription = $publication->description;
+
+        if (Yii::$app->request->isPost) {
+            if ($publication->load(Yii::$app->request->post())) {
+                $publication->author_id = Yii::$app->user->getId();
+                $publication->imageFile = UploadedFile::getInstance($publication, 'imageFile');
+                if(!is_null($publication->imageFile)) {
+                   //replace original file and thumbnail
+                    $publication->deleteOriginalImage();
+                    $publication->deleteThumbnail();
+
+                    $newName = explode('.', $publication->image)[0];
+                    $publication->image = $newName . '.' . $publication->imageFile->extension;
+                    if($publication->update(true, ["name", "description", "image"])) {
+                        if ($publication->uploadOriginalImage()) {
+                            Yii::$app->session->setFlash('success', "Успешно сохранено.");
+                            return $this->redirect(['publication/view', 'id' => $publication->id]);
+                        }
+                    }
+                    else if ((strcmp($publication->description ,$previousDescription) == 0)
+                        && (strcmp($publication->name ,$previousName) == 0)) {
+                        Yii::$app->session->setFlash('info', "Изменений нет.");
+                        return $this->redirect(['publication/view', 'id' => $publication->id]);
+                    }
+                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($publication->errors, true));
+                }
+                else {
+                    $publication->image = $previousImage;
+                    if($publication->update(true, ["name", "description"])) {
+                    Yii::$app->session->setFlash('success', "Успешно сохранено.");
+                    return $this->redirect(['publication/view', 'id' => $publication->id]);
+                    }
+                    else if ((strcmp($publication->description ,$previousDescription) == 0)
+                        && (strcmp($publication->name ,$previousName) == 0)) {
+                        Yii::$app->session->setFlash('info', "Изменений нет.");
+                        return $this->redirect(['publication/view', 'id' => $publication->id]);
+                    }
+                    Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($publication->errors, true));
+                }
+            }
+        }
+
+        return $this->render('edit', [
+            'model' => $publication
+        ]);
+    }
+
+    public function actionEditDrawings($id)
     {
         if(Yii::$app->user->isGuest)
         {
@@ -41,12 +98,141 @@ class PublicationController extends Controller
             throw new HttpException(404);
         }
 
-        return $this->render('edit', [
+        return $this->render('editDrawings', [
             'publication' => $publication,
-            /*'categoryId' => $categoryId,
-            'objectPrev' => $objectPrev,
-            'objectNext' => $objectNext,*/
         ]);
+    }
+
+    public function actionUpdateDrawingFile($filename)
+    {
+        //https://stackoverflow.com/a/17328113
+        if ( isset( $_FILES["photo-img"] ) ) {
+            $error  = false;
+            $image  = $_FILES["photo-img"];
+            $code   = (int)$image["error"];
+            $valid  = array( IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF );
+            $filePath = Publication::basePath() . '/'
+                . Publication::PREFIX_PATH_DRAWINGS . '/'
+                . $filename;
+
+            if ( $code !== UPLOAD_ERR_OK ) {
+                switch( $code ) {
+                    case UPLOAD_ERR_INI_SIZE:
+                        $error  = 'Error: The uploaded file exceeds the upload_max_filesize directive in php.ini';
+                        break;
+                    case UPLOAD_ERR_FORM_SIZE:
+                        $error  = 'Error: The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form';
+                        break;
+                    case UPLOAD_ERR_PARTIAL:
+                        $error  = 'Error: The uploaded file was only partially uploaded';
+                        break;
+                    case UPLOAD_ERR_NO_FILE:
+                        $error  = 'Error: No file was uploaded';
+                        break;
+                    case UPLOAD_ERR_NO_TMP_DIR:
+                        $error  = 'Error: Missing a temporary folder';
+                        break;
+                    case UPLOAD_ERR_CANT_WRITE:
+                        $error  = 'Error: Failed to write file to disk';
+                        break;
+                    case UPLOAD_ERR_EXTENSION:
+                        $error  = 'Error: A PHP extension stopped the file upload';
+                        break;
+                    default:
+                        $error  = 'Error: Unknown upload error';
+                        break;
+                }
+            }
+            else {
+                $iminfo = @getimagesize( $image["tmp_name"] );
+                if ( $iminfo && is_array( $iminfo ) ) {
+                    if ( isset( $iminfo[2] ) && in_array( $iminfo[2], $valid ) && is_readable( $image["tmp_name"] ) ) {
+                        if ( !move_uploaded_file( $image["tmp_name"], $filePath ) ) {
+                            $error  = "Error while moving uploaded file";
+                        }
+                    }
+                    else {
+                        $error  = "Invalid format or image is not readable";
+                    }
+                }
+                else {
+                    $error  = "Only image files are allowed (jpg, gif, png)";
+                }
+            }
+            if (empty( $error)) {
+                echo json_encode(array("error" => 0, "message" => "File uploaded successfully!"));
+            }
+           else {
+                echo json_encode(array("error" => 1,"message" => $error));
+            }
+            exit();
+        }
+    }
+
+    public function actionUpdateTextureFile($filename)
+    {
+        //https://stackoverflow.com/a/17328113
+        if ( isset( $_FILES["photo-img"] ) ) {
+            $error  = false;
+            $image  = $_FILES["photo-img"];
+            $code   = (int)$image["error"];
+            $valid  = array( IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF );
+            $filePath = Publication::basePath() . '/'
+                . Publication::PREFIX_PATH_TEXTURES . '/'
+                . $filename;
+
+            if ( $code !== UPLOAD_ERR_OK ) {
+                switch( $code ) {
+                    case UPLOAD_ERR_INI_SIZE:
+                        $error  = 'Error: The uploaded file exceeds the upload_max_filesize directive in php.ini';
+                        break;
+                    case UPLOAD_ERR_FORM_SIZE:
+                        $error  = 'Error: The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form';
+                        break;
+                    case UPLOAD_ERR_PARTIAL:
+                        $error  = 'Error: The uploaded file was only partially uploaded';
+                        break;
+                    case UPLOAD_ERR_NO_FILE:
+                        $error  = 'Error: No file was uploaded';
+                        break;
+                    case UPLOAD_ERR_NO_TMP_DIR:
+                        $error  = 'Error: Missing a temporary folder';
+                        break;
+                    case UPLOAD_ERR_CANT_WRITE:
+                        $error  = 'Error: Failed to write file to disk';
+                        break;
+                    case UPLOAD_ERR_EXTENSION:
+                        $error  = 'Error: A PHP extension stopped the file upload';
+                        break;
+                    default:
+                        $error  = 'Error: Unknown upload error';
+                        break;
+                }
+            }
+            else {
+                $iminfo = @getimagesize( $image["tmp_name"] );
+                if ( $iminfo && is_array( $iminfo ) ) {
+                    if ( isset( $iminfo[2] ) && in_array( $iminfo[2], $valid ) && is_readable( $image["tmp_name"] ) ) {
+                        if ( !move_uploaded_file( $image["tmp_name"], $filePath ) ) {
+                            $error  = "Error while moving uploaded file";
+                        }
+                    }
+                    else {
+                        $error  = "Invalid format or image is not readable";
+                    }
+                }
+                else {
+                    $error  = "Only image files are allowed (jpg, gif, png)";
+                }
+            }
+            if (empty( $error)) {
+                echo json_encode(array("error" => 0, "message" => "File uploaded successfully!"));
+            }
+            else {
+                echo json_encode(array("error" => 1,"message" => $error));
+            }
+            exit();
+        }
     }
 
     public function actionEditTextures($id)
@@ -62,9 +248,6 @@ class PublicationController extends Controller
 
         return $this->render('editTextures', [
             'publication' => $publication,
-            /*'categoryId' => $categoryId,
-            'objectPrev' => $objectPrev,
-            'objectNext' => $objectNext,*/
         ]);
     }
 
@@ -76,15 +259,12 @@ class PublicationController extends Controller
         }
 
         $publication = Publication::findOne($id);
-        /*if (empty($publication)) {
+        if (empty($publication)) {
             throw new HttpException(404);
-        }*/
+        }
 
         return $this->render('createLayer', [
             'publication' => $publication,
-            /*'categoryId' => $categoryId,
-            'objectPrev' => $objectPrev,
-            'objectNext' => $objectNext,*/
         ]);
     }
 
@@ -103,15 +283,15 @@ class PublicationController extends Controller
         //$id = $data["id"];
 
         $newName = $data["newName"];
-        $newDescription = $data["newDescription"];
+        //$newDescription = $data["newDescription"];
 
         $publication = Publication::findOne($id);
         $previousDrawings = $publication->drawings;
         $previousName = $publication->name;
-        $previousDescription = $publication->description;
+        //$previousDescription = $publication->description;
 
         $publication->name = $newName;
-        $publication->description = $newDescription;
+        //$publication->description = $newDescription;
 
         if (strcmp(json_encode($data["newDrawings"]), "") != 2) {
             $newDrawings = json_encode($data["newDrawings"], JSON_UNESCAPED_UNICODE);
@@ -136,8 +316,8 @@ class PublicationController extends Controller
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
         else if ((strcmp($publication->drawings ,$previousDrawings) == 0)
-        && (strcmp($publication->name ,$previousName) == 0)
-            && (strcmp($publication->description ,$previousDescription) == 0)){
+        && (strcmp($publication->name ,$previousName) == 0)) {
+           // && (strcmp($publication->description ,$previousDescription) == 0)){
             Yii::$app->session->setFlash('info', "Изменений нет (изменения уже сохранены).");
         }
         else {
@@ -298,7 +478,7 @@ class PublicationController extends Controller
                         //var_dump($model->drawings);
                         if($model->update(true, ["drawings"])) {
                             Yii::$app->session->setFlash('success', "Успешно сохранено.");
-                            return $this->redirect(['publication/edit', 'id' => $model->id]);
+                            return $this->redirect(['publication/edit-drawings', 'id' => $model->id]);
                         }
                         Yii::$app->session->setFlash('error', "При сохранении произошла ошибка.". print_r($model->errors, true));
                     }

@@ -600,14 +600,14 @@ function prepareLayersToDraw() {
                 const baseUrl = "/" + pathParts[1]
                     + "/" + pathParts[2]
                     + "/" + pathParts[3]
-                   // + "/" + pathParts[4]
+                    + "/" + pathParts[4]
 
                 $.ajax({
                     type: "POST",
                     url: baseUrl + "/publication/save-layers?id=" + publicationId,
                     data: {params: JSON.stringify(newData)},
                     success: function (data) {
-                        location.href = window.location.origin + baseUrl + "/publication/edit?id=" + publicationId
+                        location.href = window.location.origin + baseUrl + "/publication/edit-drawings?id=" + publicationId
                     },
                     error: function (xhr, status, error) {
                         alert("Произошла ошибка при сохранении данных: " + status + " " + error);

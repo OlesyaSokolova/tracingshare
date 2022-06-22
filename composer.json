@@ -19,9 +19,10 @@
       "yiisoft/yii2-bootstrap4": "~2.0.0",
       "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "yiisoft/yii2-imagine": "*",
-      "ext-json": "*",
+        "ext-json": "*",
         "ext-gd": "*",
-        "ext-imagick": "*"
+        "ext-imagick": "*",
+        "mihaildev/yii2-ckeditor": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
