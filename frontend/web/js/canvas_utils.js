@@ -19,7 +19,7 @@ function updateAllLayers(drawingsImages) {
         var index = parseInt((backgroundId).split('_')[1])
         var textureSrc = texturePathPrefix + preparedTextures[index].image;
         textureImage = new Image();
-        textureImage.src = textureSrc;
+        textureImage.src = textureSrc + '?' + new Date().getTime();
 
         if (isImageOk(textureImage)) {
             var textureImageCtx = drawOriginalImage(textureImage)
@@ -72,7 +72,7 @@ function initDrawingsArray(jsonDrawings) {
         var drawingsJson = jsonDrawings.drawings;
         for (let i = 0; i < drawingsJson.length; i++) {
             drawingImage = new Image();
-            drawingImage.src = drawingPathPrefix + drawingsJson[i].image;
+            drawingImage.src = drawingPathPrefix + drawingsJson[i].image + '?' + new Date().getTime();
             alpha = parseFloat(drawingsJson[i].layerParams.alpha)
             color = drawingsJson[i].layerParams.color
             title = drawingsJson[i].layerParams.title

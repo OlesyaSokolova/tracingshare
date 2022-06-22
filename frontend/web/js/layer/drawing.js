@@ -4,7 +4,7 @@ function prepareLayersToDraw() {
     const baseUrl = "/" + pathParts[1]
         + "/" + pathParts[2]
         + "/" + pathParts[3]
-        //+ "/" + pathParts[4]
+        + "/" + pathParts[4]
 
     var currentDrawings = {
         drawings: Array()
@@ -20,7 +20,7 @@ function prepareLayersToDraw() {
         originalImage = new Image();
         backgroundImage = originalImage;
         backgroundId = "originalImage";
-        originalImage.src = originalImageSrc;
+        originalImage.src = originalImageSrc + '?' + new Date().getTime();
         var drawingsImages = [];
         originalImage.onload = function () {
             if (typeof drawings != "undefined"
@@ -562,7 +562,6 @@ function prepareLayersToDraw() {
 
                     layersUrls.push(imageDataUrl);
 
-
                     if (i >= existingLayersNumber) {
                         //create new layer
                         //var imageName = prefix + (existingLayersNumber) + ".png";
@@ -719,7 +718,7 @@ function prepareLayersToDraw() {
                         var index = parseInt((backgroundId).split('_')[1])
                         var textureSrc = texturePathPrefix + preparedTextures[index].image;
                         textureImage = new Image();
-                        textureImage.src = textureSrc;
+                        textureImage.src = textureSrc + '?' + new Date().getTime();
 
                         if (isImageOk(textureImage)) {
                             backgroundImage = textureImage;

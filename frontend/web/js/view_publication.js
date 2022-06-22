@@ -21,7 +21,7 @@ function prepareView() {
         backgroundId = "originalImage";
 
         originalImage = new Image();
-        originalImage.src = originalImageSrc;
+        originalImage.src = originalImageSrc + '?' + new Date().getTime();
         originalImage.onload = function () {
 
             var originalImageCtx = drawOriginalImage(originalImage)
@@ -75,7 +75,7 @@ function prepareView() {
     }
     else {
         originalImage = new Image();
-        originalImage.src = originalImageSrc;
+        originalImage.src = originalImageSrc + '?' + new Date().getTime();
 
         originalImage.onload = function () {
             drawOriginalImage(originalImage)
@@ -137,7 +137,7 @@ function prepareView() {
                     var index = parseInt((backgroundId).split('_')[1])
                     var textureSrc = texturePathPrefix + preparedTextures[index].image;
                     textureImage = new Image();
-                    textureImage.src = textureSrc;
+                    textureImage.src = textureSrc + '?' + new Date().getTime();
 
                     if (isImageOk(textureImage)) {
                         var textureImageCtx = drawOriginalImage(textureImage)

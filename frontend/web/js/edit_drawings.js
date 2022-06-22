@@ -1,10 +1,9 @@
 function prepareEditablePublication() {
-
     const pathParts = window.location.pathname.split ('/');
     const baseUrl = "/" + pathParts[1]
         + "/" + pathParts[2]
         + "/" + pathParts[3]
-        //+ "/" + pathParts[4]
+        + "/" + pathParts[4]
 
     if(typeof drawings != "undefined"
         && drawings !== ''
@@ -14,7 +13,7 @@ function prepareEditablePublication() {
         defaultDrawings = JSON.parse(JSON.stringify(drawings));
 
         originalImage = new Image();
-        originalImage.src = originalImageSrc;
+        originalImage.src = originalImageSrc + '?' + new Date().getTime();
         var drawingsImages;
 
         originalImage.onload = function () {
@@ -51,7 +50,7 @@ function prepareEditablePublication() {
 
     else {
         originalImage = new Image();
-        originalImage.src = originalImageSrc;
+        originalImage.src = originalImageSrc + '?' + new Date().getTime();
 
         originalImage.onload = function () {
             drawOriginalImage(originalImage)
