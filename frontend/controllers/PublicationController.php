@@ -113,9 +113,6 @@ class PublicationController extends Controller
             $filePath = Publication::basePath() . '/'
                 . Publication::PREFIX_PATH_DRAWINGS . '/'
                 . $filename;
-            if (file_exists($filePath)) {
-                unlink($filePath);
-            }
 
             if ( $code !== UPLOAD_ERR_OK ) {
                 switch( $code ) {

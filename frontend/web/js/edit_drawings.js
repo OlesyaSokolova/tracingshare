@@ -166,14 +166,13 @@ function prepareEditablePublication() {
                         xhr.onreadystatechange  = function() {
                             if ( this.readyState === 4 && this.status == 200 ) {
                                 var response  = this.response || this.responseText;
-
                                 /** Do Something with the reponse **/
                                 response  = $.parseJSON( response );
                                 if ( response && response.message ) {
                                     window.alert( response.message );
                                 }
-
                             }
+                            location.reload()
                         }
                         // now send the formData to server
                         xhr.send( formData );
