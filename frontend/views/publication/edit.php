@@ -19,7 +19,7 @@ $this->title = 'Редактирование публикации';
             <?= $form->field($model, 'description')->textarea(['rows' => '8'])->label("Описание:")->widget(CKEditor::className(),
                 [
                     'editorOptions' => [
-                        'preset' => 'standard',
+                        'preset' => 'full',
                         'inline' => false,
                     ],
                     'options' => [
