@@ -50,7 +50,7 @@ class Publication extends ActiveRecord
             [['name'], 'required', 'message' => 'Это поле не может быть пустым'],
             [['drawings'], 'default', 'value'=> ''],
             ['name', 'string', 'max' => 100, 'message' => 'Максимальная длина: 32 символа'],
-            ['description', 'string', 'max' => 32000, 'message' => 'Максимальная длина: 32000 символов'],
+            ['description', 'string'],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'message' => 'Ошибка при сохранении файла'],
             [['drawingsFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png', 'message' => 'Ошибка при сохранении одного из файлов', 'maxFiles' => 10],
             [['texturesFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'message' => 'Ошибка при сохранении одного из файлов', 'maxFiles' => 10],
