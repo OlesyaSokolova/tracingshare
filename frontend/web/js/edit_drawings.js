@@ -133,21 +133,15 @@ function prepareEditablePublication() {
         var layersNumber = jsonDrawings.drawings.length;
 
         for (let i = 0; i < layersNumber; i++) {
-            var changeFileBtnId = "chng_file_btn_" + i;
-            var inputFileId = "input_file_" + i;
-            var changeFileButton = document.getElementById(changeFileBtnId);
-            changeFileButton.addEventListener('click', function (event) {
-                $('#' + inputFileId).trigger('click');
-                /*var titleId = "title_" + i;
-                //change file at drawings
-                jsonDrawings.drawings.splice(i, 1);
-                drawingsImages.splice(i, 1);
-                var redirectToView = false;
-                saveData(jsonDrawings, redirectToView)
-                initLayersSettingsForEdit(jsonDrawings)
-                updateAllLayers(initDrawingsArray(jsonDrawings));*/
-
-            })
+            (function(e) {
+                var inputFileId = "input_file_" + i;
+                var inputElement = document.getElementById(inputFileId);
+                inputElement.addEventListener("change", handleFiles, false);
+                function handleFiles() {
+                    const fileList = this.files; /* now you can work with the file list */
+                    alert(fileList.length + inputFileId)
+                }
+            })(i);
         }
     }
 
@@ -192,7 +186,8 @@ function prepareEditablePublication() {
 
                     + '<button type="button" id=\'' + changeFileBtnId  + '\' ' +
                     'class="btn btn-outline-primary btn-sm" ' +
-                    'style="float: right; margin-bottom: 10px; margin-right: 10px"' +
+                    'style="float: right; margin-bottom: 10px; margin-right: 10px" ' +
+                    'onclick="$(\'#\' + \'' + inputFileId + '\').trigger(\'click\');"' +
                     '>Загрузить другой файл</button>'
                     + '<input type="file" id=\'' + inputFileId + '\' style="display:none"/>'
 
