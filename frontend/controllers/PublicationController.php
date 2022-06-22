@@ -251,7 +251,7 @@ class PublicationController extends Controller
         ]);
     }
 
-    public function actionDraw($id)
+    public function actionDraw($id, $newLayer)
     {
         if(Yii::$app->user->isGuest)
         {
@@ -265,6 +265,7 @@ class PublicationController extends Controller
 
         return $this->render('draw', [
             'publication' => $publication,
+            'newLayer' => $newLayer,
         ]);
     }
 

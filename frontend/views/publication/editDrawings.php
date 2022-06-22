@@ -1,6 +1,5 @@
 <?php
 
-use common\models\UrlUtils;
 use frontend\assets\ViewAsset;
 use common\models\Publication;
 use yii\helpers\Html;
@@ -56,7 +55,7 @@ if (strcmp($publication->drawings ,'') != 0
 ): ?>
         <button type="button" class="btn btn-outline-primary btn-rounded" id="reset-button">Отобразить последние <br> сохраненные настройки слоев</button>
         <?= Html::a(Yii::t('app', 'Перейти ' . '<br>' . ' в графический редактор'),
-        ['/publication/draw', 'id' => $publication->id],
+        ['/publication/draw', 'id' => $publication->id, 'newLayer' => 1],
         ['class' => 'btn btn-outline-primary btn-rounded',
             'name' => 'draw-button',]) ?>
 </p>
@@ -93,7 +92,7 @@ if (strcmp($publication->drawings ,'') != 0
    <!-- --><?php /*if (strcmp($publication->settings ,'') != 0): */?>
             <div id="layers" class = "layers-class" style="padding-left: 20px; ">
                 <?=Html::a(Yii::t('app', 'Создать новый слой'),
-                    ['/publication/draw', 'id' => $publication->id],
+                    ['/publication/draw', 'id' => $publication->id, 'newLayer' => 2],
                     ['class' => 'btn btn-outline-primary btn-rounded', 'style' => 'margin-bottom: 10px',
                         'name' => 'draw-button']);
 

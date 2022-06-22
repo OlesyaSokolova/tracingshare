@@ -6,7 +6,7 @@ use common\models\UrlUtils;
 use yii\helpers\Html;
 
 
-if(!empty($publication)) {
+if(!empty($publication) && !empty($newLayer)) {
 
     $this->title = "Рисование: ".$publication->name;
     $originalImageSrc = "\"" . Publication::getStorageHttpPath() .Publication::PREFIX_PATH_IMAGES.'/'.$publication->image . "\"";
@@ -18,6 +18,7 @@ if(!empty($publication)) {
 
     if(strcmp($publication->drawings ,'') == 0) {
         $script = "publicationId = $publication->id
+        newLayer = $newLayer
         publicationId = $publication->id
         originalImageSrc = $originalImageSrc
         drawingPathPrefix =  $drawingPathPrefix
@@ -29,6 +30,7 @@ if(!empty($publication)) {
     else
     {
         $script = "publicationId = $publication->id
+        newLayer = $newLayer
         originalImageSrc = $originalImageSrc
         drawingPathPrefix =  $drawingPathPrefix
         texturePathPrefix = $texturePathPrefix
@@ -166,27 +168,25 @@ if(!empty($publication)) {
         </div>
     </div>
 
-<!--    <div class="overflow-auto">
--->    <div id="layers" class = "layers-class" style="width: fit-content; padding-left: 10px;">
-        <button type="button" id="create-layer-button" class="btn btn-outline-primary" style="margin-bottom: 10px">Создать новый слой</button>
-        <div id= "thumbnails-layers" class="thumbnails-layers" style="overflow-y: scroll; height: 900px;">
+        <div id="layers" class = "layers-class" style="width: fit-content; padding-left: 10px;">
+            <button type="button" id="create-layer-button" class="btn btn-outline-primary" style="margin-bottom: 10px">Создать новый слой</button>
+            <div id= "thumbnails-layers" class="thumbnails-layers" style="overflow-y: scroll; height: 900px;">
 
-            <?php $idCounter = (sizeof($publication->getDrawings()));?>
-    <div id="<?= "thumbnail_div_".$idCounter ?>"style="border:1px solid black;
-    border-radius: 10px;
-    padding-left: 20px;
-    width: 300px;
-    height: fit-content;
-    text-align: left;
-    margin-bottom: 10px;
-    background: #d6d5d5">
-        <?php $canvasId = "thumbnail_" . $idCounter;
-        echo '<label for="'. $canvasId. '">Новый слой '. ($idCounter + 1). ': </label>';
+    <div id="<?= "thumbnail_div_".$layersCounter ?>"style="border:1px solid black;
+        border-radius: 10px;
+        padding-left: 20px;
+        width: 300px;
+        height: fit-content;
+        text-align: left;
+        margin-bottom: 10px;
+        background: #d6d5d5">
+        <?php $canvasId = "thumbnail_" . $layersCounter;
+        echo '<label for="'. $canvasId. '">Новый слой '. ($layersCounter + 1). ': </label>';
         /*echo '<canvas id="'.$canvasId.'" > </canvas>';*/?>
         <!--<canvas id="newLayerThumbnail">
         </canvas>-->
         <br>
-        <?php $alphaId = "alpha_" . $idCounter;
+        <?php $alphaId = "alpha_" . $layersCounter;
         echo '<label for="'. $alphaId. '">Прозрачность: </label><br>';
         echo '<input type=range name=\"alphaChannel\" class ="alpha-value" id="'.$alphaId.'" step=\'0.02\' min=\'0.02\' max=\'1\' value=\'1\'>' ?>
      </div>
