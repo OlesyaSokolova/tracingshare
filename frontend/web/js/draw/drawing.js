@@ -177,10 +177,11 @@ function prepareLayersToDraw() {
                 backgroundX, backgroundY);
             var newLayerContext = newLayerCanvas.getContext("2d");
 
-            mutableCanvasesAndContexts.push({"layer":  {"imageName": prefix + (getIndexFromImageName(removeFileFormat(maxImageName)) + 1) + ".png",
+            maxImageName = prefix + (getIndexFromImageName(removeFileFormat(maxImageName)) + 1) + ".png";
+            mutableCanvasesAndContexts.push({"layer":  {"imageName": maxImageName,
                                                         "alpha": "1",
                                                         "color": "#000000",
-                                                        "title": "Новый слой " + (drawingsImages.length),
+                                                        "title": "Новый слой " + (drawingsImages.length + 1),
                                                         "description": ""},
                 "canvasId": newLayerCanvasId, "canvas": newLayerCanvas, "context": newLayerContext });
 
@@ -464,8 +465,7 @@ function prepareLayersToDraw() {
             'click', function (event) {
                 var layersThumbnailsContainer = document.getElementById("thumbnails-layers");
                    var newId = mutableCanvasesAndContexts.length;
-
-                    //todo:create layer if there are no mutable layers
+                   alert("new layer created! legth: "+ newId)
 
                     var divId = "thumbnail_div_" + newId;
                     var alphaId = "alpha_" + newId;
@@ -475,7 +475,7 @@ function prepareLayersToDraw() {
                         '            height: fit-content;\n' +
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
-                    currentLayerElement += "Новый слой " + (mutableCanvasesAndContexts.length + 1) + ':<br>'
+                    currentLayerElement += "Новый слой " + newId + ':<br>'
                         + '<br>'
                         + '<label for=\'' + alphaId + '\'>Прозрачность: </label><br>'
                         + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + 1 + '\'>'
@@ -496,10 +496,11 @@ function prepareLayersToDraw() {
                     initMutableCanvas(createdLayerCanvas)
                     createdLayerContext.lineWidth = thickness
 
-                    mutableCanvasesAndContexts.push({"layer": { "imageName": prefix + (getIndexFromImageName(removeFileFormat(maxImageName)) + 1) + ".png",
+                    maxImageName = prefix + (getIndexFromImageName(removeFileFormat(maxImageName)) + 1) + ".png";
+                    mutableCanvasesAndContexts.push({"layer": { "imageName": maxImageName,
                                                     "alpha": "1",
                                                     "color": "#000000",
-                                                    "title": "Новый слой " +  (mutableCanvasesAndContexts.length + 1) + ":",
+                                                    "title": "Новый слой " +  (mutableCanvasesAndContexts.length + 1),
                                                     "description": ""},
                     "canvasId": createdLayerId, "canvas": createdLayerCanvas, "context": createdLayerContext });
 
@@ -570,17 +571,7 @@ function prepareLayersToDraw() {
 
                     changeImageColor(contextToSave, canvas.width, canvas.height)
 
-                    var layer = {
-                            "image": tmp.layer.imageName,
-                            "title": tmp.layer.title,
-                            "alpha": tmp.context.globalAlpha,
-                            "color": tmp.context.strokeStyle,
-                            //"alpha": "1",
-                            //color: "#000000",
-                            "description": tmp.layer.description,
-                            //"data": canvasToSave.toDataURL("image/png")
-                    }
-                    //updatedLayers.push(layer)
+                    //error here: new filenames needed!!!
                     updatedLayers[tmp.layer.imageName] = {
                         "title": tmp.layer.title,
                         "alpha": tmp.context.globalAlpha.toString(),

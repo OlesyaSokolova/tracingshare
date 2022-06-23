@@ -76,7 +76,7 @@ function initDrawingsArray(jsonDrawings) {
             alpha = parseFloat(drawingsJson[i].layerParams.alpha)
             color = drawingsJson[i].layerParams.color
             title = drawingsJson[i].layerParams.title
-            description = drawingsJson[i].layerParams.title;
+            description = drawingsJson[i].layerParams.description;
             drawingsImages.push({"image": drawingImage,
                 "alpha": alpha,
                 "color": color,

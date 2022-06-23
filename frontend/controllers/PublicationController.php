@@ -332,7 +332,7 @@ class PublicationController extends Controller
         //$updatedLayers = $data['layers'];
         $publication = Publication::findOne($id);
         $updatedLayers = $data['layers'];
-        var_dump($updatedLayers);
+        var_dump(sizeof($updatedLayers));
         //if (strcmp(json_encode($data['layers']), "") != 2) {
         //  $updatedLayers = json_encode($data['layers'], JSON_UNESCAPED_UNICODE);
         $previousDrawings = $publication->drawings;
@@ -368,6 +368,7 @@ class PublicationController extends Controller
             //$originalImageSize = $publication->getOriginalImageSize();
             //$newImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
             file_put_contents($filePath, $newImage);
+            echo "updated".$filePath;
 
             $drawingsArray = array();
             $drawingsArray['drawings'] = array();
@@ -395,6 +396,7 @@ class PublicationController extends Controller
                             . $fileName;
                         if (file_exists($filePath)) {
                             unlink($filePath);
+                            echo "deleted".$filePath;
                         }
                     }
                 }
