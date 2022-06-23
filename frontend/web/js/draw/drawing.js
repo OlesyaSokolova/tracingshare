@@ -464,17 +464,19 @@ function prepareLayersToDraw() {
         createLayerButton.addEventListener(
             'click', function (event) {
                 var layersThumbnailsContainer = document.getElementById("thumbnails-layers");
-                   var newId = mutableCanvasesAndContexts.length;
-                   alert("new layer created! legth: "+ newId)
-
+                    var newId = mutableCanvasesAndContexts.length;
                     var divId = "thumbnail_div_" + newId;
                     var alphaId = "alpha_" + newId;
+
+
                     var currentLayerElement = '<div id=\'' + divId + '\' class = "bordered_div" style="border:1px solid black;\n' +
                         '            border-radius: 10px;\n' +
                         '            padding-left: 20px;\n' +
+                        '            width: 300px;\n' +
                         '            height: fit-content;\n' +
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
+
                     currentLayerElement += "Новый слой " + (newId + 1)+ ':<br>'
                         + '<br>'
                         + '<label for=\'' + alphaId + '\'>Прозрачность: </label><br>'

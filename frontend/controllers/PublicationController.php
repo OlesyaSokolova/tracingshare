@@ -352,6 +352,9 @@ class PublicationController extends Controller
             . Publication::PREFIX_PATH_DRAWINGS);
 
         //for ($i = 0; $i < sizeof($updatedLayers); $i++) {
+        $drawingsArray = array();
+        $drawingsArray['drawings'] = array();
+
         foreach ($updatedLayers as $filename => $newInfo) {
             $imageBase64 = $newInfo['data'];
             $img0 = str_replace('data:image/png;base64,', '', $imageBase64);
@@ -368,10 +371,7 @@ class PublicationController extends Controller
             //$originalImageSize = $publication->getOriginalImageSize();
             //$newImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
             file_put_contents($filePath, $newImage);
-            echo "updated".$filePath;
-
-            $drawingsArray = array();
-            $drawingsArray['drawings'] = array();
+            //echo "updated".$filePath;
              //$drawingPrefix =  Publication::DRAWING_PREFIX . $baseName . "_";
                 //$filename = $drawingPrefix .$file->baseName . '.' . $file->extension;
                 $newLayerInfo = array("image" => $filename,
@@ -385,6 +385,7 @@ class PublicationController extends Controller
             }
 
             $newDrawings = json_encode($drawingsArray);
+            echo ($newDrawings);
             $publication->drawings = $newDrawings ;
 
             if(!is_null($previousDrawingsJsonArray)) {
@@ -396,7 +397,7 @@ class PublicationController extends Controller
                             . $fileName;
                         if (file_exists($filePath)) {
                             unlink($filePath);
-                            echo "deleted".$filePath;
+                            //echo "deleted".$filePath;
                         }
                     }
                 }
