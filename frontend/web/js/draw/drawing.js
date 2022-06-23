@@ -560,13 +560,18 @@ function prepareLayersToDraw() {
         var saveButton = document.getElementById("save-layer-button");
         saveButton.addEventListener(
             'click', function (event) {
-                var updatedLayers = [];
+                var layersUrls = [];
+                var layersNames = [];
+                //console.log(currentSettings)
 
                 for(let i = 0; i < mutableCanvasesAndContexts.length; i++) {
                     var tmp = mutableCanvasesAndContexts[i];
                     var contextToSave = tmp.context;
                     var canvasToSave = tmp.canvas;
 
+                    var imageDataUrl = canvasToSave.toDataURL("image/png")
+                    layersUrls.push({"filename": tmp,
+                        'data': imageDataUrl});
                     changeImageColor(contextToSave, canvas.width, canvas.height)
 
                     var layer = {
@@ -584,16 +589,17 @@ function prepareLayersToDraw() {
 
                 var newData = {
                     layers: updatedLayers,
-                };
+                }
+                //var newData = "test";*/
                 //alert(JSON.stringify(newData));
-                var stringData = JSON.stringify( updatedLayers );
+
                 $.ajax({
                     type: "POST",
                     url: baseUrl + "/publication/save-layers?id=" + publicationId,
-                    data: { data: stringData },
+                    data: { params: JSON.stringify(newData) },
                     success: function (data) {
                         alert(data)
-                        //location.href = window.location.origin + baseUrl + "/publication/edit-drawings?id=" + publicationId
+                        location.href = window.location.origin + baseUrl + "/publication/edit-drawings?id=" + publicationId
                     },
                     error: function (xhr, status, error) {
                         alert("Произошла ошибка при сохранении данных: " + status + " " + error);
