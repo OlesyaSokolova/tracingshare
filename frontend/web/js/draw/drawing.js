@@ -475,7 +475,7 @@ function prepareLayersToDraw() {
                         '            height: fit-content;\n' +
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
-                    currentLayerElement += ("Новый слой " + (newId + 1) + ':<br>')
+                    currentLayerElement += "Новый слой " + mutableCanvasesAndContexts.length  + ':<br>'
                         + '<br>'
                         + '<label for=\'' + alphaId + '\'>Прозрачность: </label><br>'
                         + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + 1 + '\'>'
