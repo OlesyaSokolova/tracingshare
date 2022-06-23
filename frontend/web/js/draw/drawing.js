@@ -507,8 +507,8 @@ function prepareLayersToDraw() {
                     canvas = createdLayerCanvas;
                     context = createdLayerContext;
                     currentColor.a = context.globalAlpha * 255
-                    brushStyle = colorToRGBAString({r: 0, g: 0, b: 0, a: 255});
-                    context.strokeStyle = brushStyle;
+                    /*brushStyle = colorToRGBAString({r: 0, g: 0, b: 0, a: 255});
+                    context.strokeStyle = brushStyle;*/
 
                     var id = parseInt((canvas.id).split('_')[1])
                     var currentThumbnail = document.getElementById('thumbnail_div_' + id);
