@@ -11,7 +11,7 @@ function prepareLayersToDraw() {
         drawings: Array()
     }
 
-    var maxImageName = prefix + 0 + ".png";
+    var maxImageName = prefix + "0.png";
 
     var canvas;
     var context;
@@ -176,7 +176,8 @@ function prepareLayersToDraw() {
             var newLayerCanvas = createCanvasToDrawOn(newLayerCanvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
                 backgroundX, backgroundY);
             var newLayerContext = newLayerCanvas.getContext("2d");
-            mutableCanvasesAndContexts.push({"layer":  {"imageName": generateNextImageName(prefix, maxImageName),
+
+            mutableCanvasesAndContexts.push({"layer":  {"imageName": prefix + (getIndexFromImageName(removeFileFormat(maxImageName)) + 1) + ".png",
                                                         "alpha": "1",
                                                         "color": "#000000",
                                                         "title": "Новый слой " + (drawingsImages.length),
@@ -495,7 +496,7 @@ function prepareLayersToDraw() {
                     initMutableCanvas(createdLayerCanvas)
                     createdLayerContext.lineWidth = thickness
 
-                    mutableCanvasesAndContexts.push({"layer": { "imageName": generateNextImageName(prefix, maxImageName),
+                    mutableCanvasesAndContexts.push({"layer": { "imageName": prefix + (getIndexFromImageName(removeFileFormat(maxImageName)) + 1) + ".png",
                                                     "alpha": "1",
                                                     "color": "#000000",
                                                     "title": "Новый слой " +  (mutableCanvasesAndContexts.length + 1) + ":",
@@ -560,43 +561,40 @@ function prepareLayersToDraw() {
         var saveButton = document.getElementById("save-layer-button");
         saveButton.addEventListener(
             'click', function (event) {
-                var layersUrls = [];
-                var layersNames = [];
-                //console.log(currentSettings)
+                var updatedLayers = [];
 
                 for(let i = 0; i < mutableCanvasesAndContexts.length; i++) {
                     var tmp = mutableCanvasesAndContexts[i];
                     var contextToSave = tmp.context;
                     var canvasToSave = tmp.canvas;
 
-                    var imageDataUrl = canvasToSave.toDataURL("image/png")
-                    layersUrls.push({"filename": tmp,
-                        'data': imageDataUrl});
                     changeImageColor(contextToSave, canvas.width, canvas.height)
 
                     var layer = {
-                            "image": tmp.imageName,
-                            "title": tmp.title,
+                            "image": tmp.layer.imageName,
+                            "title": tmp.layer.title,
                             "alpha": tmp.context.globalAlpha,
                             "color": tmp.context.strokeStyle,
                             //"alpha": "1",
                             //color: "#000000",
-                            "description": tmp.description,
-                            "data": canvasToSave.toDataURL("image/png")
+                            "description": tmp.layer.description,
+                            //"data": canvasToSave.toDataURL("image/png")
                     }
                     updatedLayers.push(layer);
                 }
 
                 var newData = {
                     layers: updatedLayers,
-                }
-                //var newData = "test";*/
-                //alert(JSON.stringify(newData));
+                };
+                console.log(JSON.stringify(newData))
 
                 $.ajax({
                     type: "POST",
                     url: baseUrl + "/publication/save-layers?id=" + publicationId,
                     data: { params: JSON.stringify(newData) },
+                    contentType: 'application/json',
+                    dataType: 'json',
+
                     success: function (data) {
                         alert(data)
                         location.href = window.location.origin + baseUrl + "/publication/edit-drawings?id=" + publicationId

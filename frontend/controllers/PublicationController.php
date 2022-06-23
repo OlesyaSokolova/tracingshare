@@ -328,10 +328,16 @@ class PublicationController extends Controller
 
     public function actionSaveLayers($id)
     {
-        $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
-        //print_r($data);
-        $publication = Publication::findOne($id);
 
+        header("Content-Type: application/json");
+
+        $data = json_decode(file_get_contents("php://input"));
+
+        //echo "Hello". var_dump($data);
+       // $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
+        var_dump($data); /*
+        $publication = Publication::findOne($id);
+/*
         if (strcmp(json_encode($data['newDrawings']), "") != 2) {
             $newDrawings = json_encode($data['newDrawings'], JSON_UNESCAPED_UNICODE);
             $previousDrawings = $publication->drawings;
@@ -386,7 +392,7 @@ class PublicationController extends Controller
         }
         else {
             Yii::$app->session->setFlash('error', "Произошла ошибка про сохранении данных. ");
-        }
+        }*/
     }
 
     public function actionSaveTextures($id)
