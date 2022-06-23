@@ -124,3 +124,22 @@ function generateNewName(prefix, drawings) {
     return prefix + newLayerIndex + ".png";
 }
 
+function matchClickedColor(drawingLayerData, currentPixelIndex, clickedColor)
+{
+    const IMAGE_DATA_RED_SHIFT = 0;
+    const IMAGE_DATA_GREEN_SHIFT = 1;
+    const IMAGE_DATA_BLUE_SHIFT = 2;
+    const IMAGE_DATA_ALPHA_SHIFT = 3;
+
+    var r = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_RED_SHIFT];
+    var g = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_GREEN_SHIFT];
+    var b = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_BLUE_SHIFT];
+    var a = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_ALPHA_SHIFT];
+
+    // If the current pixel matches the clicked color
+    return r === clickedColor.r
+        && g === clickedColor.g
+        && b === clickedColor.b
+        && a === clickedColor.a;
+}
+

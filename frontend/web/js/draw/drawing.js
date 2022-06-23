@@ -161,7 +161,6 @@ function prepareLayersToDraw() {
                 brushIsClicked = false;
                 eraserIsClicked = true;
                 fillerIsClicked = false;
-
             });
 
             var fillerButton = document.getElementById("filler-btn");
@@ -274,7 +273,7 @@ function prepareLayersToDraw() {
                 y = newPixelIndex[1];
                 currentPixelIndex = (y*(canvas.width) + x) * IMAGE_DATA_PIXEL_SHIFT;
                 // Go up as long as the color matches and are inside the canvas
-                while(y-- >= drawingBoundTop && matchClickedColor(currentPixelIndex)) {
+                while(y-- >= drawingBoundTop && matchClickedColor(drawingLayerData, currentPixelIndex, clickedColor)) {
                     currentPixelIndex -= (canvas.width) * IMAGE_DATA_PIXEL_SHIFT;
                 }
                 currentPixelIndex += (canvas.width) * IMAGE_DATA_PIXEL_SHIFT;
@@ -283,11 +282,11 @@ function prepareLayersToDraw() {
                 reachRight = false;
 
                 // Go down as long as the color matches and in inside the canvas
-                while(y++ < drawingBoundBottom && matchClickedColor(currentPixelIndex)) {
+                while(y++ < drawingBoundBottom && matchClickedColor(drawingLayerData, currentPixelIndex, clickedColor)) {
                     colorPixel(currentPixelIndex);
 
                     if(x > drawingBoundLeft) {
-                        if(matchClickedColor(currentPixelIndex - IMAGE_DATA_PIXEL_SHIFT)){
+                        if(matchClickedColor(drawingLayerData, currentPixelIndex - IMAGE_DATA_PIXEL_SHIFT, clickedColor)){
                             if(!reachLeft) {
                                 pixelStack.push([x - 1, y]);
                                 reachLeft = true;
@@ -298,7 +297,7 @@ function prepareLayersToDraw() {
                     }
                     if(x < drawingBoundRight)
                     {
-                        if(matchClickedColor(currentPixelIndex + IMAGE_DATA_PIXEL_SHIFT)){
+                        if(matchClickedColor(drawingLayerData, currentPixelIndex + IMAGE_DATA_PIXEL_SHIFT, clickedColor)){
                             if(!reachRight){
                                 pixelStack.push([x + 1, y]);
                                 reachRight = true;
@@ -316,25 +315,6 @@ function prepareLayersToDraw() {
                 context.putImageData(drawingLayerData, 0, 0);
                 drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
             }
-        }
-
-        function matchClickedColor(currentPixelIndex)
-        {
-            var r = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_RED_SHIFT];
-            var g = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_GREEN_SHIFT];
-            var b = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_BLUE_SHIFT];
-            var a = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_ALPHA_SHIFT];
-
-            // If the current pixel matches the clicked color
-            if(r === clickedColor.r
-                && g === clickedColor.g
-                && b === clickedColor.b
-                && a === clickedColor.a) return true;
-
-            // If current pixel matches the new color
-            //if(r === 0 && g === 0 && b === 0) return false;
-
-            return false;
         }
 
         function colorPixel(currentPixelIndex)
