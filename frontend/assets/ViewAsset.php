@@ -24,6 +24,7 @@ class ViewAsset extends AssetBundle
         'js/utils/query_utils.js',
         'js/utils/canvas_utils.js',
         'js/utils/drawing_utils.js',
+        'js/utils/string_utils.js',
 
         'js/edit/edit_drawings.js',
         'js/edit/edit_textures.js',

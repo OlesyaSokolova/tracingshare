@@ -11,7 +11,7 @@ function prepareLayersToDraw() {
         drawings: Array()
     }
 
-    var maxImageName = 0;
+    var maxImageName = prefix + 0 + ".png";
 
     var canvas;
     var context;
@@ -75,6 +75,7 @@ function prepareLayersToDraw() {
             && drawings !== ''
             && drawings !== "") {
             currentDrawings = JSON.parse(JSON.stringify(drawings));
+            maxImageName = getMaxImageName(currentDrawings);
             drawingsImages = initDrawingsArray(currentDrawings);
         }
         //create context of background
@@ -92,18 +93,9 @@ function prepareLayersToDraw() {
         createExistingLayersThumbnailsElements(drawingsImages);
 
         //load images and draw them at canvases and thumbnails
-        for (let i = 0; i < drawingsImages.length; i++) {
+        //todo: check layers order on canvas
+        for (let i = drawingsImages.length - 1; i >= 0; i--) {
             var currentImage = drawingsImages[i].image;
-
-            //todo: refactor: string comparing
-            var filenameWithoutPrefix = (currentImage.src).replace(/^.*[\\\/]/, '').split('_')[2]
-            var filenameWithoutFormat = filenameWithoutPrefix.substring(0,
-                filenameWithoutPrefix.lastIndexOf('.')) || filenameWithoutPrefix
-
-            drawingIndex = parseInt(filenameWithoutFormat);
-            if(drawingIndex > maxImageName) {
-                maxImageName = drawingIndex
-            }
 
             var canvasId = "layer_" + i + "_canvas";
             if (isImageOk(currentImage)) {
@@ -113,11 +105,13 @@ function prepareLayersToDraw() {
                 drawLayer(drawingsImages[i], currentContextOk);
                 drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
                 initMutableCanvas(currentCanvasOk)
-                var shortFilenameOk = (drawingsImages[i].image.src).replace(/^.*[\\\/]/, '')
-                var filenameWithoutGeneratedValueOk = (shortFilenameOk.substring(0,
-                    shortFilenameOk.lastIndexOf('?')) || shortFilenameOk).replace(/^.*[\\\/]/, '')
-
-                mutableCanvasesAndContexts.push({"imageName": filenameWithoutGeneratedValueOk, "id": canvasId, "canvas": currentCanvasOk, "context": currentContextOk });
+                var imageNameOk = removeGeneratedValue(removeFullFilepath(drawingsImages[i].image.src))
+                mutableCanvasesAndContexts.push({"layer": {"imageName": imageNameOk,
+                                                           "alpha": drawingsImages[i].alpha,
+                                                           "color": drawingsImages[i].color,
+                                                           "title": drawingsImages[i].title,
+                                                           "description": drawingsImages[i].description},
+                    "canvasId": canvasId, "canvas": currentCanvasOk, "context": currentContextOk });
                 addClickListenerToThumbnail(i)
 
                 canvas = currentCanvasOk;
@@ -146,11 +140,14 @@ function prepareLayersToDraw() {
                     drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
                     initMutableCanvas(currentCanvas)
 
-                    //todo: refactor: string comparing
-                    var shortFilename = (drawingsImages[i].image.src).replace(/^.*[\\\/]/, '')
-                    var filenameWithoutGeneratedValue = (shortFilename.substring(0,
-                        shortFilename.lastIndexOf('?')) || shortFilename).replace(/^.*[\\\/]/, '')
-                    mutableCanvasesAndContexts.push({"imageName": filenameWithoutGeneratedValue, "id": "layer_" + i + "_canvas", "canvas": currentCanvas, "context": currentContext });
+                    var imageName = removeGeneratedValue(removeFullFilepath(drawingsImages[i].image.src))
+                    mutableCanvasesAndContexts.push({"layer": {"imageName": imageName,
+                                                                "alpha": drawingsImages[i].alpha,
+                                                                "color": drawingsImages[i].color,
+                                                                "title": drawingsImages[i].title,
+                                                                "description": drawingsImages[i].description},
+                        "canvasId": "layer_" + i + "_canvas", "canvas": currentCanvas, "context": currentContext });
+
                     addClickListenerToThumbnail(i)
 
                     canvas = currentCanvas;
@@ -179,10 +176,15 @@ function prepareLayersToDraw() {
             var newLayerCanvas = createCanvasToDrawOn(newLayerCanvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
                 backgroundX, backgroundY);
             var newLayerContext = newLayerCanvas.getContext("2d");
-            mutableCanvasesAndContexts.push({"id": newLayerCanvasId, "canvas": newLayerCanvas, "context": newLayerContext });
+            mutableCanvasesAndContexts.push({"layer":  {"imageName": generateNextImageName(prefix, maxImageName),
+                                                        "alpha": alpha,
+                                                        "color": color,
+                                                        "title": title,
+                                                        "description": description},
+                "canvasId": newLayerCanvasId, "canvas": newLayerCanvas, "context": newLayerContext });
 
-            canvas = mutableCanvasesAndContexts.find(x => x.id === newLayerCanvasId).canvas;
-            context = mutableCanvasesAndContexts.find(x => x.id === newLayerCanvasId).context;
+            canvas = mutableCanvasesAndContexts.find(x => x.canvasId === newLayerCanvasId).canvas;
+            context = mutableCanvasesAndContexts.find(x => x.canvasId === newLayerCanvasId).context;
             initMutableCanvas(canvas)
 
             addClickListenerToThumbnail((drawingsImages.length))
@@ -460,26 +462,8 @@ function prepareLayersToDraw() {
         createLayerButton.addEventListener(
             'click', function (event) {
                 var layersThumbnailsContainer = document.getElementById("thumbnails-layers");
-               var lastImageName = maxImageName
-                if (mutableCanvasesAndContexts.length !== 0) {
-                   /* mutableCanvasesAndContexts.sort((a, b) => {
-                        let ai = parseInt((a.id).split('_')[1])
-                        bi = parseInt((b.id).split('_')[1]);
-                        return ai - bi;
-                    })*/
-                    mutableCanvasesAndContexts.sort((a, b) => {
-                        /* let aFile = (a.imageName).split('_')[2];
-                         let ai = aFile.substring(0, aFile.lastIndexOf('.')) || aFile
-                         let bFile = (a.imageName).split('_')[2];
-                         let bi = bFile.substring(0, bFile.lastIndexOf('.')) || bFile
-                         return parseInt(ai) - parseInt(bi);*/
-                        a.imageName.toLowerCase() > b.imageName.toLowerCase()
-                    });
-                    mutableCanvasesAndContexts[mutableCanvasesAndContexts.length - 1].id
-                 }
-
                     //parcelastimagename
-                    newId = lastImageName + 1;
+                   var newId = getIndexFromImageName(maxImageName) + 1;
 
                     //todo:create layer if there are no mutable layers
 
@@ -512,13 +496,12 @@ function prepareLayersToDraw() {
                     initMutableCanvas(createdLayerCanvas)
                     createdLayerContext.lineWidth = thickness
 
-                    mutableCanvasesAndContexts.push({
-                        //todo: add new image prefix
-                        //tofo: add image with settings as in current drawings
-                        "id": createdLayerId,
-                        "canvas": createdLayerCanvas,
-                        "context": createdLayerContext
-                    });
+                    mutableCanvasesAndContexts.push({"layer": { "imageName": generateNextImageName(prefix, maxImageName),
+                                                                "alpha": alpha,
+                                                                "color": color,
+                                                                "title": title,
+                                                                "description": description},
+                    "canvasId": createdLayerId, "canvas": createdLayerCanvas, "context": createdLayerContext });
 
                     canvas = createdLayerCanvas;
                     context = createdLayerContext;
@@ -554,7 +537,7 @@ function prepareLayersToDraw() {
                     }
 
                     //remove canvas and context from mutableCanvasesAndContexts
-                    var removeIndex = mutableCanvasesAndContexts.map(x => x.id).indexOf(canvasId);
+                    var removeIndex = mutableCanvasesAndContexts.map(x => x.canvasId).indexOf(canvasId);
                     ~removeIndex && mutableCanvasesAndContexts.splice(removeIndex, 1);
 
                     //remove layer from settings
@@ -683,8 +666,8 @@ function prepareLayersToDraw() {
             document.getElementById('thumbnail_div_' + index)
                 .addEventListener('click', function (event) {
                     var canvasId = "layer_" + index + "_canvas";
-                    canvas = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
-                    context = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
+                    canvas = mutableCanvasesAndContexts.find(x => x.canvasId === canvasId).canvas;
+                    context = mutableCanvasesAndContexts.find(x => x.canvasId === canvasId).context;
                     initMutableCanvas(canvas)
                     context.lineWidth = thickness
                     currentColor.a = context.globalAlpha * 255
