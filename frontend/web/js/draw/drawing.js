@@ -588,7 +588,7 @@ function prepareLayersToDraw() {
                 var newData = {
                     layers:  updatedLayers,
                 };
-                console.log(JSON.stringify(newData))
+                //console.log(JSON.stringify(newData))
 
                 $.ajax({
                     type: "POST",

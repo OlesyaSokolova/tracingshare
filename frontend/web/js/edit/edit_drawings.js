@@ -115,12 +115,15 @@ function prepareEditablePublication() {
                 var layerTitle = document.getElementById(titleId).value;
                 var userAnswer = confirm("Вы действительно хотите удалить слой \" " + layerTitle +"\"?");
                 if (userAnswer === true) {
+                    //alert("before:" + JSON.stringify(jsonDrawings.drawings));
                     jsonDrawings.drawings.splice(i, 1);
+                    //alert("after splice:" + JSON.stringify(jsonDrawings.drawings));
                     drawingsImages.splice(i, 1);
                     var redirectToView = false;
-                    saveData(jsonDrawings, redirectToView)
                     initLayersSettingsForEdit(jsonDrawings)
+                    saveData(jsonDrawings, redirectToView)
                     updateAllLayers(initDrawingsArray(jsonDrawings));
+                   // alert("after updating:" + JSON.stringify(jsonDrawings.drawings))
                 }
             })
         }
@@ -196,6 +199,7 @@ function prepareEditablePublication() {
                     colorValue = jsonArrayDrawings[i].layerParams.color;
                 } else {
                     alphaValue = 1;
+                    colorValue = "#000000";
                 }
                 var layerId = "layer_" + i;
                 layerInfo += '<div className="form-group" id=\'' + layerId + '\' style="border:1px solid black;\n' +
