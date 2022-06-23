@@ -561,7 +561,7 @@ function prepareLayersToDraw() {
         var saveButton = document.getElementById("save-layer-button");
         saveButton.addEventListener(
             'click', function (event) {
-                var updatedLayers = [];
+                var updatedLayers = {};
 
                 for(let i = 0; i < mutableCanvasesAndContexts.length; i++) {
                     var tmp = mutableCanvasesAndContexts[i];
@@ -580,11 +580,20 @@ function prepareLayersToDraw() {
                             "description": tmp.layer.description,
                             //"data": canvasToSave.toDataURL("image/png")
                     }
-                    updatedLayers.push(layer);
+                    //updatedLayers.push(layer)
+                    updatedLayers[tmp.layer.imageName] = {
+                        "title": tmp.layer.title,
+                        "alpha": tmp.context.globalAlpha,
+                        "color": tmp.context.strokeStyle,
+                        //"alpha": "1",
+                        //color: "#000000",
+                        "description": tmp.layer.description,
+                        //"data": canvasToSave.toDataURL("image/png")};
+                    }
                 }
 
                 var newData = {
-                    layers: updatedLayers,
+                    layers:  updatedLayers,
                 };
                 console.log(JSON.stringify(newData))
 
@@ -592,8 +601,8 @@ function prepareLayersToDraw() {
                     type: "POST",
                     url: baseUrl + "/publication/save-layers?id=" + publicationId,
                     data: { params: JSON.stringify(newData) },
-                    contentType: 'application/json',
-                    dataType: 'json',
+                    //contentType: 'application/json',
+                   // dataType: 'json',
 
                     success: function (data) {
                         alert(data)

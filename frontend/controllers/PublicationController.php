@@ -329,13 +329,13 @@ class PublicationController extends Controller
     public function actionSaveLayers($id)
     {
 
-        header("Content-Type: application/json");
+        //header("Content-Type: application/json");
 
-        $data = json_decode(file_get_contents("php://input"));
+        //$data = json_decode(file_get_contents("php://input"));
 
         //echo "Hello". var_dump($data);
-       // $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
-        var_dump($data); /*
+       // $data = (!empty($_POST['params'])) ? json_decode($_POST['params']): "empty params";
+        var_dump($_POST); /*
         $publication = Publication::findOne($id);
 /*
         if (strcmp(json_encode($data['newDrawings']), "") != 2) {
