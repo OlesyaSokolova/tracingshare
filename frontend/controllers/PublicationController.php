@@ -332,9 +332,8 @@ class PublicationController extends Controller
         //$updatedLayers = $data['layers'];
         $publication = Publication::findOne($id);
         $updatedLayers = $data['layers'];
-        var_dump(sizeof($updatedLayers));
-        //if (strcmp(json_encode($data['layers']), "") != 2) {
-        //  $updatedLayers = json_encode($data['layers'], JSON_UNESCAPED_UNICODE);
+        //var_dump(sizeof($updatedLayers));
+
         $previousDrawings = $publication->drawings;
         $previousDrawingsJsonArray = json_decode($previousDrawings, true);
         /*updatedLayers[tmp.layer.imageName] = {
@@ -351,7 +350,6 @@ class PublicationController extends Controller
         FileHelper::createDirectory(Publication::basePath() . '/'
             . Publication::PREFIX_PATH_DRAWINGS);
 
-        //for ($i = 0; $i < sizeof($updatedLayers); $i++) {
         $drawingsArray = array();
         $drawingsArray['drawings'] = array();
 
@@ -371,17 +369,14 @@ class PublicationController extends Controller
             //$originalImageSize = $publication->getOriginalImageSize();
             //$newImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
             file_put_contents($filePath, $newImage);
-            //echo "updated".$filePath;
-             //$drawingPrefix =  Publication::DRAWING_PREFIX . $baseName . "_";
-                //$filename = $drawingPrefix .$file->baseName . '.' . $file->extension;
-                $newLayerInfo = array("image" => $filename,
-                    "layerParams" => array(
-                        "title" => $newInfo['title'],
-                        "alpha" => $newInfo['alpha'],
-                        "color" => $newInfo['color'],
-                        "description" => $newInfo['description'],
-                    ));
-                array_push($drawingsArray['drawings'], $newLayerInfo);
+            $newLayerInfo = array("image" => $filename,
+                "layerParams" => array(
+                    "title" => $newInfo['title'],
+                    "alpha" => $newInfo['alpha'],
+                    "color" => $newInfo['color'],
+                    "description" => $newInfo['description'],
+                ));
+            array_push($drawingsArray['drawings'], $newLayerInfo);
             }
 
             $newDrawings = json_encode($drawingsArray);

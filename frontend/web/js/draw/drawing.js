@@ -596,7 +596,7 @@ function prepareLayersToDraw() {
                     data: { params: JSON.stringify(newData) },
 
                     success: function (data) {
-                        alert(data)
+                        //alert(data)
                         location.href = window.location.origin + baseUrl + "/publication/edit-drawings?id=" + publicationId
                     },
                     error: function (xhr, status, error) {
