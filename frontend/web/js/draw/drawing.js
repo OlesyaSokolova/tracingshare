@@ -11,6 +11,8 @@ function prepareLayersToDraw() {
         drawings: Array()
     }
 
+    var maxDrawingIndex = 0;
+
     var canvas;
     var context;
     var currentColor = {
@@ -22,6 +24,11 @@ function prepareLayersToDraw() {
 
     const eraserStyle = "rgba(255,255,255,255)";
     const eraserGlobalCompositeOperation = "destination-out";
+
+    //init other vars and consts
+    var brushGlobalCompositeOperation;
+    var previousThumbnail = null;
+    var thickness;
 
     var brushStyle = colorToRGBAString(currentColor);
 
@@ -87,6 +94,16 @@ function prepareLayersToDraw() {
         //load images and draw them at canvases and thumbnails
         for (let i = 0; i < drawingsImages.length; i++) {
             var currentImage = drawingsImages[i].image;
+
+            var filenameWithoutPrefix = (currentImage.src).replace(/^.*[\\\/]/, '').split('_')[2]
+            var filenameWithoutFormat = filenameWithoutPrefix.substring(0,
+                filenameWithoutPrefix.lastIndexOf('.')) || filenameWithoutPrefix
+
+            drawingIndex = parseInt(filenameWithoutFormat);
+            if(drawingIndex > maxDrawingIndex) {
+                maxDrawingIndex = drawingIndex
+            }
+
             var canvasId = "layer_" + i + "_canvas";
             if (isImageOk(currentImage)) {
                 var currentCanvasOk = createCanvasToDrawOn(canvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
@@ -95,8 +112,30 @@ function prepareLayersToDraw() {
                 drawLayer(drawingsImages[i], currentContextOk);
                 drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
                 initMutableCanvas(currentCanvasOk)
-                mutableCanvasesAndContexts.push({"id": canvasId, "canvas": currentCanvasOk, "context": currentContextOk });
+                var shortFilenameOk = (drawingsImages[i].image.src).replace(/^.*[\\\/]/, '')
+                var filenameWithoutGeneratedValueOk = (shortFilenameOk.substring(0,
+                    shortFilenameOk.lastIndexOf('?')) || shortFilenameOk).replace(/^.*[\\\/]/, '')
+
+                mutableCanvasesAndContexts.push({"imageName": filenameWithoutGeneratedValueOk, "id": canvasId, "canvas": currentCanvasOk, "context": currentContextOk });
                 addClickListenerToThumbnail(i)
+
+                canvas = currentCanvasOk;
+                context = currentContextOk;
+                context.lineWidth = thickness
+                currentColor.a = context.globalAlpha * 255
+
+                var idOk = parseInt((canvas.id).split('_')[1])
+                var currentThumbnailOk = document.getElementById('thumbnail_div_' + idOk)
+                currentThumbnailOk.style.background = "#d6d5d5";
+                if (previousThumbnail != null && !previousThumbnail.isSameNode(currentThumbnailOk)) {
+                    previousThumbnail.style.background = "#ffffff";
+                }
+                previousThumbnail = currentThumbnailOk;
+
+                //init other vars and consts
+                brushGlobalCompositeOperation = context.globalCompositeOperation;
+                thickness = context.lineWidth;
+
             } else {
                 currentImage.onload = function () {
                     var currentCanvas = createCanvasToDrawOn("layer_" + i + "_canvas", originalImageCtx.canvas.width, originalImageCtx.canvas.height,
@@ -104,13 +143,35 @@ function prepareLayersToDraw() {
                     var currentContext = currentCanvas.getContext('2d');
                     drawLayer(drawingsImages[i], currentContext);
                     drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
-                    initMutableCanvas( currentCanvas, )
-                    mutableCanvasesAndContexts.push({"id": "layer_" + i + "_canvas", "canvas": currentCanvas, "context": currentContext });
+                    initMutableCanvas(currentCanvas)
+
+                    var shortFilename = (drawingsImages[i].image.src).replace(/^.*[\\\/]/, '')
+                    var filenameWithoutGeneratedValue = (shortFilename.substring(0,
+                        shortFilename.lastIndexOf('?')) || shortFilename).replace(/^.*[\\\/]/, '')
+                    mutableCanvasesAndContexts.push({"imageName": filenameWithoutGeneratedValue, "id": "layer_" + i + "_canvas", "canvas": currentCanvas, "context": currentContext });
                     addClickListenerToThumbnail(i)
+
+                    canvas = currentCanvas;
+                    context = currentContext;
+                    context.lineWidth = thickness
+                    currentColor.a = context.globalAlpha * 255
+
+                    var id = parseInt((canvas.id).split('_')[1])
+                    var currentThumbnail = document.getElementById('thumbnail_div_' + id);
+                    currentThumbnail.style.background = "#d6d5d5";
+                    if (previousThumbnail != null && !previousThumbnail.isSameNode(currentThumbnail)) {
+                        previousThumbnail.style.background = "#ffffff";
+                    }
+                    previousThumbnail = currentThumbnail;
+
+                    //init other vars and consts
+                    brushGlobalCompositeOperation = context.globalCompositeOperation;
+                    thickness = context.lineWidth;
                 }
             }
         }
 
+        //if there is new layer, choose it instead of current
         if(newLayer === 2) {
             const newLayerCanvasId = "layer_" + (drawingsImages.length) + "_canvas";
             var newLayerCanvas = createCanvasToDrawOn(newLayerCanvasId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
@@ -123,9 +184,21 @@ function prepareLayersToDraw() {
             initMutableCanvas(canvas)
 
             addClickListenerToThumbnail((drawingsImages.length))
+
+            //init other vars and consts
+            brushGlobalCompositeOperation = context.globalCompositeOperation;
+            var currentThumbnail = document.getElementById('thumbnail_div_' + (drawingsImages.length));
+            currentThumbnail.style.background = "#d6d5d5";
+            if (previousThumbnail != null && !previousThumbnail.isSameNode(currentThumbnail)) {
+                previousThumbnail.style.background = "#ffffff";
+            }
+            previousThumbnail = currentThumbnail;
+
+            brushGlobalCompositeOperation = context.globalCompositeOperation;
+            thickness = context.lineWidth;
         }
 
-        else {
+        /*else {
             if (mutableCanvasesAndContexts.length !== 0) {
                 canvas = mutableCanvasesAndContexts[0].canvas;
                 context = mutableCanvasesAndContexts[0].context;
@@ -137,12 +210,7 @@ function prepareLayersToDraw() {
                 document.getElementById('thumbnail_div_' + id).style.background = "#d6d5d5";
                 previousThumbnail = document.getElementById('thumbnail_div_' + id)
             }
-        }
-
-        //init other vars and consts
-        const brushGlobalCompositeOperation = context.globalCompositeOperation;
-        var previousThumbnail = document.getElementById("thumbnail_div_" + (drawingsImages.length));
-        var thickness = context.lineWidth;
+        }*/
 
         //init tools buttons
         var clearButton = document.getElementById("clear-layer-button");
@@ -405,14 +473,22 @@ function prepareLayersToDraw() {
             'click', function (event) {
                 var layersThumbnailsContainer = document.getElementById("thumbnails-layers");
                 if (mutableCanvasesAndContexts.length !== 0) {
-                    mutableCanvasesAndContexts.sort((a, b) => {
+                   /* mutableCanvasesAndContexts.sort((a, b) => {
                         let ai = parseInt((a.id).split('_')[1])
                         bi = parseInt((b.id).split('_')[1]);
                         return ai - bi;
-                    })
+                    })*/
+                    mutableCanvasesAndContexts.sort((a, b) => {
+          /* let aFile = (a.imageName).split('_')[2];
+           let ai = aFile.substring(0, aFile.lastIndexOf('.')) || aFile
+           let bFile = (a.imageName).split('_')[2];
+           let bi = bFile.substring(0, bFile.lastIndexOf('.')) || bFile
+           return parseInt(ai) - parseInt(bi);*/
+           a.imageName.toLowerCase() > b.imageName.toLowerCase()
+       });
                     //todo:create layer if there are no mutable layers
-                    var lastMutableLayerId = mutableCanvasesAndContexts[mutableCanvasesAndContexts.length - 1].id;
-                    var newId = parseInt(lastMutableLayerId.split('_')[1]) + 1;
+                    //var lastMutableLayerId = mutableCanvasesAndContexts[mutableCanvasesAndContexts.length - 1].id;
+                    var newId = maxDrawingIndex + 1;
                     var divId = "thumbnail_div_" + newId;
                     var alphaId = "alpha_" + newId;
                     var currentLayerElement = '<div id=\'' + divId + '\' class = "bordered_div" style="border:1px solid black;\n' +
@@ -576,7 +652,7 @@ function prepareLayersToDraw() {
 
             if (Array.isArray(drawingsImages)) {
                 var currentLayerElement = '<div id="layers"">';
-                for (let i = 0; i < drawingsImages.length; i++) {
+                for (let i = drawingsImages.length - 1; i >= 0; i--) {
                     if (typeof drawingsImages[i].alpha != 'undefined') {
                         alphaValue = drawingsImages[i].alpha;
                     } else {
@@ -603,19 +679,6 @@ function prepareLayersToDraw() {
                 layersDiv.innerHTML = currentLayerElement
             }
         }
-
-        /*function drawThumbnailsImages() {
-            for (let i = 0; i < drawingsImages.length; i++) {
-                var image = drawingsImages[i].image;
-                if (isImageOk(image)) {
-                    drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
-                } else {
-                    image.onload = function () {
-                        drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
-                    }
-                }
-            }
-        }*/
 
         function addClickListenerToThumbnail(index) {
             document.getElementById('thumbnail_div_' + index)
