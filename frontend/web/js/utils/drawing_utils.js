@@ -84,7 +84,6 @@ function colorToRGBAString(color) {
     return "rgba(" + color.r + "," + color.g + "," + color.b + "," + color.a +")";
 }
 
-/*
 function colorToHEXString(color) {
         var red = color.r.toString(16);
         if(red.length === 1) {
@@ -100,7 +99,6 @@ function colorToHEXString(color) {
         }
         return "#" + red + green + blue;
 }
-*/
 
 function generateNewName(prefix, drawings) {
     var newLayerIndex = 0;

@@ -94,7 +94,7 @@ function prepareLayersToDraw() {
 
         //load images and draw them at canvases and thumbnails
         //todo: check layers order on canvas
-        for (let i = 0; i < drawingsImages.length; i++) {
+        for (let i = drawingsImages.length - 1; i >=0; i--) {
             var currentImage = drawingsImages[i].image;
 
             var canvasId = "layer_" + i + "_canvas";
@@ -509,6 +509,8 @@ function prepareLayersToDraw() {
                     canvas = createdLayerCanvas;
                     context = createdLayerContext;
                     currentColor.a = context.globalAlpha * 255
+                    brushStyle = colorToRGBAString(currentColor);
+                    context.strokeStyle = brushStyle;
 
                     var id = parseInt((canvas.id).split('_')[1])
                     var currentThumbnail = document.getElementById('thumbnail_div_' + id);
@@ -525,7 +527,7 @@ function prepareLayersToDraw() {
             var deleteLayerButton = document.getElementById("delete-layer-button");
             deleteLayerButton.addEventListener(
                 'click', function (event) {
-                        var index = parseInt((canvas.id).split('_')[1]);
+                    var index = parseInt((canvas.id).split('_')[1]);
                     var divId = "thumbnail_div_" + index;
                     var elem = document.getElementById(divId)
                     if (elem) {
@@ -554,6 +556,8 @@ function prepareLayersToDraw() {
                         initMutableCanvas(canvas)
                         context.lineWidth = thickness
                         currentColor.a = context.globalAlpha * 255
+                        brushStyle = colorToRGBAString({r: 0, g: 0, b: 0, a: 255});
+                        context.strokeStyle = brushStyle;
 
                         var id = parseInt((canvas.id).split('_')[1])
                         document.getElementById('thumbnail_div_' + id).style.background = "#d6d5d5";
@@ -610,7 +614,7 @@ function prepareLayersToDraw() {
 
             if (Array.isArray(drawingsImages)) {
                 var currentLayerElement = '<div id="layers"">';
-                for (let i =0; i < drawingsImages.length; i++) {
+                for (let i = drawingsImages.length - 1; i >=0  ; i--) {
                     if (typeof drawingsImages[i].alpha != 'undefined') {
                         alphaValue = drawingsImages[i].alpha;
                     } else {
@@ -647,6 +651,8 @@ function prepareLayersToDraw() {
                     initMutableCanvas(canvas)
                     context.lineWidth = thickness
                     currentColor.a = context.globalAlpha * 255
+                    brushStyle = colorToRGBAString(currentColor);
+                    context.strokeStyle = brushStyle;
                     this.style.background = "#d6d5d5";
                     if (previousThumbnail != null && !previousThumbnail.isSameNode(this)) {
                         previousThumbnail.style.background = "#ffffff";
