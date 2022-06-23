@@ -141,77 +141,82 @@ if(!empty($publication) && !empty($newLayer)) {
             }
     $canvasId = "layer_" . "b"  . "_canvas";
     ?>
-    <div id="canvases" class="canvasDiv" data-state="static">
-        <canvas id="<?= $canvasId ?>" style="border:1px solid black;
-            height: fit-content;
-            width: max-content;">
-        </canvas>
-        <?php if (strcmp($publication->drawings ,'') != 0
-            && sizeof($publication->getDrawings()) > 0) {
-            for($i=0; $i < sizeof($publication->getDrawings()); $i++) {
-                //var_dump($publication->getDrawings()[$i]);
-                $canvasId = "layer_" . $i . "_canvas";
-                //var_dump($i);
-                echo '<canvas id="'.$canvasId.'" ></canvas>';
+        <div id="canvases" class="canvasDiv" data-state="static">
+            <canvas id="<?= $canvasId ?>" style="border:1px solid black;
+                height: fit-content;
+                width: max-content;">
+            </canvas>
+            <?php if (strcmp($publication->drawings ,'') != 0
+                && sizeof($publication->getDrawings()) > 0) {
+                for($i=0; $i < sizeof($publication->getDrawings()); $i++) {
+                    //var_dump($publication->getDrawings()[$i]);
+                    $canvasId = "layer_" . $i . "_canvas";
+                    //var_dump($i);
+                    echo '<canvas id="'.$canvasId.'" ></canvas>';
+                    }
                 }
-            }
-        $canvasId = "layer_" . $layersCounter  . "_canvas";
-        ?>
-        <canvas id="<?= $canvasId ?>">
-        </canvas>
-        <div class="form-group">
-            <label for="selectTextures">Фоновое изображение:</label>
-            <select id="selectTextures" class="form-control"  data-role="select-dropdown" data-profile="minimal">
-                <option id="originalImage" value="">Оригинальное изображение</option>
-                <option id="none" value="">-</option>
-            </select>
+            $canvasId = "layer_" . $layersCounter  . "_canvas";
+
+           if ($newLayer == 2): ?>
+            <canvas id="<?= $canvasId ?>">
+            </canvas>
+            <?php endif; ?>
+
+            <div class="form-group">
+                <label for="selectTextures">Фоновое изображение:</label>
+                <select id="selectTextures" class="form-control"  data-role="select-dropdown" data-profile="minimal">
+                    <option id="originalImage" value="">Оригинальное изображение</option>
+                    <option id="none" value="">-</option>
+                </select>
+            </div>
         </div>
-    </div>
 
         <div id="layers" class = "layers-class" style="width: fit-content; padding-left: 10px;">
             <button type="button" id="create-layer-button" class="btn btn-outline-primary" style="margin-bottom: 10px">Создать новый слой</button>
             <div id= "thumbnails-layers" class="thumbnails-layers" style="overflow-y: scroll; height: 900px;">
 
-    <div id="<?= "thumbnail_div_".$layersCounter ?>"style="border:1px solid black;
-        border-radius: 10px;
-        padding-left: 20px;
-        width: 300px;
-        height: fit-content;
-        text-align: left;
-        margin-bottom: 10px;
-        background: #d6d5d5">
-        <?php $canvasId = "thumbnail_" . $layersCounter;
-        echo '<label for="'. $canvasId. '">Новый слой '. ($layersCounter + 1). ': </label>';
-        /*echo '<canvas id="'.$canvasId.'" > </canvas>';*/?>
-        <!--<canvas id="newLayerThumbnail">
-        </canvas>-->
-        <br>
-        <?php $alphaId = "alpha_" . $layersCounter;
-        echo '<label for="'. $alphaId. '">Прозрачность: </label><br>';
-        echo '<input type=range name=\"alphaChannel\" class ="alpha-value" id="'.$alphaId.'" step=\'0.02\' min=\'0.02\' max=\'1\' value=\'1\'>' ?>
-     </div>
+                <?php if ($newLayer == 2): ?>
+                <div id="<?= "thumbnail_div_".$layersCounter ?>"style="border:1px solid black;
+                border-radius: 10px;
+                padding-left: 20px;
+                width: 300px;
+                height: fit-content;
+                text-align: left;
+                margin-bottom: 10px;
+                background: #d6d5d5">
+                    <?php $canvasId = "thumbnail_" . $layersCounter;
+                    echo '<label for="'. $canvasId. '">Новый слой '. ($layersCounter + 1). ': </label>';
+                    /*echo '<canvas id="'.$canvasId.'" > </canvas>';*/?>
+                    <!--<canvas id="newLayerThumbnail">
+                    </canvas>-->
+                    <br>
+                    <?php $alphaId = "alpha_" . $layersCounter;
+                    echo '<label for="'. $alphaId. '">Прозрачность: </label><br>';
+                    echo '<input type=range name=\"alphaChannel\" class ="alpha-value" id="'.$alphaId.'" step=\'0.02\' min=\'0.02\' max=\'1\' value=\'1\'>' ?>
+                 </div>
+                <?php endif; ?>
 
-        <div id = "otherLayersThumbnails">
-        </div>
+                <div id = "otherLayersThumbnails">
+                </div>
 
-        <?php $id = "b";?>
-        <div id="<?= "thumbnail_div_".$id ?>" style="border:1px solid black;
-        border-radius: 10px;
-        padding-left: 5px;
-        width: 300px;
-        height: fit-content;
-        text-align: left;
-        margin-bottom: 5px">
-            <?php $canvasId = "thumbnail_" . $id;
-            echo '<label for="'. $canvasId. '">Фоновое изображение: </label>';
-            /*echo '<canvas id="'.$canvasId.'" > </canvas>';*/?>
-            <br>
-            <?php $alphaId = "alpha_" . $id;
-            echo '<label for="'. $alphaId. '">Прозрачность: </label><br>';
-            echo '<input type=range name=\"alphaChannel\" class ="alpha-value" id="'.$alphaId.'" step=\'0.02\' min=\'0.02\' max=\'1\' value=\'1\'>' ?>
+                <?php $id = "b";?>
+                <div id="<?= "thumbnail_div_".$id ?>" style="border:1px solid black;
+                border-radius: 10px;
+                padding-left: 5px;
+                width: 300px;
+                height: fit-content;
+                text-align: left;
+                margin-bottom: 5px">
+                    <?php $canvasId = "thumbnail_" . $id;
+                    echo '<label for="'. $canvasId. '">Фоновое изображение: </label>';
+                    /*echo '<canvas id="'.$canvasId.'" > </canvas>';*/?>
+                    <br>
+                    <?php $alphaId = "alpha_" . $id;
+                    echo '<label for="'. $alphaId. '">Прозрачность: </label><br>';
+                    echo '<input type=range name=\"alphaChannel\" class ="alpha-value" id="'.$alphaId.'" step=\'0.02\' min=\'0.02\' max=\'1\' value=\'1\'>' ?>
+                </div>
+            </div>
         </div>
-    </div>
-  </div>
 </div>
 
 
