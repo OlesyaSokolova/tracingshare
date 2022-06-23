@@ -45,6 +45,10 @@ function prepareLayersToDraw() {
         var canvas;
         var context;
 
+        createExistingLayersThumbnailsElements(drawingsImages);
+        //drawThumbnailsImages()
+       // addClickListenersToThumbnails()
+
         for (let i = 0; i < drawingsImages.length; i++) {
             var currentImage = drawingsImages[i].image;
             var canvasId = "layer_" + i + "_canvas";
@@ -53,27 +57,29 @@ function prepareLayersToDraw() {
                     backgroundX, backgroundY);
                 var currentContextOk = currentCanvasOk.getContext('2d');
                 drawLayer(drawingsImages[i], currentContextOk);
+                drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
                 initMutableCanvas(currentCanvasOk)
                 mutableCanvasesAndContexts.push({"id": canvasId, "canvas": currentCanvasOk, "context": currentContextOk });
-
+                addClickListenerToThumbnail(i)
             } else {
                 currentImage.onload = function () {
                     var currentCanvas = createCanvasToDrawOn("layer_" + i + "_canvas", originalImageCtx.canvas.width, originalImageCtx.canvas.height,
                         backgroundX, backgroundY);
                     var currentContext = currentCanvas.getContext('2d');
                     drawLayer(drawingsImages[i], currentContext);
+                    drawExistingLayerThumbnail("thumbnail_" + i, drawingsImages[i].image, drawingsImages[i].color, originalImageCtx.canvas.width, originalImageCtx.canvas.height);
                     initMutableCanvas( currentCanvas, )
                     mutableCanvasesAndContexts.push({"id": "layer_" + i + "_canvas", "canvas": currentCanvas, "context": currentContext });
-
+                    addClickListenerToThumbnail(i)
                 }
             }
         }
         //create thumbnails for existing layers
-        window.onload = (event) => {
-            createExistingLayersThumbnailsElements(drawingsImages);
-            drawThumbnailsImages()
-            addClickListenersToThumbnails()
-        };
+        //window.onload = (event) => {
+           // createExistingLayersThumbnailsElements(drawingsImages);
+            //drawThumbnailsImages()
+            //addClickListenersToThumbnails()
+        //};
 
         if(newLayer === 2) {
             const newLayerCanvasId = "layer_" + (drawingsImages.length) + "_canvas";
@@ -566,7 +572,7 @@ function prepareLayersToDraw() {
             }
         }
 
-        function drawThumbnailsImages() {
+        /*function drawThumbnailsImages() {
             for (let i = 0; i < drawingsImages.length; i++) {
                 var image = drawingsImages[i].image;
                 if (isImageOk(image)) {
@@ -577,21 +583,13 @@ function prepareLayersToDraw() {
                     }
                 }
             }
-        }
+        }*/
 
-        function addClickListenersToThumbnails() {
-
-            for (let i = 0; i < drawingsImages.length + (newLayer - 1); i++) {
-                document.getElementById('thumbnail_div_' + i)
+        function addClickListenerToThumbnail(index) {
+            //for (let i = 0; i < drawingsImages.length + (newLayer - 1); i++) {
+                document.getElementById('thumbnail_div_' + index)
                     .addEventListener('click', function (event) {
-                        var canvasId = "layer_" +
-                            "" +
-                            "" +
-                            "" +
-                            "" +
-                            "" +
-                            "" +
-                            "" + i + "_canvas";
+                        var canvasId = "layer_" + index + "_canvas";
                         canvas = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
                         context = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
                         initMutableCanvas(canvas)
@@ -603,7 +601,7 @@ function prepareLayersToDraw() {
                         }
                         previousThumbnail = this;
                     });
-            }
+           // }
         }
 
             addDropdownMenuForTextures();
