@@ -283,7 +283,7 @@ function prepareLayersToDraw() {
 
                 // Go down as long as the color matches and in inside the canvas
                 while(y++ < drawingBoundBottom && matchClickedColor(drawingLayerData, currentPixelIndex, clickedColor)) {
-                    colorPixel(currentPixelIndex);
+                    colorPixel(drawingLayerData, currentPixelIndex, currentColor);
 
                     if(x > drawingBoundLeft) {
                         if(matchClickedColor(drawingLayerData, currentPixelIndex - IMAGE_DATA_PIXEL_SHIFT, clickedColor)){
@@ -315,14 +315,6 @@ function prepareLayersToDraw() {
                 context.putImageData(drawingLayerData, 0, 0);
                 drawingLayerData = context.getImageData(0, 0, canvas.width, canvas.height);
             }
-        }
-
-        function colorPixel(currentPixelIndex)
-        {
-            drawingLayerData.data[currentPixelIndex + IMAGE_DATA_RED_SHIFT] = currentColor.r;
-            drawingLayerData.data[currentPixelIndex + IMAGE_DATA_GREEN_SHIFT] = currentColor.g;
-            drawingLayerData.data[currentPixelIndex + IMAGE_DATA_BLUE_SHIFT] = currentColor.b;
-            drawingLayerData.data[currentPixelIndex + IMAGE_DATA_ALPHA_SHIFT] = currentColor.a;
         }
 
         toolbarClassContainer = 'toolbar'

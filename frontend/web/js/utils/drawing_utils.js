@@ -143,3 +143,16 @@ function matchClickedColor(drawingLayerData, currentPixelIndex, clickedColor)
         && a === clickedColor.a;
 }
 
+function colorPixel(drawingLayerData, currentPixelIndex, currentColor)
+{
+    const IMAGE_DATA_RED_SHIFT = 0;
+    const IMAGE_DATA_GREEN_SHIFT = 1;
+    const IMAGE_DATA_BLUE_SHIFT = 2;
+    const IMAGE_DATA_ALPHA_SHIFT = 3;
+
+    drawingLayerData.data[currentPixelIndex + IMAGE_DATA_RED_SHIFT] = currentColor.r;
+    drawingLayerData.data[currentPixelIndex + IMAGE_DATA_GREEN_SHIFT] = currentColor.g;
+    drawingLayerData.data[currentPixelIndex + IMAGE_DATA_BLUE_SHIFT] = currentColor.b;
+    drawingLayerData.data[currentPixelIndex + IMAGE_DATA_ALPHA_SHIFT] = currentColor.a;
+}
+
