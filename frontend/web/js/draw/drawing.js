@@ -118,7 +118,11 @@ function prepareLayersToDraw() {
                 context = currentContextOk;
                 context.lineWidth = thickness
                 currentColor.a = context.globalAlpha * 255
-
+                currentColor.r = 0;
+                currentColor.g = 0;
+                currentColor.b = 0;
+                brushStyle = colorToRGBAString(currentColor);
+                context.strokeStyle = brushStyle;
                 var idOk = parseInt((canvas.id).split('_')[1])
                 var currentThumbnailOk = document.getElementById('thumbnail_div_' + idOk)
                 currentThumbnailOk.style.background = "#d6d5d5";
@@ -429,12 +433,7 @@ function prepareLayersToDraw() {
                     if (backgroundId !== 'none')
                     {
                         contextToChange = originalImageCtx
-
-                        brushStyle = colorToRGBAString(currentColor);
-                        contextToChange.strokeStyle = brushStyle;
-
                         contextToChange.globalAlpha = newAlpha;
-
                         contextToChange.clearRect(0, 0, canvas.width, canvas.height);
                         contextToChange.globalCompositeOperation = "source-in";
                         contextToChange.fillRect(0, 0, canvas.width, canvas.height);
@@ -444,8 +443,7 @@ function prepareLayersToDraw() {
                 }
                 else {
                     contextToChange = tmp.context;
-                    brushStyle = colorToRGBAString(currentColor);
-                    contextToChange.strokeStyle = brushStyle;
+
                     const image = contextToChange.getImageData(0, 0, canvas.width, canvas.height);
                     const {data} = image;
                     const {length} = data;
@@ -509,7 +507,7 @@ function prepareLayersToDraw() {
                     canvas = createdLayerCanvas;
                     context = createdLayerContext;
                     currentColor.a = context.globalAlpha * 255
-                    brushStyle = colorToRGBAString(currentColor);
+                    brushStyle = colorToRGBAString({r: 0, g: 0, b: 0, a: 255});
                     context.strokeStyle = brushStyle;
 
                     var id = parseInt((canvas.id).split('_')[1])
@@ -556,8 +554,6 @@ function prepareLayersToDraw() {
                         initMutableCanvas(canvas)
                         context.lineWidth = thickness
                         currentColor.a = context.globalAlpha * 255
-                        brushStyle = colorToRGBAString({r: 0, g: 0, b: 0, a: 255});
-                        context.strokeStyle = brushStyle;
 
                         var id = parseInt((canvas.id).split('_')[1])
                         document.getElementById('thumbnail_div_' + id).style.background = "#d6d5d5";
@@ -581,7 +577,7 @@ function prepareLayersToDraw() {
                     updatedLayers[tmp.layer.imageName] = {
                         "title": tmp.layer.title,
                         "alpha": tmp.context.globalAlpha.toString(),
-                        "color": tmp.context.strokeStyle.toString(),
+                        "color": tmp.layer.color,
                         //"alpha": "1",
                         //color: "#000000",
                         "description": tmp.layer.description,
@@ -651,8 +647,7 @@ function prepareLayersToDraw() {
                     initMutableCanvas(canvas)
                     context.lineWidth = thickness
                     currentColor.a = context.globalAlpha * 255
-                    brushStyle = colorToRGBAString(currentColor);
-                    context.strokeStyle = brushStyle;
+
                     this.style.background = "#d6d5d5";
                     if (previousThumbnail != null && !previousThumbnail.isSameNode(this)) {
                         previousThumbnail.style.background = "#ffffff";
