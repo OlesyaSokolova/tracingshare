@@ -569,7 +569,7 @@ function prepareLayersToDraw() {
 
                     changeImageColor(contextToSave, canvas.width, canvas.height)
 
-                    updatedLayers.push({
+                    var layer = {
                             "image": tmp.imageName,
                             "title": tmp.title,
                             "alpha": tmp.context.globalAlpha,
@@ -578,18 +578,22 @@ function prepareLayersToDraw() {
                             //color: "#000000",
                             "description": tmp.description,
                             "data": canvasToSave.toDataURL("image/png")
-                    });
+                    }
+                    updatedLayers.push(layer);
                 }
 
                 var newData = {
-                    layers: JSON.stringify(updatedLayers),
+                    layers: updatedLayers,
                 };
+                //alert(JSON.stringify(newData));
+                var stringData = JSON.stringify( updatedLayers );
                 $.ajax({
                     type: "POST",
                     url: baseUrl + "/publication/save-layers?id=" + publicationId,
-                    data: {params: JSON.stringify(newData)},
+                    data: { data: stringData },
                     success: function (data) {
-                        location.href = window.location.origin + baseUrl + "/publication/edit-drawings?id=" + publicationId
+                        alert(data)
+                        //location.href = window.location.origin + baseUrl + "/publication/edit-drawings?id=" + publicationId
                     },
                     error: function (xhr, status, error) {
                         alert("Произошла ошибка при сохранении данных: " + status + " " + error);
