@@ -84,6 +84,12 @@ function prepareLayersToDraw() {
             canvas = mutableCanvasesAndContexts.find(x => x.id === newLayerCanvasId).canvas;
             context = mutableCanvasesAndContexts.find(x => x.id === newLayerCanvasId).context;
             initMutableCanvas(canvas)
+
+            addClickListenerToThumbnail((drawingsImages.length))
+        }
+
+        else {
+
         }
 
         //1.4. init vars and consts
