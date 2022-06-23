@@ -329,14 +329,23 @@ class PublicationController extends Controller
     public function actionSaveLayers($id)
     {
         $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
-        //print_r($data);
+        print_r($data);
         $publication = Publication::findOne($id);
-
-        if (strcmp(json_encode($data['newDrawings']), "") != 2) {
-            $newDrawings = json_encode($data['newDrawings'], JSON_UNESCAPED_UNICODE);
+       /* updatedSettings.push({
+                            "image": tmp.imageName,
+                            "title": tmp.title,
+                            "alpha": tmp.context.globalAlpha,
+                            "color": tmp.context.strokeStyle,
+                            //"alpha": "1",
+                            //color: "#000000",
+                            "description": tmp.description,
+                            "data": canvasToSave.toDataURL("image/png")
+                    });*/
+        if (strcmp(json_encode($data['updatedLayers']), "") != 2) {
+            $updatedLayers = json_encode($data['updatedLayers'], JSON_UNESCAPED_UNICODE);
             $previousDrawings = $publication->drawings;
             $previousDrawingsJsonArray = json_decode($previousDrawings, true);
-            $publication->drawings = $newDrawings;
+            $publication->drawings = $updatedLayers;
 
             $layersUrls = $data['layersUrls'];
             $fileNames = $data['layersFilesNames'];
@@ -367,7 +376,7 @@ class PublicationController extends Controller
         if(!is_null($previousDrawingsJsonArray)) {
             for($i = 0; $i < sizeof($previousDrawingsJsonArray['drawings']); $i++) {
                 $fileName = $previousDrawingsJsonArray['drawings'][$i]['image'];
-                if(strpos($newDrawings, $fileName) == false){
+                if(strpos($updatedLayers, $fileName) == false){
                     $filePath = Publication::basePath() . '/'
                         . Publication::PREFIX_PATH_DRAWINGS . '/'
                         . $fileName;

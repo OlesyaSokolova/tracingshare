@@ -177,10 +177,10 @@ function prepareLayersToDraw() {
                 backgroundX, backgroundY);
             var newLayerContext = newLayerCanvas.getContext("2d");
             mutableCanvasesAndContexts.push({"layer":  {"imageName": generateNextImageName(prefix, maxImageName),
-                                                        "alpha": alpha,
-                                                        "color": color,
-                                                        "title": title,
-                                                        "description": description},
+                                                        "alpha": "1",
+                                                        "color": "#000000",
+                                                        "title": "Новый слой " + (drawingsImages.length),
+                                                        "description": ""},
                 "canvasId": newLayerCanvasId, "canvas": newLayerCanvas, "context": newLayerContext });
 
             canvas = mutableCanvasesAndContexts.find(x => x.canvasId === newLayerCanvasId).canvas;
@@ -462,7 +462,6 @@ function prepareLayersToDraw() {
         createLayerButton.addEventListener(
             'click', function (event) {
                 var layersThumbnailsContainer = document.getElementById("thumbnails-layers");
-                    //parcelastimagename
                    var newId = getIndexFromImageName(maxImageName) + 1;
 
                     //todo:create layer if there are no mutable layers
@@ -475,7 +474,7 @@ function prepareLayersToDraw() {
                         '            height: fit-content;\n' +
                         '            text-align: left;\n' +
                         '            margin-bottom: 10px">';
-                    currentLayerElement += "Новый слой " + mutableCanvasesAndContexts.length  + ':<br>'
+                    currentLayerElement += "Новый слой " + (mutableCanvasesAndContexts.length + 1) + ':<br>'
                         + '<br>'
                         + '<label for=\'' + alphaId + '\'>Прозрачность: </label><br>'
                         + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + 1 + '\'>'
@@ -497,10 +496,10 @@ function prepareLayersToDraw() {
                     createdLayerContext.lineWidth = thickness
 
                     mutableCanvasesAndContexts.push({"layer": { "imageName": generateNextImageName(prefix, maxImageName),
-                                                                "alpha": alpha,
-                                                                "color": color,
-                                                                "title": title,
-                                                                "description": description},
+                                                    "alpha": "1",
+                                                    "color": "#000000",
+                                                    "title": "Новый слой " +  (mutableCanvasesAndContexts.length + 1) + ":",
+                                                    "description": ""},
                     "canvasId": createdLayerId, "canvas": createdLayerCanvas, "context": createdLayerContext });
 
                     canvas = createdLayerCanvas;
@@ -561,16 +560,8 @@ function prepareLayersToDraw() {
         var saveButton = document.getElementById("save-layer-button");
         saveButton.addEventListener(
             'click', function (event) {
-                var layersUrls = [];
-                var layersNames = [];
-                //console.log(currentSettings)
+                var updatedLayers = [];
 
-                mutableCanvasesAndContexts.sort((a, b) => {
-                    let ai = parseInt((a.id).split('_')[1])
-                        bi = parseInt((b.id).split('_')[1]);
-                        return ai - bi;
-                })
-                var existingLayersNumber = currentDrawings.drawings.length;
                 for(let i = 0; i < mutableCanvasesAndContexts.length; i++) {
                     var tmp = mutableCanvasesAndContexts[i];
                     var contextToSave = tmp.context;
@@ -578,48 +569,22 @@ function prepareLayersToDraw() {
 
                     changeImageColor(contextToSave, canvas.width, canvas.height)
 
-                    var imageDataUrl = canvasToSave.toDataURL("image/png")
-
-                    layersUrls.push(imageDataUrl);
-
-                    if (i >= existingLayersNumber) {
-                        //create new layer
-                        var imageName = generateNewName(prefix, currentDrawings.drawings);
-                        layersNames.push(imageName)
-                        existingLayersNumber++;
-
-                        var index = parseInt((canvasToSave.id).split('_')[1]);
-                        var divId = "thumbnail_div_" + index;
-                        var titleValue =  document.getElementById(divId).textContent.split(':')[0].trimStart()
-
-                        var newLayerInfo = {
-                            image: imageName,
-                            layerParams: {
-                                title: titleValue,
-                                alpha: tmp.context.globalAlpha,
-                                //color: colorToHEXString(currentColor),
-                                color: tmp.context.strokeStyle,
-                                //alpha: "1",
-                                //color: "#000000",
-                                description: ""
-                            }
-                        }
-                        currentDrawings.drawings.push(newLayerInfo);
-                    }
-                    else {
-                        layersNames.push(currentDrawings.drawings[i].image)
-                    }
+                    updatedLayers.push({
+                            "image": tmp.imageName,
+                            "title": tmp.title,
+                            "alpha": tmp.context.globalAlpha,
+                            "color": tmp.context.strokeStyle,
+                            //"alpha": "1",
+                            //color: "#000000",
+                            "description": tmp.description,
+                            "data": canvasToSave.toDataURL("image/png")
+                    });
                 }
-                var newData = {
-                    layersFilesNames: layersNames,
-                    layersUrls: layersUrls,
-                    newDrawings: currentDrawings,
-                };
 
                 $.ajax({
                     type: "POST",
                     url: baseUrl + "/publication/save-layers?id=" + publicationId,
-                    data: {params: JSON.stringify(newData)},
+                    data: {params: JSON.stringify(updatedLayers)},
                     success: function (data) {
                         location.href = window.location.origin + baseUrl + "/publication/edit-drawings?id=" + publicationId
                     },
