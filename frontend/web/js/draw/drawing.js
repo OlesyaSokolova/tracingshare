@@ -94,7 +94,7 @@ function prepareLayersToDraw() {
 
         //load images and draw them at canvases and thumbnails
         //todo: check layers order on canvas
-        for (let i = drawingsImages.length - 1; i >= 0; i--) {
+        for (let i = 0; i < drawingsImages.length; i++) {
             var currentImage = drawingsImages[i].image;
 
             var canvasId = "layer_" + i + "_canvas";
@@ -421,7 +421,7 @@ function prepareLayersToDraw() {
                 currentColor.a = newAlpha*255;
                 var id = ($(this).attr('id')).split('_')[1];
                 var layerId = "layer_" + id + "_canvas";
-                var tmp = mutableCanvasesAndContexts.find(x => x.id === layerId);
+                var tmp = mutableCanvasesAndContexts.find(x => x.canvasId === layerId);
                 var contextToChange;
                 if(typeof tmp === 'undefined') {
                     if (backgroundId !== 'none')
@@ -462,7 +462,7 @@ function prepareLayersToDraw() {
         createLayerButton.addEventListener(
             'click', function (event) {
                 var layersThumbnailsContainer = document.getElementById("thumbnails-layers");
-                   var newId = getIndexFromImageName(maxImageName) + 1;
+                   var newId = mutableCanvasesAndContexts.length;
 
                     //todo:create layer if there are no mutable layers
 
@@ -581,10 +581,13 @@ function prepareLayersToDraw() {
                     });
                 }
 
+                var newData = {
+                    layers: JSON.stringify(updatedLayers),
+                };
                 $.ajax({
                     type: "POST",
                     url: baseUrl + "/publication/save-layers?id=" + publicationId,
-                    data: {params: JSON.stringify(updatedLayers)},
+                    data: {params: JSON.stringify(newData)},
                     success: function (data) {
                         location.href = window.location.origin + baseUrl + "/publication/edit-drawings?id=" + publicationId
                     },
@@ -599,7 +602,7 @@ function prepareLayersToDraw() {
 
             if (Array.isArray(drawingsImages)) {
                 var currentLayerElement = '<div id="layers"">';
-                for (let i = drawingsImages.length - 1; i >= 0; i--) {
+                for (let i =0; i < drawingsImages.length; i++) {
                     if (typeof drawingsImages[i].alpha != 'undefined') {
                         alphaValue = drawingsImages[i].alpha;
                     } else {

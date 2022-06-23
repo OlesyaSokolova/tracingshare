@@ -148,10 +148,9 @@ if(!empty($publication) && !empty($newLayer)) {
             </canvas>
             <?php if (strcmp($publication->drawings ,'') != 0
                 && sizeof($publication->getDrawings()) > 0) {
-                for($i=0; $i < sizeof($publication->getDrawings()); $i++) {
+                for($i = 0; $i < sizeof($publication->getDrawings()); $i++) {
                     //var_dump($publication->getDrawings()[$i]);
                     $canvasId = "layer_" . $i . "_canvas";
-                    //var_dump($i);
                     echo '<canvas id="'.$canvasId.'" ></canvas>';
                     }
                 }

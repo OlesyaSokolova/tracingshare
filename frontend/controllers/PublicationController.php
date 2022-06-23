@@ -281,10 +281,7 @@ class PublicationController extends Controller
     {
         $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
 
-        //$id = $data["id"];
-
         $newName = $data["newName"];
-        //$newDescription = $data["newDescription"];
 
         $publication = Publication::findOne($id);
         $previousDrawings = $publication->drawings;
@@ -329,9 +326,21 @@ class PublicationController extends Controller
     public function actionSaveLayers($id)
     {
         $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
-        print_r($data);
+        //print_r($data);
         $publication = Publication::findOne($id);
-       /* updatedSettings.push({
+
+        if (strcmp(json_encode($data["layers"]), "") != 2) {
+            $updatedLayers = json_encode($data["layers"], JSON_UNESCAPED_UNICODE);
+            $previousDrawings = $publication->drawings;
+            $previousDrawingsJsonArray = json_decode($previousDrawings, true);
+            //todo: update existing drawings with new info
+            //$publication->drawings = $updatedLayers;
+
+            // Создаем директорию, если не существует
+            FileHelper::createDirectory(Publication::basePath() . '/'
+                . Publication::PREFIX_PATH_DRAWINGS);
+
+            /*updatedLayers.push({
                             "image": tmp.imageName,
                             "title": tmp.title,
                             "alpha": tmp.context.globalAlpha,
@@ -341,27 +350,14 @@ class PublicationController extends Controller
                             "description": tmp.description,
                             "data": canvasToSave.toDataURL("image/png")
                     });*/
-        if (strcmp(json_encode($data['updatedLayers']), "") != 2) {
-            $updatedLayers = json_encode($data['updatedLayers'], JSON_UNESCAPED_UNICODE);
-            $previousDrawings = $publication->drawings;
-            $previousDrawingsJsonArray = json_decode($previousDrawings, true);
-            $publication->drawings = $updatedLayers;
-
-            $layersUrls = $data['layersUrls'];
-            $fileNames = $data['layersFilesNames'];
-
-            // Создаем директорию, если не существует
-            FileHelper::createDirectory(Publication::basePath() . '/'
-                . Publication::PREFIX_PATH_DRAWINGS);
-
-            for($i = 0; $i < sizeof($layersUrls); $i++) {
-                $imageBase64 = $layersUrls[$i];
+            for($i = 0; $i < sizeof($updatedLayers); $i++) {
+                $imageBase64 = $updatedLayers[$i]['data'];
                 $img0 = str_replace('data:image/png;base64,', '', $imageBase64);
                 $img0 = str_replace(' ', '+', $img0);
                 $imageToSave = base64_decode($img0);
                 $filePath = Publication::basePath() . '/'
                     . Publication::PREFIX_PATH_DRAWINGS . '/'
-                    . $fileNames[$i];
+                    . $updatedLayers[$i]['image'];
                 if (file_exists($filePath)) {
                     unlink($filePath);
                 }

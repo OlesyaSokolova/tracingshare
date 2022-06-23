@@ -79,7 +79,6 @@ function prepareEditablePublication() {
         //mainDescription = document.getElementById('mainDesc').value;
         name = document.getElementById('name').value;
         var newData = {
-            //id: parseInt(publicationId),
             newName: name,
             //newDescription: mainDescription,
             newDrawings: drawings,
