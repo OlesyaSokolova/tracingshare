@@ -1,5 +1,6 @@
 function prepareLayersToDraw() {
 
+    //init vars and consts
     const pathParts = window.location.pathname.split ('/');
     const baseUrl = "/" + pathParts[1]
         + "/" + pathParts[2]
@@ -10,26 +11,65 @@ function prepareLayersToDraw() {
         drawings: Array()
     }
 
-        preparedTextures = ''
-        if(typeof textures != "undefined"
-            && textures !== ''
-            && textures !== ""
-            && textures.textures.length > 0) {
-            preparedTextures = textures.textures
-        }
+    var canvas;
+    var context;
+    var currentColor = {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 255
+    };
 
-        originalImage = new Image();
-        backgroundImage = originalImage;
-        backgroundId = "originalImage";
-        originalImage.src = originalImageSrc + '?' + new Date().getTime();
-        var drawingsImages = [];
-        originalImage.onload = function () {
-            if (typeof drawings != "undefined"
-                && drawings !== ''
-                && drawings !== "") {
-                currentDrawings = JSON.parse(JSON.stringify(drawings));
-                drawingsImages = initDrawingsArray(currentDrawings);
-            }
+    const eraserStyle = "rgba(255,255,255,255)";
+    const eraserGlobalCompositeOperation = "destination-out";
+
+    var brushStyle = colorToRGBAString(currentColor);
+
+    var isDrawing = false;
+    var isErasing = false;
+    var isFilling = false;
+
+    var brushIsClicked = false;
+    var eraserIsClicked = false;
+    var fillerIsClicked = false;
+
+    var counter = 0;
+    var previousTool;
+
+    var drawingLayerData;
+    var pixelStack = [];
+    var clickedColor = {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 0
+    }
+    const IMAGE_DATA_PIXEL_SHIFT = 4;
+    const IMAGE_DATA_RED_SHIFT = 0;
+    const IMAGE_DATA_GREEN_SHIFT = 1;
+    const IMAGE_DATA_BLUE_SHIFT = 2;
+    const IMAGE_DATA_ALPHA_SHIFT = 3;
+
+    preparedTextures = ''
+    if(typeof textures != "undefined"
+        && textures !== ''
+        && textures !== ""
+        && textures.textures.length > 0) {
+        preparedTextures = textures.textures
+    }
+
+    originalImage = new Image();
+    backgroundImage = originalImage;
+    backgroundId = "originalImage";
+    originalImage.src = originalImageSrc + '?' + new Date().getTime();
+    var drawingsImages = [];
+    originalImage.onload = function () {
+        if (typeof drawings != "undefined"
+            && drawings !== ''
+            && drawings !== "") {
+            currentDrawings = JSON.parse(JSON.stringify(drawings));
+            drawingsImages = initDrawingsArray(currentDrawings);
+        }
         //create context of background
         var backgroundCanvasId = "layer_" + "b" + "_canvas";
         var originalImageCtx = drawBackground(backgroundCanvasId, originalImage);
@@ -41,9 +81,6 @@ function prepareLayersToDraw() {
         var mutableCanvasesAndContexts = [];
         var backgroundElement = document.getElementById(backgroundCanvasId);
         const backgroundX = backgroundElement.offsetLeft, backgroundY = backgroundElement.offsetTop;
-
-        var canvas;
-        var context;
 
         createExistingLayersThumbnailsElements(drawingsImages);
 
@@ -89,52 +126,25 @@ function prepareLayersToDraw() {
         }
 
         else {
+            if (mutableCanvasesAndContexts.length !== 0) {
+                canvas = mutableCanvasesAndContexts[0].canvas;
+                context = mutableCanvasesAndContexts[0].context;
+                initMutableCanvas(canvas)
+                context.lineWidth = thickness
+                currentColor.a = context.globalAlpha * 255
 
+                var id = parseInt((canvas.id).split('_')[1])
+                document.getElementById('thumbnail_div_' + id).style.background = "#d6d5d5";
+                previousThumbnail = document.getElementById('thumbnail_div_' + id)
+            }
         }
 
-        //1.4. init vars and consts
-        const eraserStyle = "rgba(255,255,255,255)";
-        const eraserGlobalCompositeOperation = "destination-out";
-
+        //init other vars and consts
         const brushGlobalCompositeOperation = context.globalCompositeOperation;
-
-       var currentColor = {
-            r: 0,
-            g: 0,
-            b: 0,
-            a: 255
-        };
-
-        var brushStyle = colorToRGBAString(currentColor);
+        var previousThumbnail = document.getElementById("thumbnail_div_" + (drawingsImages.length));
         var thickness = context.lineWidth;
 
-        var isDrawing = false;
-        var isErasing = false;
-        var isFilling = false;
-
-        var brushIsClicked = false;
-        var eraserIsClicked = false;
-        var fillerIsClicked = false;
-
-        var counter = 0;
-        var previousTool;
-        var previousThumbnail = document.getElementById("thumbnail_div_" + (drawingsImages.length));
-
-        var drawingLayerData;
-        var pixelStack = [];
-        var clickedColor = {
-            r: 0,
-            g: 0,
-            b: 0,
-            a: 0
-        }
-        const IMAGE_DATA_PIXEL_SHIFT = 4;
-        const IMAGE_DATA_RED_SHIFT = 0;
-        const IMAGE_DATA_GREEN_SHIFT = 1;
-        const IMAGE_DATA_BLUE_SHIFT = 2;
-        const IMAGE_DATA_ALPHA_SHIFT = 3;
-        //1.5. init buttons
-
+        //init tools buttons
         var clearButton = document.getElementById("clear-layer-button");
         clearButton.addEventListener(
             'click', function (event) {
@@ -394,6 +404,7 @@ function prepareLayersToDraw() {
         createLayerButton.addEventListener(
             'click', function (event) {
                 var layersThumbnailsContainer = document.getElementById("thumbnails-layers");
+                if (mutableCanvasesAndContexts.length !== 0) {
                     mutableCanvasesAndContexts.sort((a, b) => {
                         let ai = parseInt((a.id).split('_')[1])
                         bi = parseInt((b.id).split('_')[1]);
@@ -415,48 +426,39 @@ function prepareLayersToDraw() {
                         + '<label for=\'' + alphaId + '\'>Прозрачность: </label><br>'
                         + '<input type=\'range\' name="alphaChannel" id=\'' + alphaId + '\' class=\'alpha-value\' step=\'0.02\' min=\'0.02\' max=\'1\' value=\'' + 1 + '\'>'
                     currentLayerElement += '</div>';
-                currentLayerElement += '</div>';
-                layersThumbnailsContainer.insertAdjacentHTML('afterbegin', currentLayerElement);
+                    currentLayerElement += '</div>';
+                    layersThumbnailsContainer.insertAdjacentHTML('afterbegin', currentLayerElement);
 
-                //create empty canvas
-                var canvasesContainer = document.getElementById("canvases");
-                var createdLayerId = "layer_" + (newId) + "_canvas";
-                var createdCanvas = '<canvas id=\'' + createdLayerId + '\'></canvas>'
-                canvasesContainer.insertAdjacentHTML('beforeend', createdCanvas);
+                    //create empty canvas
+                    var canvasesContainer = document.getElementById("canvases");
+                    var createdLayerId = "layer_" + (newId) + "_canvas";
+                    var createdCanvas = '<canvas id=\'' + createdLayerId + '\'></canvas>'
+                    canvasesContainer.insertAdjacentHTML('beforeend', createdCanvas);
 
-                //init empty canvas
-                var createdLayerCanvas = createCanvasToDrawOn(createdLayerId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
-                    backgroundX, backgroundY);
-                var createdLayerContext = createdLayerCanvas.getContext("2d");
-                initMutableCanvas(createdLayerCanvas)
-                createdLayerContext.lineWidth = thickness
+                    //init empty canvas
+                    var createdLayerCanvas = createCanvasToDrawOn(createdLayerId, originalImageCtx.canvas.width, originalImageCtx.canvas.height,
+                        backgroundX, backgroundY);
+                    var createdLayerContext = createdLayerCanvas.getContext("2d");
+                    initMutableCanvas(createdLayerCanvas)
+                    createdLayerContext.lineWidth = thickness
 
-                mutableCanvasesAndContexts.push({"id": createdLayerId, "canvas": createdLayerCanvas, "context": createdLayerContext });
-
-                canvas = createdLayerCanvas;
-                context = createdLayerContext;
-                currentColor.a = context.globalAlpha*255
-
-                var id = parseInt((canvas.id).split('_')[1])
-                document.getElementById('thumbnail_div_' + id).style.background =  "#d6d5d5";
-                previousThumbnail.style.background = "#ffffff";
-                previousThumbnail =  document.getElementById('thumbnail_div_' + id)
-
-                document.getElementById(divId)
-                    .addEventListener('click', function (event) {
-                        var canvasId = createdLayerId;
-                        canvas = mutableCanvasesAndContexts.find(x => x.id === canvasId).canvas;
-                        context = mutableCanvasesAndContexts.find(x => x.id === canvasId).context;
-                        initMutableCanvas(canvas)
-                        context.lineWidth = thickness;
-                        currentColor.a = context.globalAlpha*255
-
-                        this.style.background = "#d6d5d5";
-                        if (previousThumbnail != null && !previousThumbnail.isSameNode(this)) {
-                            previousThumbnail.style.background = "#ffffff";
-                        }
-                        previousThumbnail = this;
+                    mutableCanvasesAndContexts.push({
+                        "id": createdLayerId,
+                        "canvas": createdLayerCanvas,
+                        "context": createdLayerContext
                     });
+
+                    canvas = createdLayerCanvas;
+                    context = createdLayerContext;
+                    currentColor.a = context.globalAlpha * 255
+
+                    var id = parseInt((canvas.id).split('_')[1])
+                    document.getElementById('thumbnail_div_' + id).style.background = "#d6d5d5";
+                    previousThumbnail.style.background = "#ffffff";
+                    previousThumbnail = document.getElementById('thumbnail_div_' + id)
+
+                    addClickListenerToThumbnail(newId)
+                }
             });
 
             var deleteLayerButton = document.getElementById("delete-layer-button");
