@@ -334,8 +334,8 @@ class PublicationController extends Controller
         //$data = json_decode(file_get_contents("php://input"));
 
         //echo "Hello". var_dump($data);
-       // $data = (!empty($_POST['params'])) ? json_decode($_POST['params']): "empty params";
-        var_dump($_POST); /*
+        $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true): "empty params";
+        $updatedLayers = $data['layers'];
         $publication = Publication::findOne($id);
 /*
         if (strcmp(json_encode($data['newDrawings']), "") != 2) {
