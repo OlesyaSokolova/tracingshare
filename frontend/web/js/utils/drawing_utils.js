@@ -44,9 +44,7 @@ function createCanvasToDrawOn(canvasId, width, height, x, y) {
 }
 
 function drawExistingLayerThumbnail(elementId, layerImage, color, width, height) {
-
     var canvas = document.getElementById(elementId)
-    //add element as child to id = otherLayersThumbnails
     var ratio = width / height
     var constWidth = 150
     var correspondingHeight = constWidth / ratio
@@ -60,9 +58,6 @@ function drawExistingLayerThumbnail(elementId, layerImage, color, width, height)
     newLayerCtx.globalCompositeOperation = "source-in";
     newLayerCtx.fillRect(0, 0, canvas.width, canvas.height);
     newLayerCtx.globalCompositeOperation = "source-over";
-
-    //newLayerCtx.drawImage(layerImage, 0, 0, canvas.width,  canvas.height);
-
     return newLayerCtx
 }
 
@@ -123,4 +118,62 @@ function generateNewName(prefix, drawings) {
 
     return prefix + newLayerIndex + ".png";
 }
+
+function matchClickedColor(drawingLayerData, currentPixelIndex, clickedColor)
+{
+    const IMAGE_DATA_RED_SHIFT = 0;
+    const IMAGE_DATA_GREEN_SHIFT = 1;
+    const IMAGE_DATA_BLUE_SHIFT = 2;
+    const IMAGE_DATA_ALPHA_SHIFT = 3;
+
+    var r = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_RED_SHIFT];
+    var g = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_GREEN_SHIFT];
+    var b = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_BLUE_SHIFT];
+    var a = drawingLayerData.data[currentPixelIndex + IMAGE_DATA_ALPHA_SHIFT];
+
+    // If the current pixel matches the clicked color
+    return r === clickedColor.r
+        && g === clickedColor.g
+        && b === clickedColor.b
+        && a === clickedColor.a;
+}
+
+function colorPixel(drawingLayerData, currentPixelIndex, currentColor)
+{
+    const IMAGE_DATA_RED_SHIFT = 0;
+    const IMAGE_DATA_GREEN_SHIFT = 1;
+    const IMAGE_DATA_BLUE_SHIFT = 2;
+    const IMAGE_DATA_ALPHA_SHIFT = 3;
+
+    drawingLayerData.data[currentPixelIndex + IMAGE_DATA_RED_SHIFT] = currentColor.r;
+    drawingLayerData.data[currentPixelIndex + IMAGE_DATA_GREEN_SHIFT] = currentColor.g;
+    drawingLayerData.data[currentPixelIndex + IMAGE_DATA_BLUE_SHIFT] = currentColor.b;
+    drawingLayerData.data[currentPixelIndex + IMAGE_DATA_ALPHA_SHIFT] = currentColor.a;
+}
+
+function getMaxImageName(jsonDrawings) {
+
+    var maxImageName = prefix + 0 + ".png";
+    var drawingsJson = jsonDrawings.drawings;
+    for (let i = 0; i < drawingsJson.length; i++) {
+        //todo: string comparison;
+        if (drawingsJson[i].image > maxImageName) {
+            maxImageName = drawingsJson[i].image;
+        }
+    }
+    return maxImageName;
+}
+
+/*function getMinMax(arr) {
+    if (!arr) {
+        return null;
+    }
+    var minV = arr[0];
+    var maxV = arr[0];
+    for (a of arr) {
+        if (a < minV) minV = a;
+        if (a > maxV) maxV = a;
+    }
+    return [minV, maxV];
+}*/
 

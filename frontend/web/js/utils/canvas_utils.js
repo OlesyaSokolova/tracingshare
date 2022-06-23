@@ -76,9 +76,12 @@ function initDrawingsArray(jsonDrawings) {
             alpha = parseFloat(drawingsJson[i].layerParams.alpha)
             color = drawingsJson[i].layerParams.color
             title = drawingsJson[i].layerParams.title
-            //drawingImage.onload = function () {
-            drawingsImages.push({"image": drawingImage, "alpha": alpha, "color": color, "title": title});
-            // }
+            description = drawingsJson[i].layerParams.description;
+            drawingsImages.push({"image": drawingImage,
+                "alpha": alpha,
+                "color": color,
+                "title": title,
+                "description": description});
         }
     }
     return drawingsImages
@@ -131,4 +134,5 @@ function isImageOk(img) {
     // No other way of checking: assume it’s ok.
     return true;
 }
+
 
