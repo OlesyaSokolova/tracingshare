@@ -583,12 +583,12 @@ function prepareLayersToDraw() {
                     //updatedLayers.push(layer)
                     updatedLayers[tmp.layer.imageName] = {
                         "title": tmp.layer.title,
-                        "alpha": tmp.context.globalAlpha,
-                        "color": tmp.context.strokeStyle,
+                        "alpha": tmp.context.globalAlpha.toString(),
+                        "color": tmp.context.strokeStyle.toString(),
                         //"alpha": "1",
                         //color: "#000000",
                         "description": tmp.layer.description,
-                        //"data": canvasToSave.toDataURL("image/png")};
+                        "data": canvasToSave.toDataURL("image/png")
                     }
                 }
 
@@ -601,8 +601,6 @@ function prepareLayersToDraw() {
                     type: "POST",
                     url: baseUrl + "/publication/save-layers?id=" + publicationId,
                     data: { params: JSON.stringify(newData) },
-                    //contentType: 'application/json',
-                   // dataType: 'json',
 
                     success: function (data) {
                         alert(data)

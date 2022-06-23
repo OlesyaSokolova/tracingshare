@@ -328,71 +328,87 @@ class PublicationController extends Controller
 
     public function actionSaveLayers($id)
     {
-
-        //header("Content-Type: application/json");
-
-        //$data = json_decode(file_get_contents("php://input"));
-
-        //echo "Hello". var_dump($data);
-        $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true): "empty params";
-        $updatedLayers = $data['layers'];
+        $data = (!empty($_POST['params'])) ? json_decode($_POST['params'], true) : "empty params";
+        //$updatedLayers = $data['layers'];
         $publication = Publication::findOne($id);
-/*
-        if (strcmp(json_encode($data['newDrawings']), "") != 2) {
-            $newDrawings = json_encode($data['newDrawings'], JSON_UNESCAPED_UNICODE);
-            $previousDrawings = $publication->drawings;
-            $previousDrawingsJsonArray = json_decode($previousDrawings, true);
-            $publication->drawings = $newDrawings;
+        $updatedLayers = $data['layers'];
+        var_dump($updatedLayers);
+        //if (strcmp(json_encode($data['layers']), "") != 2) {
+        //  $updatedLayers = json_encode($data['layers'], JSON_UNESCAPED_UNICODE);
+        $previousDrawings = $publication->drawings;
+        $previousDrawingsJsonArray = json_decode($previousDrawings, true);
+        /*updatedLayers[tmp.layer.imageName] = {
+                "title": tmp.layer.title,
+                "alpha": tmp.context.globalAlpha,
+                "color": tmp.context.strokeStyle,
+                //"alpha": "1",
+                //color: "#000000",
+                "description": tmp.layer.description,
+                "data": canvasToSave.toDataURL("image/png")*/
+        //$publication->drawings = $newDrawings;
 
-            $layersUrls = $data['layersUrls'];
-            $fileNames = $data['layersFilesNames'];
+        // Создаем директорию, если не существует
+        FileHelper::createDirectory(Publication::basePath() . '/'
+            . Publication::PREFIX_PATH_DRAWINGS);
 
-            // Создаем директорию, если не существует
-            FileHelper::createDirectory(Publication::basePath() . '/'
-                . Publication::PREFIX_PATH_DRAWINGS);
-
-            for($i = 0; $i < sizeof($layersUrls); $i++) {
-                $imageBase64 = $layersUrls[$i];
-                $img0 = str_replace('data:image/png;base64,', '', $imageBase64);
-                $img0 = str_replace(' ', '+', $img0);
-                $imageToSave = base64_decode($img0);
-                $filePath = Publication::basePath() . '/'
-                    . Publication::PREFIX_PATH_DRAWINGS . '/'
-                    . $fileNames[$i];
-                if (file_exists($filePath)) {
-                    unlink($filePath);
-                }
-                $originalImageSize = $publication->getOriginalImageSize();
-                $newImage = new Imagick();
-                $newImage->readImageBlob($imageToSave);
-                //$newImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
-                file_put_contents($filePath, $newImage);
+        //for ($i = 0; $i < sizeof($updatedLayers); $i++) {
+        foreach ($updatedLayers as $filename => $newInfo) {
+            $imageBase64 = $newInfo['data'];
+            $img0 = str_replace('data:image/png;base64,', '', $imageBase64);
+            $img0 = str_replace(' ', '+', $img0);
+            $imageToSave = base64_decode($img0);
+            $filePath = Publication::basePath() . '/'
+                . Publication::PREFIX_PATH_DRAWINGS . '/'
+                . $filename;
+            if (file_exists($filePath)) {
+                unlink($filePath);
             }
-        }
+            $newImage = new Imagick();
+            $newImage->readImageBlob($imageToSave);
+            //$originalImageSize = $publication->getOriginalImageSize();
+            //$newImage->scaleImage($originalImageSize[0], $originalImageSize[1]);
+            file_put_contents($filePath, $newImage);
 
-        if(!is_null($previousDrawingsJsonArray)) {
-            for($i = 0; $i < sizeof($previousDrawingsJsonArray['drawings']); $i++) {
-                $fileName = $previousDrawingsJsonArray['drawings'][$i]['image'];
-                if(strpos($newDrawings, $fileName) == false){
-                    $filePath = Publication::basePath() . '/'
-                        . Publication::PREFIX_PATH_DRAWINGS . '/'
-                        . $fileName;
-                    if (file_exists($filePath)) {
-                        unlink($filePath);
+            $drawingsArray = array();
+            $drawingsArray['drawings'] = array();
+             //$drawingPrefix =  Publication::DRAWING_PREFIX . $baseName . "_";
+                //$filename = $drawingPrefix .$file->baseName . '.' . $file->extension;
+                $newLayerInfo = array("image" => $filename,
+                    "layerParams" => array(
+                        "title" => $newInfo['title'],
+                        "alpha" => $newInfo['alpha'],
+                        "color" => $newInfo['color'],
+                        "description" => $newInfo['description'],
+                    ));
+                array_push($drawingsArray['drawings'], $newLayerInfo);
+            }
+
+            $newDrawings = json_encode($drawingsArray);
+            $publication->drawings = $newDrawings ;
+
+            if(!is_null($previousDrawingsJsonArray)) {
+                for($i = 0; $i < sizeof($previousDrawingsJsonArray['drawings']); $i++) {
+                    $fileName = $previousDrawingsJsonArray['drawings'][$i]['image'];
+                    if(strpos($newDrawings, $fileName) == false){
+                        $filePath = Publication::basePath() . '/'
+                            . Publication::PREFIX_PATH_DRAWINGS . '/'
+                            . $fileName;
+                        if (file_exists($filePath)) {
+                            unlink($filePath);
+                        }
                     }
                 }
             }
-        }
 
         if($publication->update(true, ["drawings"])) {
             Yii::$app->session->setFlash('success', "Успешно сохранено.");
         }
-        else if (strcmp($publication->drawings ,$previousDrawings) == 0) {
+        else if (strcmp($newDrawings, $previousDrawings) == 0) {
             Yii::$app->session->setFlash('success', "Успешно сохранено. (Новых слоев нет)");
         }
         else {
             Yii::$app->session->setFlash('error', "Произошла ошибка про сохранении данных. ");
-        }*/
+        }
     }
 
     public function actionSaveTextures($id)
