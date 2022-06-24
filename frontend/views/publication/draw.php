@@ -122,13 +122,13 @@ if(!empty($publication) && !empty($newLayer)) {
                    id="thickness"
                    style="width: 100px; margin-bottom: 10px; transform: rotate(90deg);"
                    class="thickness-value"
-                   step='1' min='1' max='10' value='5''">
+                   step='1' min='1' max='20' value='5''">
             <br>
             <br>
             <img src="<?= UrlUtils::getFirstPartOfUrl()."/frontend/web/icons/line.png" ?>"
                  style="padding-left: 20px"
             width="100px"
-            height="12px"/>
+            height="20px"/>
 
         </div>
     </div>
