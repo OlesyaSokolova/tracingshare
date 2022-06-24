@@ -576,7 +576,7 @@ function prepareLayersToDraw() {
                     //error here: new filenames needed!!!
                     updatedLayers[tmp.layer.imageName] = {
                         "title": tmp.layer.title,
-                        "alpha": tmp.context.globalAlpha.toString(),
+                        "alpha": tmp.layer.alpha,
                         "color": tmp.layer.color,
                         //"alpha": "1",
                         //color: "#000000",
