@@ -380,7 +380,7 @@ class PublicationController extends Controller
             }
 
             $newDrawings = json_encode($drawingsArray);
-            echo ($newDrawings);
+            //echo ($newDrawings);
             $publication->drawings = $newDrawings ;
 
             if(!is_null($previousDrawingsJsonArray)) {
