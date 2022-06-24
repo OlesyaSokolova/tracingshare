@@ -164,16 +164,3 @@ function getMaxImageName(jsonDrawings) {
     return maxImageName;
 }
 
-/*function getMinMax(arr) {
-    if (!arr) {
-        return null;
-    }
-    var minV = arr[0];
-    var maxV = arr[0];
-    for (a of arr) {
-        if (a < minV) minV = a;
-        if (a > maxV) maxV = a;
-    }
-    return [minV, maxV];
-}*/
-
