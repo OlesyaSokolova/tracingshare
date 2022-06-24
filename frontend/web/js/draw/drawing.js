@@ -461,7 +461,8 @@ function prepareLayersToDraw() {
         createLayerButton.addEventListener(
             'click', function (event) {
                 var layersThumbnailsContainer = document.getElementById("thumbnails-layers");
-                    var newId = mutableCanvasesAndContexts.length;
+                maxImageName = prefix + (getIndexFromImageName(removeFileFormat(maxImageName)) + 1) + ".png";
+                var newId = getIndexFromImageName(removeFileFormat(maxImageName));
                     var divId = "thumbnail_div_" + newId;
                     var alphaId = "alpha_" + newId;
 
@@ -495,7 +496,6 @@ function prepareLayersToDraw() {
                     initMutableCanvas(createdLayerCanvas)
                     createdLayerContext.lineWidth = thickness
 
-                    maxImageName = prefix + (getIndexFromImageName(removeFileFormat(maxImageName)) + 1) + ".png";
                     mutableCanvasesAndContexts.push({"layer": { "imageName": maxImageName,
                                                     "alpha": "1",
                                                     "color": "#000000",
