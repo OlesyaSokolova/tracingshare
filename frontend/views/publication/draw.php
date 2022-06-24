@@ -55,7 +55,8 @@ if(!empty($publication) && !empty($newLayer)) {
         <?= Html::a(Yii::t('app', 'Выйти из редактора'),
             ['/publication/view', 'id' => $publication->id],
             ['class' => 'btn btn-outline-primary btn-rounded',
-                'name' => 'exit-button',]) ?>
+            'name' => 'exit-button',
+            'data-confirm' => "Вы уверены, что хотите покинуть страницу? Внесенные изменения не будут сохранены."]) ?>
 
         <button type="button" class="btn btn-outline-primary btn-rounded" id="save-layer-button">Сохранить</button>
 

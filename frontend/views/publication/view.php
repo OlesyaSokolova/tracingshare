@@ -58,7 +58,8 @@ if(!empty($publication)) {
         echo Html::a(Yii::t('app', 'Удалить' . '<br>' .'публикацию'),
         ['/publication/delete', 'id' => $publication->id],
         ['class' => 'btn btn-outline-danger btn-rounded',
-        'name' => 'create-layer-button',]) ?>
+        'name' => 'create-layer-button',
+            'data-confirm'=> "Вы уверены, что хотите удалить публикацию?"]) ?>
 
         <div class="dropdown" style="display: inline-block">
                 <a style="margin-right: 1px" class="btn btn-outline-primary btn-rounded dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
