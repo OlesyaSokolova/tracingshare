@@ -93,7 +93,6 @@ function prepareLayersToDraw() {
         createExistingLayersThumbnailsElements(drawingsImages);
 
         //load images and draw them at canvases and thumbnails
-        //todo: check layers order on canvas
         for (let i = drawingsImages.length - 1; i >=0; i--) {
             var currentImage = drawingsImages[i].image;
 
