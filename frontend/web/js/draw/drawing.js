@@ -499,7 +499,7 @@ function prepareLayersToDraw() {
                     mutableCanvasesAndContexts.push({"layer": { "imageName": maxImageName,
                                                     "alpha": "1",
                                                     "color": "#000000",
-                                                    "title": "Новый слой " +  (mutableCanvasesAndContexts.length + 1),
+                                                    "title": "Новый слой " +  (newId + 1),
                                                     "description": ""},
                     "canvasId": createdLayerId, "canvas": createdLayerCanvas, "context": createdLayerContext });
 
